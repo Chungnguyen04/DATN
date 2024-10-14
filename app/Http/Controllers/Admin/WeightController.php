@@ -14,11 +14,7 @@ class WeightController extends Controller
 {
     public function index()
     {
-<<<<<<< HEAD
-        $data['weights'] = Weight::orderBy('id', 'DESC')->get();
-=======
         $data['weights'] = Weight::orderBy('id', 'DESC')->paginate(5);
->>>>>>> 19de923 (update admin)
 
         return view('admin.pages.weights.index', compact('data'));
     }
