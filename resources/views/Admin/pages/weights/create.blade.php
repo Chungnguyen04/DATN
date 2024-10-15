@@ -21,7 +21,7 @@
                             <div class="live-preview">
                                 <div class="col-md-12 mb-3">
                                     <label for="categoryInput" class="form-label">Trọng lương</label>
-                                    <input type="number" value="{{ old('weight') }}" class="form-control weight" name="weight"
+                                    <input type="number" value="{{ old('weight') }}" step="0.01" class="form-control weight" name="weight"
                                            id="weight" placeholder="Nhập trọng lượng...">
                                     @error('weight')
                                     <span class="text-danger mt-3">{{ $message }}</span>
@@ -32,8 +32,7 @@
                                     <label for="categoryInput" class="form-label">Đơn vị trọng lượng</label>
                                     <div class="mt-2">
                                         <select name="unit" id="unit" class="form-select">
-                                            <option value="" selected>--Chọn--</option>
-                                            <option @selected(old('unit') == 'carat') value="carat">carat</option>
+                                            <option selected value="carat">carat</option>
                                         </select>
                                     </div>
                                     @error('unit')

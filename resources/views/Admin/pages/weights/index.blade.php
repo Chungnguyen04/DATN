@@ -47,7 +47,7 @@
                                                     </td>
                                                     <td>{{ $key + 1 }}</td>
                                                     <td>
-                                                        {{ number_format($weight->weight, 0, '', '.') }}
+                                                        {{ number_format($weight->weight, 2) }}
                                                     </td>
                                                     <td>{{ $weight->unit }}</td>
                                                     <td>
@@ -100,6 +100,9 @@
                             </div>
                         </div><!-- end card-body -->
                     </div><!-- end card -->
+                    <div class="d-flex justify-content-center align-items-center">
+                        <div>{{ $data['weights']->links('pagination::bootstrap-4') }}</div>
+                    </div>
                 </div><!-- end col -->
             </div><!-- end row -->
         </div>
