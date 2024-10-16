@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\CartController;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\CategoryController;
 
@@ -57,6 +58,29 @@ Route::prefix('categories')
         // api
         Route::get('/list-category', 'getAllCategory')
             ->name('getAllCategory');
+        // end api
+
+    });
+
+
+Route::prefix('carts')
+    ->name('carts.')
+    ->controller(CartController::class)
+    ->group(function () {
+
+        // api
+        Route::get('/cart-list/{userId}', 'cartByUserId')
+            ->name('cartByUserId');
+        // end api
+
+        // api
+        Route::post('/addToCart', 'addToCart')
+            ->name('addToCart');
+        // end api
+
+        // api
+        Route::post('/update-quantity', 'updateQuantity')
+            ->name('updateQuantity');
         // end api
 
     });
