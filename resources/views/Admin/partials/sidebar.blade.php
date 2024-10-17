@@ -42,6 +42,11 @@
                         <i class="ri-handbag-fill"></i> <span data-key="t-dashboards">Đơn hàng</span>
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link menu-link" href="{{ route('Admin.pages.users.list_user') }}">
+                        <i class="fa-solid fa-user"></i> <span data-key="t-dashboards">Quản Lí User</span>
+                    </a>
+                </li>
 
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="#sidebarApps" data-bs-toggle="collapse" role="button" aria-expanded="{{ in_array(Route::currentRouteName(), ['categories.listCategories' , 'categories.createCategories', 'categories.editCategories', 'products.index', 'products.create', 'products.edit', 'variants.index', 'variants.create', 'variants.edit', 'weights.index', 'weights.create', 'weights.edit']) ? 'true' : 'false' }}" aria-controls="sidebarApps">
