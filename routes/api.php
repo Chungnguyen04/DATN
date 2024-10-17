@@ -3,7 +3,7 @@
 use App\Http\Controllers\Api\CartController;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\CategoryController;
-
+use App\Http\Controllers\Api\OrderController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -84,3 +84,18 @@ Route::prefix('carts')
         // end api
 
     });
+
+    
+Route::prefix('order')
+->name('order.')
+->controller(OrderController::class)
+->group(function () {
+
+    Route::get('/order-list/{id}', 'index')
+        ->name('index');
+    Route::get('/order-detail/{id}', 'show')
+        ->name('show');
+    Route::get('/product_in_order-detail/{id}', 'product')
+        ->name('product');
+        
+});
