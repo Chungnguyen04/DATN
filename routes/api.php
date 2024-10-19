@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\CartController;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\OrderController;
+use App\Http\Controllers\Api\UserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -99,3 +100,13 @@ Route::prefix('order')
         ->name('product');
         
 });
+
+
+// Api quản lí người dùng
+//http://127.0.0.1:8000
+Route::get('/users', [UserController::class, 'listUser']);
+Route::get('/user-ids', [UserController::class, 'addUser']);
+Route::post('/add-user', [UserController::class, 'addPost']);
+Route::get('/admin/users/{id}', [UserController::class, 'edit']);
+Route::put('/admin/users/{id}', [UserController::class, 'editPost']);
+Route::delete('/users/{id}', [UserController::class, 'deleteUser']);
