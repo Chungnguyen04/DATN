@@ -1,7 +1,7 @@
 @extends('Admin.layouts.master')
 
 @section('title')
-    Danh sách sản phẩm
+    Danh sách user
 @endsection
 
 @section('content')

@@ -20,7 +20,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('checkAdmin')->prefix('admin')->group(function () {
 
     Route::get('/', [DashboardController::class, 'index'])
         ->name('admin.dashboard');
@@ -114,7 +113,7 @@ Route::middleware('checkAdmin')->prefix('admin')->group(function () {
                 ->name('delete');
         });
         
-});
+
 // Quản lí user
 Route::get('users', [UserController::class, 'listUser'])->name('Admin.pages.users.list_user'); 
 Route::get('add', [UserController::class, 'addUser'])->name('Admin.pages.users.add_user'); 

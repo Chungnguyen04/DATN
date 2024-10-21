@@ -87,7 +87,7 @@
             @yield('content')
             <!-- End Page-content -->
 
-            @include('Admin.partials.footer')
+            {{-- @include('Admin.partials.footer') --}}
         </div>
         <!-- end main content-->
 

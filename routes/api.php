@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\Api\AuthenticationController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -110,3 +111,11 @@ Route::post('/add-user', [UserController::class, 'addPost']);
 Route::get('/admin/users/{id}', [UserController::class, 'edit']);
 Route::put('/admin/users/{id}', [UserController::class, 'editPost']);
 Route::delete('/users/{id}', [UserController::class, 'deleteUser']);
+
+
+// Api quản lí đăng nhập đăng ký
+Route::post('/register', [AuthenticationController::class, 'apiRegister']);
+Route::post('/login', [AuthenticationController::class, 'apiLogin']);
+Route::post('/logout', [AuthenticationController::class, 'apiLogout'])->middleware('auth:sanctum');
+
+
