@@ -38,6 +38,7 @@ class AuthenticationController extends Controller
 
     public function postRegister(Request $req){
         $check = User::where('email', $req->email)->exists();
+        
         if($check){
             return redirect()->back()->with([
                 'message' => 'Tài khoản đã tồn tại'
@@ -48,6 +49,7 @@ class AuthenticationController extends Controller
                 'email' => $req->email,
                 'password' => Hash::make($req->password),
                 'phonenumber'=>$req->phonenumber,
+                
             ];
             $newUser = User::create($data);   
             return redirect()->route('login')->with([ // Để tạm thành login / cắt giao diện đổi thành người dùng
@@ -55,13 +57,6 @@ class AuthenticationController extends Controller
            ]);
         }
     }
-
-
-
-
-
-
-
 
 
     public function logout(){

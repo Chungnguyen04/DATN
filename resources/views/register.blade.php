@@ -62,6 +62,7 @@
                           <label for="password" class="form-label">Password</label>
                           <input type="password" class="form-control" name="password" placeholder="Nhập mật khẩu" required>
                         </div>
+                        <hr>
                         <button type="submit" class="btn btn-primary w-100">Đăng ký tài khoản</button>
                     </form>
 

@@ -19,7 +19,7 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
-
+Route::middleware('checkAdmin')->prefix('admin')->group(function () {
 
     Route::get('/', [DashboardController::class, 'index'])
         ->name('admin.dashboard');
@@ -114,7 +114,9 @@ use Illuminate\Support\Facades\Route;
         });
         
 
-// Quản lí user
+
+    });
+        // Quản lí user
 Route::get('users', [UserController::class, 'listUser'])->name('Admin.pages.users.list_user'); 
 Route::get('add', [UserController::class, 'addUser'])->name('Admin.pages.users.add_user'); 
 Route::post('users/post', [UserController::class, 'addPost'])->name('addPost'); 

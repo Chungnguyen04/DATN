@@ -67,6 +67,8 @@
                               <span class="text-danger">{{$message}}</span>
                           @enderror
                         </div>
+                        
+                        
                         <button type="submit" class="btn btn-primary w-100">Đăng nhập</button>
                     </form>
 
