@@ -3,14 +3,16 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\UpdateOrderRequest;
 use App\Models\Order;
+use App\Models\OrderStatusHistory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class OrderController extends Controller
 {
-   public function index(Request $request)
+    public function index(Request $request)
     {
         $orders = Order::with([
             'user',
@@ -40,8 +42,6 @@ class OrderController extends Controller
         return view('admin.pages.orders.index', compact('orders'));
     }
 
-
-    // Xóa đơn hàng
     public function delete($id)
     {
         try {
@@ -68,5 +68,4 @@ class OrderController extends Controller
             return back()->with('status_failed', 'Đã xảy ra lỗi khi xóa!');
         }
     }
-
 }
