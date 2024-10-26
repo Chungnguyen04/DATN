@@ -109,6 +109,8 @@ Route::middleware('checkAdmin')->prefix('admin')->group(function () {
         ->group(function () {
             Route::get('/', 'index')
                 ->name('index');
+            Route::post('/update-order-status/{id}', 'updateOrderStatus')
+                ->name('updateOrderStatus');
 
             Route::delete('/delete/{id}', 'delete')
                 ->name('delete');
