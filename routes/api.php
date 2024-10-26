@@ -114,7 +114,10 @@ Route::prefix('order')
 ->name('order.')
 ->controller(OrderController::class)
 ->group(function(){
+    // There is list order by user
 Route::get('/order-list/{id}','index')->name('index');
+    // There is order detail for order 
 Route::get('/order-detail/{id}','show')->name('show');
+    // There are a few products in order detail
 Route::get('/product_in_order_detail/{id}','product')->name('product');
 });
