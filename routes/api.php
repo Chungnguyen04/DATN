@@ -88,19 +88,8 @@ Route::prefix('carts')
     });
 
     
-Route::prefix('order')
-->name('order.')
-->controller(OrderController::class)
-->group(function () {
 
-    Route::get('/order-list/{id}', 'index')
-        ->name('index');
-    Route::get('/order-detail/{id}', 'show')
-        ->name('show');
-    Route::get('/product_in_order-detail/{id}', 'product')
-        ->name('product');
-        
-});
+
 
 
 // Api quản lí người dùng
@@ -119,3 +108,13 @@ Route::post('/login', [AuthenticationController::class, 'apiLogin']);
 Route::post('/logout', [AuthenticationController::class, 'apiLogout'])->middleware('auth:sanctum');
 
 
+// Api order
+//http://127.0.0.1:8000
+Route::prefix('order')
+->name('order.')
+->controller(OrderController::class)
+->group(function(){
+Route::get('/order-list/{id}','index')->name('index');
+Route::get('/order-detail/{id}','show')->name('show');
+Route::get('/product_in_order_detail/{id}','product')->name('product');
+});
