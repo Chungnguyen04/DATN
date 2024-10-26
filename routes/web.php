@@ -102,7 +102,8 @@ Route::middleware('checkAdmin')->prefix('admin')->group(function () {
                 ->name('delete');
         });
 
-    Route::controller(OrderController::class)
+   
+        Route::controller(OrderController::class)
         ->name('orders.')
         ->prefix('orders')
         ->group(function () {

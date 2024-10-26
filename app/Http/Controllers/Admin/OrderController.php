@@ -59,7 +59,7 @@ class OrderController extends Controller
 
             DB::commit();
 
-            return redirect()->route('orders.index')->with('status_success', 'Đơn hàng đã được xóa thành công!');
+            return redirect()->route('orders.index')->with('status_succeed', 'Đơn hàng đã được xóa thành công!');
         } catch (\Exception $e) {
             DB::rollBack();
 
