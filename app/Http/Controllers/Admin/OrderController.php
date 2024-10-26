@@ -10,9 +10,16 @@ use Illuminate\Support\Facades\Log;
 
 class OrderController extends Controller
 {
-    public function index(Request $request)
+   public function index(Request $request)
     {
-        $orders = Order::with('user', 'orderDetails', 'orderDetails.product', 'orderDetails.variant');
+        $orders = Order::with([
+            'user',
+            'orderDetails',
+            'orderStatusHistories',
+            'orderStatusHistories.user',
+            'orderDetails.variant',
+            'orderDetails.variant.weight',
+        ]);
 
         if (!empty($request->input('information'))) {
             $information = $request->input('information');
