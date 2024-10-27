@@ -271,8 +271,8 @@ Danh sách đơn hàng
                                                                                             </table>
                                                                                             <div class="d-flex justify-content-end mt-3">
                                                                                                 <div class="d-flex flex-column text-end">
-                                                                                                    <h5>Phí vận chuyển: {{ !empty($order->shipping_fee) ? number_format($order->shipping_fee, 0, '', ',') : '' }} VND</h5>
-                                                                                                    <h4>Tổng tiền: {{ !empty($total) ? number_format($total + $order->shipping_fee, 0, '', ',') : '' }} VND</h4>
+                                                                                                    <h5>Miễn phí vận chuyển</h5>
+                                                                                                    <h4>Tổng tiền: {{ !empty($total) ? number_format($total, 0, '', ',') : '' }} VND</h4>
                                                                                                 </div>
                                                                                             </div>
                                                                                         </div>
