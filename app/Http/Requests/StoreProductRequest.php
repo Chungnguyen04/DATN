@@ -27,11 +27,11 @@ class StoreProductRequest extends FormRequest
             'product.category_id' => 'required',
 
             'productVariant.weight_id.*' => 'required',
-            'productVariant.listed_price.*' => 'required|numeric',
-            'productVariant.import_price.*' => 'required|numeric',
-            'productVariant.selling_price.*' => 'required|numeric',
+            'productVariant.listed_price.*' => 'required|numeric|gt:0',
+            'productVariant.import_price.*' => 'required|numeric|gt:0',
+            'productVariant.selling_price.*' => 'required|numeric|gt:0',
             'productVariant.weight.*' => 'required|numeric',
-            'productVariant.quantity.*' => 'required|numeric',
+            'productVariant.quantity.*' => 'required|numeric|gt:0',
         ];
     }
 
@@ -49,18 +49,22 @@ class StoreProductRequest extends FormRequest
 
             'productVariant.listed_price.*.required' => 'Giá niêm yết phải là bắt buộc.',
             'productVariant.listed_price.*.numeric' => 'Giá niêm yết phải là một số.',
+            'productVariant.listed_price.*.gt' => 'Giá niêm yết phải là > 0.',
 
             'productVariant.import_price.*.required' => 'Giá nhập phải là bắt buộc.',
             'productVariant.import_price.*.numeric' => 'Giá nhập phải là một số.',
+            'productVariant.import_price.*.gt' => 'Giá nhập phải là > 0.',
 
             'productVariant.selling_price.*.required' => 'Giá bán phải là bắt buộc.',
             'productVariant.selling_price.*.numeric' => 'Giá bán phải là một số.',
+            'productVariant.selling_price.*.gt' => 'Giá bán phải là > 0.',
 
             'productVariant.weight.*.required' => 'Khối lượng phải là bắt buộc.',
             'productVariant.weight.*.numeric' => 'Khối lượng phải là một số.',
 
             'productVariant.quantity.*.required' => 'Số lượng phải là bắt buộc.',
             'productVariant.quantity.*.numeric' => 'Số lượng phải là một số.',
+            'productVariant.quantity.*.gt' => 'Số lượng phải là > 0.',
         ];
     }
 }
