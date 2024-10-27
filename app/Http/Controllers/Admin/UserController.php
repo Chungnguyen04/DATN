@@ -26,7 +26,8 @@ class UserController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email', // Kiểm tra email trùng lặp
             'password' => 'required|string|min:6',
-            'phonenumber' => 'required',
+            'phone' => 'required',
+            'address' => 'required',
             'role' => 'required',
         ], [
             'name.required' => 'Tên bắt buộc phải nhập',
@@ -34,7 +35,7 @@ class UserController extends Controller
             'email.email' => 'Email không đúng định dạng',
             'email.unique' => 'Email đã tồn tại', // Thông báo khi email đã tồn tại
             'password.required' => 'Mật khẩu bắt buộc phải nhập',
-            'phonenumber.required' => 'Số điện thoại bắt buộc',
+            'phone.required' => 'Số điện thoại bắt buộc',
             'role.required' => 'Vai trò bắt buộc phải nhập',
         ]);
 
@@ -42,7 +43,8 @@ class UserController extends Controller
             'name' => $req->name,
             'email' => $req->email,
             'password' => $req->password,
-            'phonenumber' => $req->phonenumber,
+            'phone' => $req->phone,
+            'address' => $req->address,
             'role' => $req->role,
         ];
         User::create($data);
@@ -71,7 +73,8 @@ class UserController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email', // Kiểm tra email trùng lặp
             'password' => 'required|string|min:6',
-            'phonenumber' => 'required',
+            'phone' => 'required',
+            'address' => 'required',
             'role' => 'required',
         ], [
             'name.required' => 'Tên bắt buộc phải nhập',
@@ -79,7 +82,7 @@ class UserController extends Controller
             'email.email' => 'Email không đúng định dạng',
             'email.unique' => 'Email đã tồn tại', // Thông báo khi email đã tồn tại
             'password.required' => 'Mật khẩu bắt buộc phải nhập',
-            'phonenumber.required' => 'Số điện thoại bắt buộc',
+            'phone.required' => 'Số điện thoại bắt buộc',
             'role.required' => 'Vai trò bắt buộc phải nhập',
         ]);
 
@@ -87,7 +90,8 @@ class UserController extends Controller
             'name' => $req->name,
             'email' => $req->email,
             'password' => $req->password,
-            'phonenumber' => $req->phonenumber,
+            'phone' => $req->phone,
+            'address' => $req->address,
             'role' => $req->role,
         ];
         User::where('id',$id)->update($data);

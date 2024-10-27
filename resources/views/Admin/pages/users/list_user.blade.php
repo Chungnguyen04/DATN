@@ -5,6 +5,8 @@
 @endsection
 
 @section('content')
+
+<br>
 <div class="p-4" style="height: 950px; width: 100%; ">
   
     <h4 class="text-primary mb-4">Danh sách user</h4>
@@ -22,6 +24,7 @@
                 <th scope="col">Email</th>
                 <th scope="col">Password</th>
                 <th scope="col">Phone</th>
+                <th scope="col">Address</th>
                 <th scope="col">Role</th>
                 <th scope="col">Action</th>
             </tr>
@@ -34,7 +37,8 @@
                     <td>{{ $item->name }}</td>
                     <td>{{ $item->email }}</td>
                     <td>{{ $item->password }}</td>
-                    <td>{{ $item->phonenumber }}</td>
+                    <td>{{ $item->phone }}</td>
+                    <td>{{ $item->address }}</td>
                     <td>{{ $item->role }}</td>
                     <td>
                         <a href="{{ route('Admin.pages.users.edit_user', $item->id)}}"><button class="btn btn-info">Sửa</button></a>

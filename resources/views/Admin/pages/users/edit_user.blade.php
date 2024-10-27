@@ -22,13 +22,6 @@
         @enderror
         </div>
         <div class="row">
-            <label for="" class="form-label">Phonenumber</label>
-            <input type="text" class="form-control" name="phonenumber" value="{{ $user->phonenumber }}">
-            @error('phonenumber')
-            <p class="text-danger">{{ $message }}</p>
-        @enderror
-        </div>
-        <div class="row">
             <label for="" class="form-label">Email</label>
             <input type="text" class="form-control" name="email" value="{{ $user->email }}">
             @error('email')
@@ -42,11 +35,27 @@
             <p class="text-danger">{{ $message }}</p>
         @enderror
         </div>
+        <div class="row">
+            <label for="" class="form-label">Phone</label>
+            <input type="text" class="form-control" name="phone" value="{{ $user->phone }}">
+            @error('phone')
+            <p class="text-danger">{{ $message }}</p>
+        @enderror
+        </div>
+        <div class="row">
+            <label for="" class="form-label">Address</label>
+            <input type="text" class="form-control" name="address" value="{{ $user->address }}">
+            @error('address')
+            <p class="text-danger">{{ $message }}</p>
+        @enderror
+        </div>
+       
+       
         <div class="mb-3">
             <label for="role" class="form-label">Vai trò người dùng</label>
             <select name="role" id="role" class="form-select">
-                <option value="1" {{ $user->role == 1 ? 'selected' : '' }}>Admin</option>
-                <option value="2" {{ $user->role == 2 ? 'selected' : '' }}>User</option>
+                <option value="1" {{ $user->role == 0 ? 'selected' : '' }}>Admin</option>
+                <option value="2" {{ $user->role == 1 ? 'selected' : '' }}>User</option>
             </select>
         </div>
         <hr>

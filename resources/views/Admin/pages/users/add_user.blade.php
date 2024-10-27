@@ -37,18 +37,26 @@
         </div>
         <div class="row">
             <label for="" class="form-label">Phone</label>
-            <input type="text" class="form-control" name="phonenumber">
-            @error('phonenumber')
+            <input type="text" class="form-control" name="phone">
+            @error('phone')
             <p class="text-danger">{{ $message }}</p>
         @enderror
         </div>
+        <div class="row">
+            <label for="" class="form-label">Address</label>
+            <input type="text" class="form-control" name="address">
+            @error('address')
+            <p class="text-danger">{{ $message }}</p>
+        @enderror
+        </div>
+       
         <div class="row">
             <div class="col-md-6">
                 <div class="form-group">
                     <label for="role" class="form-label">Role</label>
                     <select name="role" id="role" class="form-control">
-                        <option value="1">Admin</option>
-                        <option value="2">User</option>
+                        <option value="0">Admin</option>
+                        <option value="1">User</option>
                     </select>
                 </div>
             </div>
