@@ -11,7 +11,7 @@ class UserController extends Controller
 {
     public function listUser()
     {
-        $users = User::query()->get();
+        $users = User::query()->paginate(5);
         // Truyền biến $users sang view
         return view('Admin.pages.users.list_user', compact('users'));
     }

@@ -21,6 +21,7 @@
                             <img src="{{ asset('assets/theme/assets/images/logo-light.png') }}" alt="" height="17">
                         </span>
                     </a>
+                    
                 </div>
 
                 <button type="button" class="btn btn-sm px-3 fs-16 header-item vertical-menu-btn topnav-hamburger" id="topnav-hamburger-icon">
