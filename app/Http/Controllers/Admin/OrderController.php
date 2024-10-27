@@ -42,6 +42,54 @@ class OrderController extends Controller
         return view('admin.pages.orders.index', compact('orders'));
     }
 
+    public function updateOrderStatus(UpdateOrderRequest $request, $id)
+    {
+        try {
+            DB::beginTransaction();
+
+            $order = Order::find($id);
+
+            if(!$order) {
+                return redirect()->route('orders.index')->with('status_failed', 'Đơn hàng không tồn tại!');
+            }
+
+            // Lưu trạng thái cũ
+            $oldStatus = $order->status;
+
+            // Cập nhật trạng thái mới
+            if ($request->new_status == 'completed') {
+                $order->update([
+                    'payment_status' => 'paid',
+                    'status' => $request->new_status,
+                ]);
+            } else {
+                $order->update([
+                    'status' => $request->new_status,
+                ]);
+            }
+
+            // Lưu vào lịch sử thay đổi
+            OrderStatusHistory::create([
+                'order_id' => $id,
+                'old_status' => $oldStatus,
+                'new_status' => $request->new_status,
+                'changed_by' => auth()->user()->id ?? 0, // ID của người thay đổi
+                'note' => $request->note,     // Ghi chú nếu có
+            ]);
+
+            DB::commit();
+
+            return redirect()->route('orders.index')->with('status_succeed', 'Đơn hàng đã được cập nhật thành công!');
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            Log::error($e->getMessage());
+
+            return back()->with('status_failed', 'Đã xảy ra lỗi khi cập nhật!');
+        }
+    }
+
+    // Xóa đơn hàng
     public function delete($id)
     {
         try {
@@ -68,4 +116,5 @@ class OrderController extends Controller
             return back()->with('status_failed', 'Đã xảy ra lỗi khi xóa!');
         }
     }
+
 }
