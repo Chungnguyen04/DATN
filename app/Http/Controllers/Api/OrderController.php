@@ -74,7 +74,7 @@ class OrderController extends Controller
      }
 
 
-     // Chi tiết đơn hàng
+    // Chi tiết đơn hàng
     public function getOrderDetails($orderId)
     {
         try {
