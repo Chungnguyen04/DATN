@@ -197,75 +197,6 @@ class OrderController extends Controller
         }
     }
 
-    // Đánh dấu đơn hàng là hoàn thành
-    public function markAsCompleted($orderId)
-    {
-        DB::beginTransaction();
-        try {
-            // Lấy đơn hàng theo ID
-            $order = Order::find($orderId);
-
-            if (!$order) {
-                return response()->json([
-                    'status' => false,
-                    'message' => 'Không tìm thấy đơn hàng!'
-                ], Response::HTTP_NOT_FOUND);
-            }
-
-            // Kiểm tra trạng thái đơn hàng
-            if ($order->status !== 'delivering') {
-                return response()->json([
-                    'status' => false,
-                    'message' => 'Chỉ có thể hoàn thành đơn hàng khi đang ở trạng thái "Đang giao hàng".'
-                ], Response::HTTP_BAD_REQUEST);
-            }
-
-            // Cập nhật trạng thái đơn hàng thành "Hoàn thành" và "Đã thanh toán"
-            $order->update([
-                'status' => 'completed',
-                'payment_status' => 'paid'
-            ]);
-
-            // Lưu lại lịch sử trạng thái đơn hàng
-            OrderStatusHistory::create([
-                'order_id' => $order->id,
-                'old_status' => 'delivering',
-                'new_status' => 'completed',
-                'changed_by' => auth()->user()->id ?? 0, // Cập nhật nếu có người dùng đang đăng nhập
-            ]);
-
-            DB::commit();
-
-            return response()->json([
-                'status' => true,
-                'message' => 'Đơn hàng đã được hoàn thành thành công',
-                'order' => $order
-            ], Response::HTTP_OK);
-        } catch (QueryException $e) {
-            DB::rollBack();
-            return response()->json([
-                'status' => false,
-                'message' => 'Đã xảy ra lỗi với cơ sở dữ liệu.',
-                'errors' => [$e->getMessage()],
-            ], Response::HTTP_INTERNAL_SERVER_ERROR);
-        } catch (ModelNotFoundException $e) {
-            DB::rollBack();
-            return response()->json([
-                'status' => false,
-                'message' => 'Lỗi models không tạo.',
-                'errors' => [$e->getMessage()],
-            ], Response::HTTP_INTERNAL_SERVER_ERROR);
-        } catch (\Exception $e) {
-            DB::rollBack();
-            return response()->json([
-                'status' => false,
-                'message' => 'Đã xảy ra lỗi khi truy xuất dữ liệu',
-                'errors' => [$e->getMessage()],
-                'code' => $e->getCode()
-            ], Response::HTTP_INTERNAL_SERVER_ERROR);
-        }
-    }
-
     public function generateRandomOrderCode($length = 8)
     {
         $characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
@@ -294,7 +225,6 @@ class OrderController extends Controller
                     'name' => $request->name,
                     'address' => $request->address,
                     'phone' => $request->phone,
-                    'shipping_fee' => $request->shipping_fee ?? 0,
                     'total_price' => $request->total_price,
                     'status' => 'pending',
                     'payment_method' => 'vnpay',
@@ -323,7 +253,7 @@ class OrderController extends Controller
                         DB::rollBack();
                         return response()->json([
                             'status' => false,
-                            'message' => 'Đã vượt quá số lượng sản phẩm.',
+                            'message' => 'Sản phẩm đã hết hàng.',
                         ]);
                     }
                 }
@@ -343,7 +273,6 @@ class OrderController extends Controller
                     'name' => $request->name,
                     'address' => $request->address,
                     'phone' => $request->phone,
-                    'shipping_fee' => $request->shipping_fee ?? 0,
                     'total_price' => $request->total_price,
                     'status' => $request->status ?? 'pending',
                     'payment_method' => $request->payment_method ?? 'cod',
@@ -369,7 +298,7 @@ class OrderController extends Controller
                         DB::rollBack();
                         return response()->json([
                             'status' => false,
-                            'message' => 'Đặt hàng thất bại do số lượng tồn kho đã hết.',
+                            'message' => 'Sản phẩm đã hết hàng.',
                         ]);
                     }
                 }
@@ -385,7 +314,7 @@ class OrderController extends Controller
                 // Xóa sản phẩm trong giỏ hàng sau khi đặt hàng thành công
                 foreach ($request->products as $product) {
                     Cart::where('user_id', $request->user_id)
-                        ->where('product_id', $product['product_id'])
+                        ->where('variant_id', $product['variant_id'])
                         ->delete();
                 }
 
@@ -407,7 +336,6 @@ class OrderController extends Controller
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
-
 
 
     // Thanh toán qua VNPay
@@ -490,7 +418,7 @@ class OrderController extends Controller
             DB::beginTransaction();
             try {
                 // Tìm đơn hàng dựa trên mã giao dịch
-                $order = Order::where('code', $vnp_TxnRef)->first();
+                $order = Order::with('orderDetails')->where('code', $vnp_TxnRef)->first();
 
                 if ($order) {
                     $order->update([
@@ -501,14 +429,14 @@ class OrderController extends Controller
                     OrderStatusHistory::create([
                         'order_id' => $order->id,
                         'old_status' => 'pending',
-                        'new_status' => 'confirmed',
+                        'new_status' => 'pending',
                         'changed_by' => auth()->user()->id ?? 0,
                     ]);
 
                     // Xóa sản phẩm trong giỏ hàng của người dùng
                     foreach ($order->orderDetails as $orderDetail) {
                         Cart::where('user_id', $order->user_id)
-                            ->where('product_id', $orderDetail->variant_id) // Giả sử variant_id là product_id trong giỏ hàng
+                            ->where('variant_id', $orderDetail->variant_id)
                             ->delete();
                     }
 
