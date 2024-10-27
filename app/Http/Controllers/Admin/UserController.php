@@ -11,7 +11,9 @@ class UserController extends Controller
 {
     public function listUser()
     {
-        $users = User::query()->paginate(5);
+        // Sử dụng paginate để lấy danh sách người dùng với 5 bản ghi mỗi trang
+        $users = User::paginate(5);
+        
         // Truyền biến $users sang view
         return view('Admin.pages.users.list_user', compact('users'));
     }
@@ -50,11 +52,7 @@ class UserController extends Controller
         User::create($data);
 
         // Lấy danh sách người dùng sau khi thêm mới
-        $users = User::all();
-        return view('Admin.pages.users.list_user')->with([
-            'users' => $users, // Truyền danh sách người dùng vào view
-            'message' => 'Thêm mới thành công'
-        ]);
+        return redirect()->route('Admin.pages.users.list_user')->with('message', 'Thêm mới thành công');
     }
 
     public function edit($id)
