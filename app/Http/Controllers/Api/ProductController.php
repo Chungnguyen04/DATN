@@ -13,9 +13,7 @@ use Illuminate\Http\Response;
 
 class ProductController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    // Danh sách sản phẩm
     public function index()
     {
         try {
@@ -48,17 +46,7 @@ class ProductController extends Controller
         }
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
+    // Chi tiết sản phẩm
     public function show(string $id)
     {
         try {
@@ -112,6 +100,7 @@ class ProductController extends Controller
         }
     }
 
+    // Sản phẩm theo danh mục
     public function getProductsByCategory(Request $request, $id)
     {
         try {
@@ -151,6 +140,7 @@ class ProductController extends Controller
         }
     }
 
+    // Top 5 sản phẩm mới nhất
     public function top5ProductNew()
     {
         try {
@@ -183,6 +173,7 @@ class ProductController extends Controller
         }
     }
 
+    // TÌm kiếm sản phẩm
     public function filterProducts(Request $request)
     {
         try {
@@ -224,22 +215,5 @@ class ProductController extends Controller
                 'code' => $e->getCode()
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
-    }
-
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
     }
 }

@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();  // Tự động tạo cột 'id' kiểu bigint UNSIGNED AUTO_INCREMENT
             $table->bigInteger('user_id'); // Liên kết với bảng users
             $table->bigInteger('product_id'); // Liên kết với bảng products
-            $table->bigInteger('variant_id'); // Liên kết với bảng variants, có thể NULL
+            $table->bigInteger('variant_id')->nullable(); // Liên kết với bảng variants, có thể NULL
             $table->integer('quantity'); // Số lượng sản phẩm
             $table->decimal('price', 30, 0); // Giá của sản phẩm hoặc biến thể
             $table->timestamps();

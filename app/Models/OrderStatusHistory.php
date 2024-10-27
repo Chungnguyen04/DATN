@@ -5,11 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class OrderDetail extends Model
+class OrderStatusHistory extends Model
 {
     use HasFactory;
 
-    protected $table = 'order_details';
+    protected $table = 'order_status_histories';
 
     protected $guarded = [];
 
@@ -18,8 +18,8 @@ class OrderDetail extends Model
         return $this->belongsTo(Order::class, 'order_id', 'id');
     }
 
-    public function variant()
+    public function user()
     {
-        return $this->belongsTo(Variant::class, 'variant_id', 'id');
+        return $this->belongsTo(User::class, 'changed_by', 'id');
     }
 }

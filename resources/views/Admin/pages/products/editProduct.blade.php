@@ -111,12 +111,12 @@
                                                             </select>
                                                             @if ($errors->has('productVariant.weight_id.' . $key))
                                                                 <span
-                                                                    class="text-danger">{{ $errors->first('productVariant.weight.' . $key) }}</span>
+                                                                    class="text-danger">{{ $errors->first('productVariant.weight_id.' . $key) }}</span>
                                                             @endif
                                                         </div>
 
                                                         <div class="mb-3 rightInputColor"
-                                                             style="margin-right: 18px; width: 162px;">
+                                                             style="margin-right: 18px; width: 200px;">
                                                             <input type="number" name="productVariant[import_price][]"
                                                                    class="form-control" placeholder="Nhập giá nhập..."
                                                                    value="{{ old('productVariant.import_price.' . $key, $variant->import_price) }}">
@@ -127,7 +127,7 @@
                                                         </div>
 
                                                         <div class="mb-3 rightInputColor"
-                                                             style="margin-right: 18px; width: 162px">
+                                                             style="margin-right: 18px; width: 200px">
                                                             <input type="number" name="productVariant[selling_price][]"
                                                                    class="form-control" placeholder="Nhập giá bán..."
                                                                    value="{{ old('productVariant.selling_price.' . $key, $variant->selling_price) }}">
@@ -138,7 +138,7 @@
                                                         </div>
 
                                                         <div class="mb-3 rightInputColor"
-                                                             style="margin-right: 18px; width: 162px;">
+                                                             style="margin-right: 18px; width: 200px;">
                                                             <input type="number" name="productVariant[listed_price][]"
                                                                    class="form-control"
                                                                    placeholder="Nhập giá niêm yết..."
@@ -180,14 +180,14 @@
                                                         </select>
                                                         @if ($errors->has('productVariant.weight_id.0'))
                                                             <span
-                                                                class="text-danger">{{ $errors->first('productVariant.weight.0') }}</span>
+                                                                class="text-danger">{{ $errors->first('productVariant.weight_id.0') }}</span>
                                                         @endif
                                                     </div>
 
                                                     <div class="mb-3 rightInputColor"
-                                                         style="margin-right: 18px; width: 162px;">
+                                                         style="margin-right: 18px; width: 200px;">
                                                         <input type="number" name="productVariant[import_price][]"
-                                                               class="form-control" placeholder="Nhập giá nhập...">
+                                                               class="form-control" value="{{ old('productVariant.import_price.0') }}" placeholder="Nhập giá nhập...">
                                                         @if ($errors->has('productVariant.import_price.0'))
                                                             <span
                                                                 class="text-danger">{{ $errors->first('productVariant.import_price.0') }}</span>
@@ -195,9 +195,9 @@
                                                     </div>
 
                                                     <div class="mb-3 rightInputColor"
-                                                         style="margin-right: 18px; width: 162px">
+                                                         style="margin-right: 18px; width: 200px">
                                                         <input type="number" name="productVariant[selling_price][]"
-                                                               class="form-control" placeholder="Nhập giá bán...">
+                                                               class="form-control" value="{{ old('productVariant.selling_price.0') }}" placeholder="Nhập giá bán...">
                                                         @if ($errors->has('productVariant.selling_price.0'))
                                                             <span
                                                                 class="text-danger">{{ $errors->first('productVariant.selling_price.0') }}</span>
@@ -205,9 +205,9 @@
                                                     </div>
 
                                                     <div class="mb-3 rightInputColor"
-                                                         style="margin-right: 18px; width: 162px;">
+                                                         style="margin-right: 18px; width: 200px;">
                                                         <input type="number" name="productVariant[listed_price][]"
-                                                               class="form-control" placeholder="Nhập giá niêm yết...">
+                                                               class="form-control" value="{{ old('productVariant.listed_price.0') }}" placeholder="Nhập giá niêm yết...">
                                                         @if ($errors->has('productVariant.listed_price.0'))
                                                             <span
                                                                 class="text-danger">{{ $errors->first('productVariant.listed_price.0') }}</span>
@@ -217,7 +217,7 @@
                                                     <div class="mb-3 rightInputColor"
                                                          style="margin-right: 18px;width: 200px !important;">
                                                         <input type="number" name="productVariant[quantity][]"
-                                                               class="form-control" placeholder="Nhập số lượng...">
+                                                               class="form-control" value="{{ old('productVariant.quantity.0') }}" placeholder="Nhập số lượng...">
                                                         @if ($errors->has('productVariant.quantity.0'))
                                                             <span
                                                                 class="text-danger">{{ $errors->first('productVariant.quantity.0') }}</span>
@@ -263,7 +263,7 @@
                             </div>
 
                             <div class="mb-3 rightInputColor"
-                                 style="margin-right: 18px; width: 162px">
+                                 style="margin-right: 18px; width: 200px">
                                 <input type="number" name="productVariant[listed_price][]"
                                        class="form-control" placeholder="Nhập giá niêm yết...">
                                 @if ($errors->has('productVariant.listed_price.0'))
@@ -273,7 +273,7 @@
                             </div>
 
                             <div class="mb-3 rightInputColor"
-                                 style="margin-right: 18px; width: 162px;">
+                                 style="margin-right: 18px; width: 200px;">
                                 <input type="number" name="productVariant[import_price][]"
                                        class="form-control" placeholder="Nhập giá nhập...">
                                 @if ($errors->has('productVariant.import_price.0'))
@@ -283,7 +283,7 @@
                             </div>
 
                             <div class="mb-3 rightInputColor"
-                                 style="margin-right: 18px; width: 162px">
+                                 style="margin-right: 18px; width: 200px">
                                 <input type="number" name="productVariant[selling_price][]"
                                        class="form-control" placeholder="Nhập giá bán...">
                                 @if ($errors->has('productVariant.selling_price.0'))

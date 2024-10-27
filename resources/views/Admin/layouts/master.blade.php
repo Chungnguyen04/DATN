@@ -87,7 +87,7 @@
             @yield('content')
             <!-- End Page-content -->
 
-            {{-- @include('Admin.partials.footer') --}}
+            @include('Admin.partials.footer')
         </div>
         <!-- end main content-->
 
@@ -965,17 +965,17 @@
         @if (session()->has('status_succeed'))
             Toastify({
                 text: "{{ session()->pull('status_succeed') }}",
-                duration: 1000, // Thời gian hiển thị (miligiây)
+                duration: 2000, // Thời gian hiển thị (miligiây)
                 gravity: "top", // "top" hoặc "bottom"
                 position: 'right', // "left", "center" hoặc "right"
-                backgroundColor: "linear-gradient(to right, #00b09b, #96c93d)",
+                backgroundColor: "rgb(22 194 67)",
             }).showToast();
         @endif
 
         @if (session()->has('status_failed'))
             Toastify({
                 text: "{{ session()->pull('status_failed') }}",
-                duration: 1000, // Thời gian hiển thị (miligiây)
+                duration: 2000, // Thời gian hiển thị (miligiây)
                 gravity: "top", // "top" hoặc "bottom"
                 position: 'right', // "left", "center" hoặc "right"
                 backgroundColor: "red",

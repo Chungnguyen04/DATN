@@ -16,7 +16,6 @@ return new class extends Migration
         Schema::create('order_details', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('order_id');                 // ID đơn hàng (liên kết tới bảng `orders`)
-            // $table->bigInteger('product_id');               // ID sản phẩm (liên kết tới bảng `products`)
             $table->bigInteger('variant_id')->nullable();   // ID biến thể (liên kết tới bảng `variants`)
             $table->decimal('price', 30, 0);  // Giá bán sản phẩm
             $table->integer('quantity');                    // Số lượng sản phẩm

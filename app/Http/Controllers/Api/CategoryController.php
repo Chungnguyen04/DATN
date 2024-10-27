@@ -4,11 +4,14 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Category;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
 class CategoryController extends Controller
 {
+    // Danh sách danh mục
     public function getAllCategory()
     {
         try {
@@ -27,6 +30,18 @@ class CategoryController extends Controller
                 'data' => $categorys
             ], Response::HTTP_OK);
 
+        } catch (QueryException $e) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Đã xảy ra lỗi với cơ sở dữ liệu.',
+                'errors' => [$e->getMessage()],
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        } catch (ModelNotFoundException $e) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Lỗi models không tạo.',
+                'errors' => [$e->getMessage()],
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
         } catch (\Exception $e) {
             // Lỗi hệ thống
             return response()->json([

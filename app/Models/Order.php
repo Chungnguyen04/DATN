@@ -22,4 +22,9 @@ class Order extends Model
     {
         return $this->hasMany(OrderDetail::class, 'order_id', 'id');
     }
+
+    public function orderStatusHistories()
+    {
+        return $this->hasMany(OrderStatusHistory::class, 'order_id', 'id');
+    }
 }
