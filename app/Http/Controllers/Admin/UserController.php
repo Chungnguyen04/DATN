@@ -69,7 +69,7 @@ class UserController extends Controller
     public function editPost($id, Request $req ){
         $validated = $req->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users,email', // Kiểm tra email trùng lặp
+            'email' => 'required', // Kiểm tra email trùng lặp
             'password' => 'required|string|min:6',
             'phone' => 'required',
             'address' => 'required',

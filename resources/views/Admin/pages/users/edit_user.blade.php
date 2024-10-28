@@ -54,8 +54,8 @@
         <div class="mb-3">
             <label for="role" class="form-label">Vai trò người dùng</label>
             <select name="role" id="role" class="form-select">
-                <option value="1" {{ $user->role == 0 ? 'selected' : '' }}>Admin</option>
-                <option value="2" {{ $user->role == 1 ? 'selected' : '' }}>User</option>
+                <option value="0" {{ $user->role == 0 ? 'selected' : '' }}>Admin</option>
+                <option value="1" {{ $user->role == 1 ? 'selected' : '' }}>User</option>
             </select>
         </div>
         <hr>
