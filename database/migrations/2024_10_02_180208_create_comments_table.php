@@ -15,12 +15,14 @@ return new class extends Migration
     {
         Schema::create('comments', function (Blueprint $table) {
             $table->id();
-            $table->longText('content');
             $table->integer('parent_id');
+            $table->integer('product_id');
+            $table->integer('user_id');
+            $table->longText('content');
+            $table->integer('rating');
             $table->timestamps();
         });
     }
-
     /**
      * Reverse the migrations.
      */
