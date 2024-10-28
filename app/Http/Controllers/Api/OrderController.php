@@ -9,6 +9,7 @@ use App\Models\Order;
 use App\Models\OrderDetail;
 use App\Models\OrderStatusHistory;
 use App\Models\Variant;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
@@ -122,62 +123,126 @@ class OrderController extends Controller
     //     }
     // }
 
-    // Chi tiết đơn hàng hiển thị sản phẩm của id order đó
-    public function getOrderDetails($orderId)
+    public function getRevenueAndProfitData(Request $request)
     {
-        try {
-            $order = Order::with([
-                'user',
-                'orderDetails',
-                'orderDetails.variant',
-                'orderDetails.variant.product',
-                'orderDetails.variant.weight',
+        // Lấy giá trị bộ lọc từ yêu cầu hoặc mặc định là tháng hiện tại
+        $month = $request->input('month', Carbon::now()->month);
+        $year = Carbon::now()->year;
+
+        // Xác định ngày bắt đầu và kết thúc của tháng đã chọn
+        $startDate = Carbon::create($year, $month, 1)->startOfMonth();
+        $endDate = $startDate->copy()->endOfMonth();
+
+        // Lấy dữ liệu đơn hàng trong khoảng thời gian đã xác định
+        $data = Order::where('status', 'completed')
+            ->whereBetween('created_at', [$startDate, $endDate])
+            ->with([
+                'orderDetails' => function ($query) {
+                    $query->select('order_id', 'price', 'quantity', 'variant_id');
+                }
             ])
-                ->where('id', $orderId)
-                ->first();
+            ->get();
 
-            if (!$order) {
-                return response()->json([
-                    'status' => false,
-                    'message' => 'Không tìm thấy đơn hàng!'
-                ], Response::HTTP_NOT_FOUND);
-            }
+        // Khởi tạo kết quả
+        $result = [
+            'labels' => [],
+            'revenue' => [],
+            'profit' => []
+        ];
 
-            // Trích xuất chi tiết sản phẩm
-            $products = $order->orderDetails->map(function ($detail) {
-                return $detail->variant->product;
+        // Tạo danh sách các ngày trong tháng
+        $dateRange = [];
+        $currentDate = $startDate->copy();
+
+        while ($currentDate->lte($endDate)) {
+            $dateRange[] = $currentDate->format('d-m-Y');
+            $currentDate->addDay();
+        }
+
+        foreach ($dateRange as $date) {
+            $orders = $data->filter(function ($order) use ($date) {
+                return Carbon::parse($order->created_at)->format('d-m-Y') === $date;
             });
 
-            return response()->json([
-                'status' => true,
-                'message' => 'Danh sách chi tiết đơn hàng',
-                'data' => [
-                    'order' => $order,
-                    'products' => $products
-                ]
-            ], Response::HTTP_OK);
-        } catch (QueryException $e) {
-            return response()->json([
-                'status' => false,
-                'message' => 'Đã xảy ra lỗi với cơ sở dữ liệu.',
-                'errors' => [$e->getMessage()],
-            ], Response::HTTP_INTERNAL_SERVER_ERROR);
-        } catch (ModelNotFoundException $e) {
-            return response()->json([
-                'status' => false,
-                'message' => 'Lỗi models không tạo.',
-                'errors' => [$e->getMessage()],
-            ], Response::HTTP_INTERNAL_SERVER_ERROR);
-        } catch (\Exception $e) {
-            // Lỗi hệ thống
-            return response()->json([
-                'status' => false,
-                'message' => 'Đã xảy ra lỗi khi truy xuất dữ liệu',
-                'errors' => [$e->getMessage()],
-                'code' => $e->getCode()
-            ]);
+            $revenue = $orders->sum(function ($order) {
+                return $order->orderDetails->sum(function ($detail) {
+                    return $detail->price * $detail->quantity;
+                });
+            });
+
+            $profit = $orders->sum(function ($order) {
+                return $order->orderDetails->sum(function ($detail) {
+                    $variant = Variant::find($detail->variant_id);
+                    $importPrice = $variant ? $variant->import_price : 0;
+                    return ($detail->price - $importPrice) * $detail->quantity;
+                });
+            });
+
+            $result['labels'][] = $date;
+            $result['revenue'][] = $revenue;
+            $result['profit'][] = $profit;
         }
+
+        return response()->json($result);
     }
+
+
+   // Chi tiết đơn hàng hiển thị sản phẩm của id order đó
+   public function getOrderDetails($orderId)
+   {
+       try {
+           $order = Order::with([
+               'user',
+               'orderDetails',
+               'orderDetails.variant',
+               'orderDetails.variant.product',
+               'orderDetails.variant.weight',
+           ])
+               ->where('id', $orderId)
+               ->first();
+
+           if (!$order) {
+               return response()->json([
+                   'status' => false,
+                   'message' => 'Không tìm thấy đơn hàng!'
+               ], Response::HTTP_NOT_FOUND);
+           }
+
+           // Trích xuất chi tiết sản phẩm
+           $products = $order->orderDetails->map(function ($detail) {
+               return $detail->variant->product;
+           });
+
+           return response()->json([
+               'status' => true,
+               'message' => 'Danh sách chi tiết đơn hàng',
+               'data' => [
+                   'order' => $order,
+                   'products' => $products
+               ]
+           ], Response::HTTP_OK);
+       } catch (QueryException $e) {
+           return response()->json([
+               'status' => false,
+               'message' => 'Đã xảy ra lỗi với cơ sở dữ liệu.',
+               'errors' => [$e->getMessage()],
+           ], Response::HTTP_INTERNAL_SERVER_ERROR);
+       } catch (ModelNotFoundException $e) {
+           return response()->json([
+               'status' => false,
+               'message' => 'Lỗi models không tạo.',
+               'errors' => [$e->getMessage()],
+           ], Response::HTTP_INTERNAL_SERVER_ERROR);
+       } catch (\Exception $e) {
+           // Lỗi hệ thống
+           return response()->json([
+               'status' => false,
+               'message' => 'Đã xảy ra lỗi khi truy xuất dữ liệu',
+               'errors' => [$e->getMessage()],
+               'code' => $e->getCode()
+           ]);
+       }
+   }
     // Hủy đơn hàng
     public function cancelOrder($orderId)
     {
