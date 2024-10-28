@@ -74,6 +74,55 @@ class OrderController extends Controller
     }
 
     // Chi tiết đơn hàng
+    // public function getOrderDetails($orderId)
+    // {
+    //     try {
+    //         $order = Order::with([
+    //             'user',
+    //             'orderDetails',
+    //             'orderDetails.variant',
+    //             'orderDetails.variant.product',
+    //             'orderDetails.variant.weight',
+    //         ])
+    //             ->where('id', $orderId)
+    //             ->first();
+
+    //         if (!$order) {
+    //             return response()->json([
+    //                 'status' => false,
+    //                 'message' => 'Không tìm thấy đơn hàng!'
+    //             ], Response::HTTP_NOT_FOUND);
+    //         }
+
+    //         return response()->json([
+    //             'status' => true,
+    //             'message' => 'Danh sách chi tiết đơn hàng',
+    //             'data' => $order
+    //         ], Response::HTTP_OK);
+    //     } catch (QueryException $e) {
+    //         return response()->json([
+    //             'status' => false,
+    //             'message' => 'Đã xảy ra lỗi với cơ sở dữ liệu.',
+    //             'errors' => [$e->getMessage()],
+    //         ], Response::HTTP_INTERNAL_SERVER_ERROR);
+    //     } catch (ModelNotFoundException $e) {
+    //         return response()->json([
+    //             'status' => false,
+    //             'message' => 'Lỗi models không tạo.',
+    //             'errors' => [$e->getMessage()],
+    //         ], Response::HTTP_INTERNAL_SERVER_ERROR);
+    //     } catch (\Exception $e) {
+    //         // Lỗi hệ thống
+    //         return response()->json([
+    //             'status' => false,
+    //             'message' => 'Đã xảy ra lỗi khi truy xuất dữ liệu',
+    //             'errors' => [$e->getMessage()],
+    //             'code' => $e->getCode()
+    //         ]);
+    //     }
+    // }
+
+    // Chi tiết đơn hàng hiển thị sản phẩm của id order đó
     public function getOrderDetails($orderId)
     {
         try {
@@ -94,10 +143,18 @@ class OrderController extends Controller
                 ], Response::HTTP_NOT_FOUND);
             }
 
+            // Trích xuất chi tiết sản phẩm
+            $products = $order->orderDetails->map(function ($detail) {
+                return $detail->variant->product;
+            });
+
             return response()->json([
                 'status' => true,
                 'message' => 'Danh sách chi tiết đơn hàng',
-                'data' => $order
+                'data' => [
+                    'order' => $order,
+                    'products' => $products
+                ]
             ], Response::HTTP_OK);
         } catch (QueryException $e) {
             return response()->json([
@@ -121,7 +178,6 @@ class OrderController extends Controller
             ]);
         }
     }
-
     // Hủy đơn hàng
     public function cancelOrder($orderId)
     {
