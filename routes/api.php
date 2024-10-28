@@ -105,6 +105,11 @@ Route::prefix('orders')
     ->controller(OrderController::class)
     ->group(function () {
 
+        // api thống kê đơn hàng
+        Route::get('/getRevenueAndProfitData', 'getRevenueAndProfitData')
+            ->name('getRevenueAndProfitData');
+        // end api thống kê đơn hàng
+
         // api danh sách đơn hàng theo người dùng (CÓ lọc)
         Route::get('/order-list/{userId}', 'getAllOrderByUser')
             ->name('getAllOrderByUser');
@@ -119,7 +124,7 @@ Route::prefix('orders')
         Route::get('/order-markAsCompleted/{orderId}', 'markAsCompleted')
             ->name('markAsCompleted');
         // end api
-        
+
         // api hủy đơn hàng
         Route::get('/cancel-order/{orderId}', 'cancelOrder')
             ->name('cancelOrder');

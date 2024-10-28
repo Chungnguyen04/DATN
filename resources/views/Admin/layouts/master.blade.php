@@ -936,6 +936,10 @@
 
     <script src="{{ asset('assets/theme/assets/js/plugins.js') }}"></script>
 
+    <script src="{{ asset('assets/theme/assets/libs/chart.js/chart.umd.js') }}"></script>
+
+    {{-- <script src="{{ asset('assets/theme/assets/js/pages/chartjs.init.js') }}"></script> --}}
+
     <!-- apexcharts -->
     <script src="{{ asset('assets/theme/assets/libs/apexcharts/apexcharts.min.js') }}"></script>
 
