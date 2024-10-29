@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\AuthenticationController;
 use App\Http\Controllers\Api\CartController;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\CategoryController;
+use App\Http\Controllers\Api\Comment;
 use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\RoleController;
 use Illuminate\Support\Facades\Route;
@@ -139,4 +140,18 @@ Route::prefix('orders')
         Route::get('/vnpayReturn', 'vnpayReturn')
             ->name('vnpayReturn');
         // end api
+    });
+
+
+
+    Route::prefix('comments')
+    ->name('comments.')
+    ->controller(Comment::class)
+    ->group(function () {
+        // list comment
+        Route::get('getCommentForIdProduct/{productId}','getComment')
+        ->name('getComment');
+        // add Comment
+        Route::post('addComment', 'addComment')
+        ->name('addComment');
     });
