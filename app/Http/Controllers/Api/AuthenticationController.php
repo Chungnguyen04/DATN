@@ -105,12 +105,7 @@ class AuthenticationController extends Controller
 
         return response()->json([
             'message' => 'Đăng nhập thành công',
-            'user' => [
-                'id' => $user->id,
-                'name' => $user->name,
-                'email' => $user->email,
-                'role' => $user->role,
-            ],
+            'user' => $user->toArray(),
             'token' => $token,
             'status_code' => 200
         ], 200);
