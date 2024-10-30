@@ -11,13 +11,7 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        // Đếm số lượng đơn hàng theo trạng thái
-        $statuses = ['pending', 'confirmed', 'shipping', 'delivering', 'failed', 'cancelled', 'completed'];
-        $data = [];
-
-        foreach ($statuses as $status) {
-            $data["order_{$status}"] = Order::where('status', $status)->count();
-        }
+        
 
         // Tổng doanh thu của tháng hiện tại
         $currentMonth = now()->month;
@@ -36,6 +30,6 @@ class DashboardController extends Controller
 
         $totalOrders = Order::where('status', 'completed')->count();
 
-        return view('Admin.pages.dashboard', compact('data', 'totalOrders', 'totalRevenueThisMonth'));
+        return view('Admin.pages.dashboard', compact( 'totalOrders', 'totalRevenueThisMonth'));
     }
 }
