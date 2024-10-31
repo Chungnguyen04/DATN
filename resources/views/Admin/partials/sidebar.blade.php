@@ -73,6 +73,11 @@
                         <i class="ri-coupon-3-fill"></i> <span data-key="t-dashboards">Voucher</span>
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link menu-link" href="{{ route('comments.index') }}">
+                        <i class="ri-star-line"></i> <span data-key="t-dashboards">Đánh giá</span>
+                    </a>
+                </li>
             </ul>
         </div>
         <!-- Sidebar -->
