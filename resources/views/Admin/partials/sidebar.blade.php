@@ -67,6 +67,12 @@
                         </ul>
                     </div>
                 </li>
+
+                <li class="nav-item">
+                    <a class="nav-link menu-link" href="{{ route('vouchers.index') }}">
+                        <i class="ri-coupon-3-fill"></i> <span data-key="t-dashboards">Voucher</span>
+                    </a>
+                </li>
             </ul>
         </div>
         <!-- Sidebar -->
