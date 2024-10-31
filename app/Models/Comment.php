@@ -12,7 +12,10 @@ class Comment extends Model
     public function User (){
         return $this->belongsTo(User::class);
     }
-    public  function Product(){
+    public  function Order(){
+        return $this->belongsTo(Order::class);
+    }
+    public function Product(){
         return $this->belongsTo(Product::class);
     }
 }

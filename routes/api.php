@@ -156,9 +156,15 @@ Route::prefix('orders')
     ->name('comments.')
     ->controller(Comment::class)
     ->group(function () {
-        // list comment
+        // list comment theo sản phẩm
         Route::get('getCommentForIdProduct/{productId}','getComment')
         ->name('getComment');
+        // Kiểm tra có comment trong đơn hàng chưa
+        Route::get('addCommentForOrder/user/{userId}/order/{orderId}','checkCommentForOrder')
+        ->name('checkCommentForOrder');
+        // Kiểm tra xem có comment trong sản phẩm chưa
+        Route::get('addCommentForProduct/user/{userId}/product/{productId}','checkCommentForProduct')
+        ->name('checkCommentForProduct');
         // add Comment
         Route::post('addComment', 'addComment')
         ->name('addComment');
