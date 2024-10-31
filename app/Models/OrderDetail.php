@@ -22,4 +22,9 @@ class OrderDetail extends Model
     {
         return $this->belongsTo(Variant::class, 'variant_id', 'id');
     }
+
+    public function product()
+    {
+        return $this->belongsTo(Product::class, 'order_id','id'); // 'order_id' là khóa ngoại trong bảng order_details
+    }
 }
