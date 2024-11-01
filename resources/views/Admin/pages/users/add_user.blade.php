@@ -11,7 +11,7 @@
             <h4 class="fs-18 fw-semibold m-0">Thêm mới User</h4>
        </div>
     </div>
-    <form action="{{ route('addPost')}}" method="POST"
+    <form action="{{ route('users.store')}}" method="POST"
     enctype="multipart/form-data" >
         @csrf
         <div class="row">
@@ -53,10 +53,10 @@
         <div class="row">
             <div class="col-md-6">
                 <div class="form-group">
-                    <label for="role" class="form-label">Role</label>
-                    <select name="role" id="role" class="form-control">
-                        <option value="0">Admin</option>
-                        <option value="1">User</option>
+                    <label for="type" class="form-label">Type</label>
+                    <select name="type" id="type" class="form-control">
+                        <option value="Admin">Admin</option>
+                        <option value="Member">Member</option>
                     </select>
                 </div>
             </div>

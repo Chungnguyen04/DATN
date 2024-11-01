@@ -46,14 +46,14 @@
                                 <input type="hidden" name="product_id" value="{{ $comment->product_id }}">
                                 <input type="hidden" name="content" value="{{ $comment->content }}">
                                 <div class="col-md-12">
-                                    <label for="" class="form-label">Đánh giá</label>
+                                    <label for="" class="form-label">Xếp hạng đánh giá</label>
                                     <select name="rating" class="form-select">
                                         <option value="{{ $commentById->rating }}">{{ $commentById->rating }}⭐</option>
                                         <option value="1">⭐</option>
                                         <option value="2">⭐⭐</option>
                                         <option value="3">⭐⭐⭐</option>
-                                        <option value="3">⭐⭐⭐⭐</option>
-                                        <option value="3">⭐⭐⭐⭐⭐</option>
+                                        <option value="4">⭐⭐⭐⭐</option>
+                                        <option value="5">⭐⭐⭐⭐⭐</option>
                                     </select>
                                 </div>
                                 <div class="col-md-12">

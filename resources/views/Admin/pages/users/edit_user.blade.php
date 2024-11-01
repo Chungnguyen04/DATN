@@ -11,7 +11,7 @@
             <h4 class="fs-18 fw-semibold m-0">Thêm mới User</h4>
        </div>
     </div>
-    <form action="{{  route('editPost', $user->id) }}" method="POST"
+    <form action="{{  route('users.update', $user->id) }}" method="POST"
     enctype="multipart/form-data" >
         @csrf
         <div class="row">
@@ -52,10 +52,10 @@
        
        
         <div class="mb-3">
-            <label for="role" class="form-label">Vai trò người dùng</label>
-            <select name="role" id="role" class="form-select">
-                <option value="0" {{ $user->role == 0 ? 'selected' : '' }}>Admin</option>
-                <option value="1" {{ $user->role == 1 ? 'selected' : '' }}>User</option>
+            <label for="type" class="form-label">Vai trò người dùng</label>
+            <select name="type" id="type" class="form-select">
+                <option value="Admin" {{ $user->type == 'Admin' ? 'selected' : '' }}>Admin</option>
+                <option value="Member" {{ $user->type == 'Member' ? 'selected' : '' }}>Member</option>
             </select>
         </div>
         <hr>
