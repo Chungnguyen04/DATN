@@ -46,15 +46,26 @@ class CommentController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $comment = Comment::findOrFail($id);
+        $commentById = Comment::with([
+            'user',
+            'product'
+        ])->where('id',$id)->first();
+        return view('admin.pages.comment.edit',compact('commentById','comment'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Comment $comment)
     {
-        //
+        // $data = [
+        //     'rating' => $request->rating,
+        //     'status' => $request->status
+        // ];
+        $comment->update($request->all());
+        return redirect()->route('comments.index')->with('success','Sửa thành công');
+        
     }
 
     /**

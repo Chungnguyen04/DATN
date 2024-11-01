@@ -60,6 +60,7 @@ Danh sách đánh giá
                                                     <span class="status-dot" style="background-color: red;"></span> Hidden
                                                 @endif
                                             </td>
+                                            <td><a class="btn btn-info" href="{{ route('comments.edit',$comment->id) }}">Chỉnh sửa</a></td>
                                         </tr>
                                         @endforeach
                                         @endif

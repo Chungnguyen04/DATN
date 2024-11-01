@@ -60,11 +60,11 @@ $topProducts = Product::join('order_details', 'products.id', '=', 'order_details
 $topProfitProducts = Product::select(
  'products.id', // Chỉ định rõ ràng bảng
  'products.name',
- 'products.code', // Giả định bạn có trường code
+ 'products.sku', // Giả định bạn có trường code
  DB::raw('SUM(order_details.price * order_details.quantity) as profit')
 )
 ->join('order_details', 'products.id', '=', 'order_details.order_id') // Sửa thành product_id
-->groupBy('products.id', 'products.name', 'products.code')
+->groupBy('products.id', 'products.name', 'products.sku')
 ->orderByDesc('profit')
 ->take(5)
 ->get();

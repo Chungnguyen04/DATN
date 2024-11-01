@@ -17,8 +17,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 
-// Route::prefix('admin')
-//     ->group(function () {
+Route::prefix('admin')
+    ->group(function () {
 
 Route::get('/login', [AuthController::class, 'loginForm'])
     ->name('admin.login.form');
@@ -152,3 +152,17 @@ Route::controller(VoucherController::class)
         Route::delete('/delete/{id}', 'delete')
             ->name('delete');
     });
+
+
+Route::controller(CommentController::class)
+->name('comments.')
+->prefix('comments')
+->group(function(){
+    Route::get('/','index')
+    ->name('index');
+    Route::get('/edit/{id}','edit')
+    ->name('edit');
+    Route::put('/update/{comment}','update')
+    ->name('update');
+});
+});
