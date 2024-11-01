@@ -43,12 +43,10 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    {{-- <a class="nav-link menu-link" href="{{ route('users.index') }}"> --}}
-                        <i class="ri-handbag-user"></i> <span data-key="t-dashboards">Quản lí người dùng</span>
+                    <a class="nav-link menu-link" href="{{ route('users.index') }}">
+                        <i class="ri-user-fill"></i> <span data-key="t-dashboards">Quản lí người dùng</span>
                     </a>
                 </li>
-
-
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="#sidebarApps" data-bs-toggle="collapse" role="button" aria-expanded="{{ in_array(Route::currentRouteName(), ['categories.listCategories' , 'categories.createCategories', 'categories.editCategories', 'products.index', 'products.create', 'products.edit', 'variants.index', 'variants.create', 'variants.edit', 'weights.index', 'weights.create', 'weights.edit']) ? 'true' : 'false' }}" aria-controls="sidebarApps">
                         <i class="ri-apps-2-line"></i> <span data-key="t-apps">Sản phẩm</span>

@@ -15,7 +15,7 @@
             {{ session('message') }}
         </div>
     @endif
-    <a href="{{ route('Admin.pages.users.add_user') }}">
+    <a href="{{ route('users.create') }}">
         <button class="btn btn-info">Thêm mới</button>
     </a>
     
@@ -28,7 +28,7 @@
                 <th scope="col">Password</th>
                 <th scope="col">Phone</th>
                 <th scope="col">Address</th>
-                <th scope="col">Role</th>
+                <th scope="col">Type</th>
                 <th scope="col">Action</th>
             </tr>
         </thead>
@@ -42,12 +42,12 @@
                         <td>{{ $item->password }}</td>
                         <td>{{ $item->phone }}</td>
                         <td>{{ $item->address }}</td>
-                        <td>{{ $item->role }}</td>
+                        <td>{{ $item->type }}</td>
                         <td>
-                            <a href="{{ route('Admin.pages.users.edit_user', $item->id) }}">
+                            <a href="{{ route('users.edit', $item->id) }}">
                                 <button class="btn btn-info">Sửa</button>
                             </a>
-                            <form action="/delete/{{ $item->id }}" method="POST" style="display:inline;" onclick="return confirm('Bạn có muốn xóa tài khoản ?')">
+                            <form action="{{ route('users.delete', $item->id) }} " method="POST" style="display:inline;" onsubmit="return confirm('Bạn có muốn xóa tài khoản này?')">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="btn btn-danger">Xóa</button>

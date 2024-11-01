@@ -28,7 +28,7 @@ class UserController extends Controller
             'password' => 'required|string|min:6',
             'phone' => 'required',
             'address' => 'required',
-            'role' => 'required',
+            'type' => 'required',
         ], [
             'name.required' => 'Tên bắt buộc phải nhập',
             'email.required' => 'Email bắt buộc phải nhập',
@@ -36,7 +36,7 @@ class UserController extends Controller
             'email.unique' => 'Email đã tồn tại', // Thông báo khi email đã tồn tại
             'password.required' => 'Mật khẩu bắt buộc phải nhập',
             'phone.required' => 'Số điện thoại bắt buộc',
-            'role.required' => 'Vai trò bắt buộc phải nhập',
+            'type.required' => 'Vai trò bắt buộc phải nhập',
         ]);
 
         $data = [
@@ -45,12 +45,12 @@ class UserController extends Controller
             'password' => $req->password,
             'phone' => $req->phone,
             'address' => $req->address,
-            'role' => $req->role,
+            'type' => $req->type,
         ];
         User::create($data);
 
         // Lấy danh sách người dùng sau khi thêm mới
-        return redirect()->route('Admin.pages.users.list_user')->with('message', 'Thêm mới thành công');
+        return redirect()->route('users.index')->with('message', 'Thêm mới thành công');
     }
 
     public function edit($id)
@@ -58,7 +58,7 @@ class UserController extends Controller
         $user = User::find($id);
 
         if (!$user) {
-            return redirect()->route('Admin.pages.users.list_user')->with('message', 'Người dùng không tồn tại');
+            return redirect()->route('users.index')->with('message', 'Người dùng không tồn tại');
         }
 
         return view('Admin.pages.users.edit_user', compact('user'));
@@ -71,7 +71,7 @@ class UserController extends Controller
             'password' => 'required|string|min:6',
             'phone' => 'required',
             'address' => 'required',
-            'role' => 'required',
+            'type' => 'required',
         ], [
             'name.required' => 'Tên bắt buộc phải nhập',
             'email.required' => 'Email bắt buộc phải nhập',
@@ -79,7 +79,7 @@ class UserController extends Controller
             'email.unique' => 'Email đã tồn tại', // Thông báo khi email đã tồn tại
             'password.required' => 'Mật khẩu bắt buộc phải nhập',
             'phone.required' => 'Số điện thoại bắt buộc',
-            'role.required' => 'Vai trò bắt buộc phải nhập',
+            'type.required' => 'Vai trò bắt buộc phải nhập',
         ]);
 
         $data = [
@@ -88,20 +88,19 @@ class UserController extends Controller
             'password' => $req->password,
             'phone' => $req->phone,
             'address' => $req->address,
-            'role' => $req->role,
+            'type' => $req->type,
         ];
         User::where('id',$id)->update($data);
-        return redirect()->route('Admin.pages.users.list_user')
+        return redirect()->route('users.index')
             ->with('message', 'Sửa thành công');
     }
 
 
-
-
-    public function delete(Request $req)
+    public function delete($id)
     {
-        User::where('id', $req->id)->delete();
-        return redirect()->route('Admin.pages.users.list_user')
-            ->with('message', 'Xóa thành công');
+        $user = User::findOrFail($id); // Tìm người dùng theo ID, nếu không có thì báo lỗi
+        $user->delete(); // Xóa người dùng
+        return redirect()->route('users.index')
+        ->with('message','Tài khoản đã được xóa thành công');
     }
 }
