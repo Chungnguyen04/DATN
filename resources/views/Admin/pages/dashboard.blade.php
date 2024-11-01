@@ -283,6 +283,75 @@
                                 </div>
 
                             </div> <!-- end col -->
+                            <div class="container">
+                                <div class="top-products">
+                                    <h3>Top 5 Sản Phẩm Doanh Thu Cao Nhất</h3>
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th>Tên Sản Phẩm</th>
+                                                <th>Hình Ảnh</th> 
+                                                <th>Doanh Thu</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach ( $topRevenueProducts as $item)
+                                                <tr>
+                                                    <td>{{ $item->product->name }}</td>
+                                                    <td>
+                                                        <img src="{{ asset('storage/products' . $item->product->image_path) }}" alt="" style="width: 50px; height: 50px;" />
+                                                    </td>
+                                                    <td>{{ number_format($item->revenue, 2) }} VND</td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <div class="top-products">
+                                    <h3>Top 5 Sản Phẩm Bán Chạy Nhất</h3>                                
+                                        <table class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Tên Sản Phẩm</th>
+                                                    <th>Số Lượng Đã Bán</th>
+                                                    <th>Doanh Thu</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach ($topProducts as $products)
+                                                    <tr>
+                                                        <td>{{ $products->name }}</td>
+                                                        <td>{{ $products->sold_quantity }}</td>
+                                                        <td>{{ number_format($products->revenue, 2) }} VND</td>
+                                                    </tr>
+                                                @endforeach
+                                            </tbody>
+                                        </table>
+                                </div>
+
+                                <div class="top-products">
+                                    <h3>Top 5 Sản Phẩm Lợi Nhuận Cao Nhất</h3>
+                                    <div class="product-list">
+                                        @foreach ($topProfitProducts as $product)
+                                        <div class="product-item">
+                                            <div class="product-image-placeholder">
+                                                @if($product->image_path)
+                                                    <img src="{{ asset('storage/products' . $product->image_path) }}" alt="{{ $product->name }}" style="width: 100%; height: auto;" />
+                                                @else
+                                                    X <!-- Hiển thị 'X' nếu không có hình ảnh -->
+                                                @endif
+                                            </div>
+                                            <div class="product-details">
+                                                <p class="product-name">{{ $product->name }}</p>
+                                                <p class="product-code">{{ $product->code }}</p>
+                                            </div>
+                                            <div class="product-price">{{ number_format($product->profit, 0) }} VNĐ</div>
+                                        </div>
+                                    @endforeach
+                                    </div>
+                                </div>
+                            </div>
                         </div>
 
                         <!-- end row-->
@@ -292,6 +361,106 @@
         </div>
         <!-- container-fluid -->
     </div>
+    <style>
+        <style>
+     /* CSS for horizontal layout */
+
+     body {
+         font-family: Arial, sans-serif;
+         background-color: #f7f7f7;
+         display: flex;
+         justify-content: center;
+         align-items: center;
+         min-height: 100vh;
+         margin: 0;
+     }
+
+     .container {
+         display: flex;
+         gap: 20px;
+         /* Khoảng cách giữa hai phần */
+         width: 100%;
+         max-width: 100%;
+         /* Giới hạn chiều rộng cho cả container */
+     }
+
+     .top-products,
+     .top {
+         background-color: #ffffff;
+         border-radius: 8px;
+         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+         padding: 20px;
+         width: 100%;
+         /* Để cả hai phần chiếm đều nhau */
+     }
+
+     .top-products h3,
+     .top h3 {
+         font-size: 18px;
+         font-weight: bold;
+         margin: 0 0 15px;
+         color: #333;
+         text-align: center;
+         border-bottom: 2px solid #e0e0e0;
+         padding-bottom: 10px;
+     }
+
+     .product-list {
+         display: flex;
+         flex-direction: column;
+         gap: 10px;
+     }
+
+     .product-item {
+         display: flex;
+         align-items: center;
+         border: 1px solid #e0e0e0;
+         border-radius: 5px;
+         padding: 10px;
+         background-color: #fafafa;
+         transition: box-shadow 0.3s ease;
+     }
+
+     .product-item:hover {
+         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+     }
+
+     .product-image-placeholder {
+         width: 50px;
+         height: 50px;
+         background-color: #ddd;
+         display: flex;
+         align-items: center;
+         justify-content: center;
+         margin-right: 15px;
+         font-weight: bold;
+         color: #666;
+         border-radius: 5px;
+         font-size: 14px;
+     }
+
+     .product-details {
+         flex-grow: 1;
+     }
+
+     .product-name {
+         margin: 0;
+         font-weight: bold;
+         color: #333;
+     }
+
+     .product-code {
+         margin: 2px 0 0;
+         font-size: 12px;
+         color: #888;
+     }
+
+     .product-price {
+         font-weight: bold;
+         color: #4CAF50;
+         /* Màu xanh cho giá */
+     }
+ </style>
 @endsection
 
 @section('script')

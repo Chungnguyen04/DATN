@@ -27,4 +27,9 @@ class Product extends Model
     public function comment(){
         return $this->hasMany(Comment::class);
     }
+
+    public function orderDetails()
+    {
+        return $this->hasMany(OrderDetail::class, 'order_id'); // Giả sử 'order_id' là khóa ngoại trong bảng order_details
+    }
 }

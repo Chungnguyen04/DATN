@@ -43,8 +43,8 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link menu-link" href="{{ route('Admin.pages.users.list_user') }}">
-                        <i class="ri-handbag-fill"></i> <span data-key="t-dashboards">Quản lí người dùng</span>
+                    {{-- <a class="nav-link menu-link" href="{{ route('users.index') }}"> --}}
+                        <i class="ri-handbag-user"></i> <span data-key="t-dashboards">Quản lí người dùng</span>
                     </a>
                 </li>
 

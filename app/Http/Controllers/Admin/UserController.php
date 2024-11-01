@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Http\Controllers\Admin;
-
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
@@ -9,20 +8,19 @@ use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
-    public function listUser()
+    public function index()
     {
         // Sử dụng paginate để lấy danh sách người dùng với 5 bản ghi mỗi trang
         $users = User::paginate(5);
-        
         // Truyền biến $users sang view
         return view('Admin.pages.users.list_user', compact('users'));
     }
-    public function addUser()
+    public function create()
     {
         $users = User::query()->pluck('id')->all();
         return view('Admin.pages.users.add_user', compact('users'));
     }
-    public function addPost(Request $req)
+    public function store(Request $req)
     {
         $validated = $req->validate([
             'name' => 'required|string|max:255',
@@ -66,7 +64,7 @@ class UserController extends Controller
         return view('Admin.pages.users.edit_user', compact('user'));
     }
 
-    public function editPost($id, Request $req ){
+    public function update($id, Request $req ){
         $validated = $req->validate([
             'name' => 'required|string|max:255',
             'email' => 'required', // Kiểm tra email trùng lặp
@@ -100,7 +98,7 @@ class UserController extends Controller
 
 
 
-    public function deleteUser(Request $req)
+    public function delete(Request $req)
     {
         User::where('id', $req->id)->delete();
         return redirect()->route('Admin.pages.users.list_user')
