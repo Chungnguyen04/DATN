@@ -35,7 +35,7 @@
                                                 <div>
                                                     <h4 class="fs-22 fw-semibold ff-secondary mb-4"><span
                                                             class="counter-value"
-                                                            data-target="{{ !empty($data['order_pending']) ? $data['order_pending'] : 0 }}">0</span>
+                                                            data-target="{{ !empty($totalPendingOrders) ? $totalPendingOrders : 0 }}">{{ $totalPendingOrders }}</span>
                                                         Đơn hàng </h4>
                                                     <a href="{{ route('orders.index') }}"
                                                         class="text-decoration-underline">Xem </a>
@@ -64,7 +64,7 @@
                                                 <div>
                                                     <h4 class="fs-22 fw-semibold ff-secondary mb-4"><span
                                                             class="counter-value"
-                                                            data-target="{{ !empty($data['order_confirmed']) ? $data['order_confirmed'] : 0 }}">0</span>
+                                                            data-target="{{ !empty($daxacnhan) ? $daxacnhan : 0 }}">{{ $daxacnhan }}</span>
                                                         Đơn hàng </h4>
                                                     <a href="{{ route('orders.index') }}"
                                                         class="text-decoration-underline">Xem </a>
@@ -85,15 +85,14 @@
                                         <div class="card-body">
                                             <div class="d-flex align-items-center">
                                                 <div class="flex-grow-1 overflow-hidden">
-                                                    <p class="text-uppercase fw-medium text-muted text-truncate mb-0"> Đang
-                                                        giao</p>
+                                                    <p class="text-uppercase fw-medium text-muted text-truncate mb-0"> Đang giao</p>
                                                 </div>
                                             </div>
                                             <div class="d-flex align-items-end justify-content-between mt-4">
                                                 <div>
                                                     <h4 class="fs-22 fw-semibold ff-secondary mb-4"><span
                                                             class="counter-value"
-                                                            data-target="{{ !empty($data['order_shipping']) ? $data['order_shipping'] : 0 }}">0</span>
+                                                            data-target="{{ !empty($danggiao) ? $danggiao : 0 }}">{{ $danggiao }}</span>
                                                         Đơn hàng </h4>
                                                     <a href="{{ route('orders.index') }}"
                                                         class="text-decoration-underline">Xem </a>
@@ -122,7 +121,7 @@
                                                 <div>
                                                     <h4 class="fs-22 fw-semibold ff-secondary mb-4"><span
                                                             class="counter-value"
-                                                            data-target="{{ !empty($data['order_delivering']) ? $data['order_delivering'] : 0 }}">0</span>
+                                                            data-target="{{ !empty($giaothanhcong) ? $giaothanhcong : 0 }}">{{ $giaothanhcong }}</span>
                                                         Đơn hàng </h4>
                                                     <a href="{{ route('orders.index') }}"
                                                         class="text-decoration-underline">Xem </a>
@@ -151,7 +150,7 @@
                                                 <div>
                                                     <h4 class="fs-22 fw-semibold ff-secondary mb-4"><span
                                                             class="counter-value"
-                                                            data-target="{{ !empty($data['order_completed']) ? $data['order_completed'] : 0 }}">0</span>
+                                                            data-target="{{ !empty($totalOrders) ? $totalOrders : 0 }}">{{ $totalOrders }}</span>
                                                         Đơn hàng </h4>
                                                     <a href="{{ route('orders.index') }}"
                                                         class="text-decoration-underline">Xem </a>
@@ -180,7 +179,7 @@
                                                 <div>
                                                     <h4 class="fs-22 fw-semibold ff-secondary mb-4"><span
                                                             class="counter-value"
-                                                            data-target="{{ !empty($data['order_failed']) ? $data['order_failed'] : 0 }}">0</span>
+                                                            data-target="{{ !empty($giaothatbai) ? $giaothatbai : 0 }}">{{ $giaothatbai }}</span>
                                                         Đơn hàng </h4>
                                                     <a href="{{ route('orders.index') }}"
                                                         class="text-decoration-underline">Xem </a>
@@ -209,7 +208,7 @@
                                                 <div>
                                                     <h4 class="fs-22 fw-semibold ff-secondary mb-4"><span
                                                             class="counter-value"
-                                                            data-target="{{ !empty($data['order_cancelled']) ? $data['order_cancelled'] : 0 }}">0</span>
+                                                            data-target="{{ !empty($giaohuy) ? $giaohuy : 0 }}">{{ $giaohuy }}</span>
                                                         Đơn hàng </h4>
                                                     <a href="{{ route('orders.index') }}"
                                                         class="text-decoration-underline">Xem </a>
