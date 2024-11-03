@@ -19,9 +19,11 @@ return new class extends Migration
             $table->string('name');
             $table->string('address');
             $table->string('phone');
-            $table->decimal('shipping_fee', 10,0);
             $table->decimal('total_price', 30,0);
 
+            $table->bigInteger('voucher_id')->nullable(); // Thêm trường này
+            $table->decimal('discount_value', 30, 0)->default(0); // Thêm trường này
+            $table->decimal('final_price', 30, 0)->default(0); // Thêm trường này
 
             // Trạng thái đơn hàng
             $table->enum('status', [

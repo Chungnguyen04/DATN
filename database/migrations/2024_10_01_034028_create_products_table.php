@@ -19,7 +19,6 @@ return new class extends Migration
             $table->string('name');
             $table->string('image')->nullable();
             $table->text('description')->nullable();
-            $table->decimal('revenue', 10, 2)->default(0); // Thay đổi kiểu dữ liệu và kích thước nếu cầ
             $table->timestamps();
         });
     }

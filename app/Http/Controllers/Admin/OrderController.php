@@ -4,11 +4,14 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UpdateOrderRequest;
+use App\Mail\OrderConfirmation;
 use App\Models\Order;
 use App\Models\OrderStatusHistory;
+use App\Notifications\OrderStatusChanged;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 class OrderController extends Controller
 {
@@ -32,7 +35,7 @@ class OrderController extends Controller
             });
         }
 
-        if(!empty($request->input('status'))) {
+        if (!empty($request->input('status'))) {
             $orders = $orders->where('status', $request->input('status'));
         }
 
@@ -49,7 +52,7 @@ class OrderController extends Controller
 
             $order = Order::find($id);
 
-            if(!$order) {
+            if (!$order) {
                 return redirect()->route('orders.index')->with('status_failed', 'Đơn hàng không tồn tại!');
             }
 
@@ -76,6 +79,8 @@ class OrderController extends Controller
                 'changed_by' => auth()->user()->id ?? 0, // ID của người thay đổi
                 'note' => $request->note,     // Ghi chú nếu có
             ]);
+            // thông báo về mail khi thay đổi trạng thái đơn hàng
+            Mail::to($order->user->email)->send(new OrderConfirmation($order));
 
             DB::commit();
 
@@ -97,7 +102,7 @@ class OrderController extends Controller
 
             $order = Order::find($id);
 
-            if(!$order) {
+            if (!$order) {
                 return redirect()->route('orders.index')->with('status_failed', 'Đơn hàng không tồn tại!');
             }
 
@@ -116,5 +121,4 @@ class OrderController extends Controller
             return back()->with('status_failed', 'Đã xảy ra lỗi khi xóa!');
         }
     }
-
 }

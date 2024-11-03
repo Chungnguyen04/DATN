@@ -15,11 +15,13 @@ class UserController extends Controller
         // Truyền biến $users sang view
         return view('Admin.pages.users.list_user', compact('users'));
     }
+
     public function create()
     {
         $users = User::query()->pluck('id')->all();
         return view('Admin.pages.users.add_user', compact('users'));
     }
+
     public function store(Request $req)
     {
         $validated = $req->validate([
@@ -64,7 +66,8 @@ class UserController extends Controller
         return view('Admin.pages.users.edit_user', compact('user'));
     }
 
-    public function update($id, Request $req ){
+    public function update($id, Request $req)
+    {
         $validated = $req->validate([
             'name' => 'required|string|max:255',
             'email' => 'required', // Kiểm tra email trùng lặp
@@ -90,17 +93,18 @@ class UserController extends Controller
             'address' => $req->address,
             'type' => $req->type,
         ];
-        User::where('id',$id)->update($data);
+
+        User::where('id', $id)->update($data);
+
         return redirect()->route('users.index')
             ->with('message', 'Sửa thành công');
     }
-
 
     public function delete($id)
     {
         $user = User::findOrFail($id); // Tìm người dùng theo ID, nếu không có thì báo lỗi
         $user->delete(); // Xóa người dùng
         return redirect()->route('users.index')
-        ->with('message','Tài khoản đã được xóa thành công');
+            ->with('message', 'Tài khoản đã được xóa thành công');
     }
 }
