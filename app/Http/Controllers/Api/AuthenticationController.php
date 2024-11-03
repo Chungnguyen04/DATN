@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -64,7 +65,7 @@ class AuthenticationController extends Controller
         ], 201);
     }
 
-    public function apiLogin(Request $req): JsonResponse
+    public function apiLogin(Request $request)
     {
         $messages = [
             'email.required' => 'Email là bắt buộc.',
@@ -72,7 +73,8 @@ class AuthenticationController extends Controller
             'password.required' => 'Mật khẩu là bắt buộc.',
         ];
 
-        $validator = Validator::make($req->all(), [
+        // Kiểm tra tính hợp lệ của dữ liệu đầu vào
+        $validator = Validator::make($request->all(), [
             'email' => 'required|email',
             'password' => 'required|string',
         ], $messages);
@@ -85,29 +87,45 @@ class AuthenticationController extends Controller
             ], 422);
         }
 
-        $user = User::where('email', $req->email)->first();
+        // Tìm kiếm người dùng theo email
+        $user = User::where('email', $request->email)->first();
 
+        // Kiểm tra nếu người dùng không tồn tại
         if (!$user) {
             return response()->json([
+                'status_code' => 401,
                 'message' => 'Email không tồn tại',
-                'status_code' => 400
-            ], 400);
-        }
-
-        if (!Hash::check($req->password, $user->password)) {
-            return response()->json([
-                'message' => 'Mật khẩu không đúng',
-                'status_code' => 401
             ], 401);
         }
 
+        // Lấy thông tin xác thực
+        $credentials = $request->only('email', 'password');
+
+        // Kiểm tra thông tin đăng nhập
+        if (!Auth::attempt($credentials)) {
+            return response()->json([
+                'status_code' => 401,
+                'message' => 'Tài khoản hoặc mật khẩu không đúng',
+            ], 401);
+        }
+
+        // Tạo token cho người dùng
         $token = $user->createToken('authToken')->plainTextToken;
 
+        // Trả về thông tin đăng nhập thành công
         return response()->json([
             'message' => 'Đăng nhập thành công',
-            'user' => $user->toArray(),
-            'token' => $token,
-            'status_code' => 200
+            'user' => [
+                'id' => $user->id,
+                'name' => $user->name,
+                'email' => $user->email,
+                'role' => $user->role,
+            ],
+            'status_code' => 200,
+            'authorisation' => [
+                'token' => $token,
+                'type' => 'bearer',
+            ]
         ], 200);
     }
 

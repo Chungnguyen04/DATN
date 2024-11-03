@@ -11,9 +11,16 @@ use Illuminate\Http\Request;
 
 class CommentController extends Controller
 {
-    public function getComment($productId, $variantId)
+    public function getComment(Request $request)
     {
         try {
+            // Lấy `product_id` từ body của yêu cầu
+            $productId = $request->input('product_id');
+            $variantId = $request->input('variant_id');
+    
+            // Lấy thông tin người dùng đã xác thực từ token
+            $user = $request->user();
+    
             // Kiểm tra xem sản phẩm có tồn tại không
             $product = Product::find($productId);
             if (!$product) {
@@ -22,25 +29,34 @@ class CommentController extends Controller
                     'message' => 'Sản phẩm không tồn tại.'
                 ], Response::HTTP_NOT_FOUND);
             }
-
-            // Lấy danh sách đánh giá theo product_id và variant_id
-            $comments = ModelsComment::with(['user', 'product'])
+    
+            // Lấy tất cả các bình luận cho sản phẩm này từ người dùng đã xác thực và bao gồm thông tin biến thể
+            $comments = ModelsComment::with(['variant', 'user']) // Bao gồm thông tin variant và user
                 ->where('product_id', $productId)
-                ->where('variant_id', $variantId) // Thêm điều kiện variant_id
+                ->where('variant_id', $variantId)
                 ->where('status', 'default')
                 ->orderBy('id', 'desc')
                 ->get();
-
-            return $comments->isEmpty()
-                ? response()->json([
-                    'status' => false,
-                    'message' => 'Không có đánh giá nào cho biến thể này của sản phẩm.'
-                ], Response::HTTP_NOT_FOUND)
-                : response()->json([
-                    'status' => true,
-                    'message' => 'Danh sách đánh giá đã được lấy thành công.',
-                    'data' => $comments
-                ], Response::HTTP_OK);
+    
+            // Chuẩn bị phản hồi
+            $response = $comments->map(function ($comment) {
+                return [
+                    'id' => $comment->id,
+                    'content' => $comment->content,
+                    'rating' => $comment->rating,
+                    'created_at' => $comment->created_at,
+                    'user' => [
+                        'id' => $comment->user->id,
+                        'name' => $comment->user->name,
+                    ],
+                ];
+            });
+    
+            return response()->json([
+                'status' => true,
+                'message' => 'Danh sách bình luận đã được lấy thành công.',
+                'data' => $response
+            ], Response::HTTP_OK);
         } catch (\Exception $e) {
             return response()->json([
                 'status' => false,
@@ -50,7 +66,6 @@ class CommentController extends Controller
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
-
 
     public function addComment(Request $request)
     {

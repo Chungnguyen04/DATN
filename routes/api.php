@@ -1,10 +1,10 @@
 <?php
 
-use App\Http\Controllers\Admin\CommentController;
 use App\Http\Controllers\Api\AuthenticationController;
 use App\Http\Controllers\Api\CartController;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\CategoryController;
+use App\Http\Controllers\Api\CommentController;
 use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\RoleController;
 use App\Http\Controllers\Api\UserController;
@@ -150,15 +150,17 @@ Route::prefix('orders')
         // end api
     });
 
-
-
     Route::prefix('comments')
     ->name('comments.')
     ->controller(CommentController::class)
     ->group(function () {
-        // Lấy danh sách đánh giá cho sản phẩm
-        Route::get('product/{productId}/variant/{variantId}', 'getComment')->name('getComment');
-        // Thêm đánh giá cho sản phẩm
-        Route::post('/add', 'addComment')->name('addComment');
+         // Lấy danh sách đánh giá cho sản phẩm
+        Route::post('product', 'getComment')
+            ->name('getComment')
+            ->middleware('auth:sanctum');
+        
+         // Thêm đánh giá cho sản phẩm
+        Route::post('add', 'addComment')
+            ->name('addComment');
     });
 
