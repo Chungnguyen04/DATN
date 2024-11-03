@@ -1,10 +1,10 @@
 <?php
 
+use App\Http\Controllers\Admin\CommentController;
 use App\Http\Controllers\Api\AuthenticationController;
 use App\Http\Controllers\Api\CartController;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\CategoryController;
-use App\Http\Controllers\Api\Comment;
 use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\RoleController;
 use App\Http\Controllers\Api\UserController;
@@ -154,7 +154,7 @@ Route::prefix('orders')
 
     Route::prefix('comments')
     ->name('comments.')
-    ->controller(Comment::class)
+    ->controller(CommentController::class)
     ->group(function () {
         // Lấy danh sách đánh giá cho sản phẩm
         Route::get('product/{productId}/variant/{variantId}', 'getComment')->name('getComment');

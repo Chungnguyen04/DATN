@@ -9,7 +9,7 @@ use App\Models\Product;
 use Illuminate\Http\Response;
 use Illuminate\Http\Request;
 
-class Comment extends Controller
+class CommentController extends Controller
 {
     public function getComment($productId, $variantId)
     {
