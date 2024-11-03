@@ -19,4 +19,8 @@ class Comment extends Model
     public function Product(){
         return $this->belongsTo(Product::class);
     }
+    public function variant()
+    {
+        return $this->belongsTo(Variant::class);
+    }
 }
