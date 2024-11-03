@@ -71,10 +71,20 @@
                         <i class="ri-coupon-3-fill"></i> <span data-key="t-dashboards">Voucher</span>
                     </a>
                 </li>
+                
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="{{ route('comments.index') }}">
                         <i class="ri-star-line"></i> <span data-key="t-dashboards">Đánh giá</span>
                     </a>
+                </li>
+
+                <li class="nav-item">
+                    <form action="{{ route('logout') }}" method="post">
+                        @csrf
+                        <button type="submit" class="nav-link menu-link">
+                            <i class="ri-logout-circle-r-line logout" style="padding-right: 6px;"></i><span data-key="t-landing">Đăng xuất</span>
+                        </button>
+                    </form>
                 </li>
             </ul>
         </div>
