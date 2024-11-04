@@ -37,4 +37,19 @@ class User extends Authenticatable
     {
         return $this->type === self::TYPE_MEMBER;
     }
+
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
+    }
+
+    public function vouchers()
+    {
+        return $this->hasMany(UserVoucher::class);
+    }
+
+    public function userVouchers()
+    {
+        return $this->hasMany(UserVoucher::class);
+    }
 }
