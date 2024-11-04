@@ -9,6 +9,7 @@ use App\Models\Order;
 use App\Models\OrderDetail;
 use App\Models\OrderStatusHistory;
 use App\Models\Variant;
+use App\Models\Voucher;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\QueryException;
@@ -74,19 +75,48 @@ class OrderController extends Controller
         }
     }
 
+    // chung
     public function getRevenueAndProfitData(Request $request)
     {
-        // Lấy giá trị bộ lọc từ yêu cầu hoặc mặc định là tháng hiện tại
-        $month = $request->input('month', Carbon::now()->month);
-        $year = Carbon::now()->year;
+        // Lấy giá trị bộ lọc từ yêu cầu
+        $filter = $request->input('filter', null);
+        $year = $request->input('year', Carbon::now()->year);
+        $date = $request->input('date', null);
+        $startDate = null;
+        $endDate = Carbon::now()->endOfDay();
 
-        // Xác định ngày bắt đầu và kết thúc của tháng đã chọn
-        $startDate = Carbon::create($year, $month, 1)->startOfMonth();
-        $endDate = $startDate->copy()->endOfMonth();
+        if ($filter === 'year') {
+            // Thống kê theo năm: Lấy dữ liệu từng tháng trong năm
+            $startDate = Carbon::create($year, 1, 1)->startOfDay();
+            $endDate = Carbon::create($year, 12, 31)->endOfDay();
+        } elseif ($filter === 'day' && $date) {
+            // Thống kê theo ngày: Lấy dữ liệu theo giờ trong ngày
+            $startDate = Carbon::parse($date)->startOfDay();
+            $endDate = Carbon::parse($date)->endOfDay();
+        } elseif ($filter === 'range') {
+            // Thống kê theo khoảng thời gian: Giới hạn tối đa 60 ngày
+            if ($request->input('start_date') && $request->input('end_date')) {
+                // Cả ngày bắt đầu và ngày kết thúc đều có
+                $startDate = Carbon::parse($request->input('start_date'))->startOfDay();
+                $endDate = Carbon::parse($request->input('end_date'))->endOfDay();
 
-        // Lấy dữ liệu đơn hàng trong khoảng thời gian đã xác định
+                if ($startDate->diffInDays($endDate) > 60) {
+                    return response()->json(['error' => 'Khoảng thời gian tối đa là 60 ngày'], 400);
+                }
+            } elseif ($request->input('start_date')) {
+                // Chỉ có start_date, lấy đến thời điểm hiện tại
+                $startDate = Carbon::parse($request->input('start_date'))->startOfDay();
+                $endDate = Carbon::now()->endOfDay(); // Đến thời điểm hiện tại
+            }
+        } else {
+            // Mặc định là tháng hiện tại
+            $startDate = Carbon::now()->startOfMonth();
+            $endDate = Carbon::now()->endOfMonth();
+        }
+
+        // Lấy dữ liệu doanh thu trong khoảng thời gian đã xác định
         $data = Order::where('status', 'completed')
-            ->whereBetween('created_at', [$startDate, $endDate])
+            ->whereBetween('created_at', [$startDate, $endDate]) // Áp dụng khoảng thời gian
             ->with([
                 'orderDetails' => function ($query) {
                     $query->select('order_id', 'price', 'quantity', 'variant_id');
@@ -101,37 +131,88 @@ class OrderController extends Controller
             'profit' => []
         ];
 
-        // Tạo danh sách các ngày trong tháng
-        $dateRange = [];
-        $currentDate = $startDate->copy();
-
-        while ($currentDate->lte($endDate)) {
-            $dateRange[] = $currentDate->format('d-m-Y');
-            $currentDate->addDay();
-        }
-
-        foreach ($dateRange as $date) {
-            $orders = $data->filter(function ($order) use ($date) {
-                return Carbon::parse($order->created_at)->format('d-m-Y') === $date;
-            });
-
-            $revenue = $orders->sum(function ($order) {
-                return $order->orderDetails->sum(function ($detail) {
-                    return $detail->price * $detail->quantity;
+        if ($filter === 'year') {
+            // Thống kê theo năm (từng tháng)
+            for ($month = 1; $month <= 12; $month++) {
+                $monthlyStart = Carbon::create($year, $month, 1)->startOfDay();
+                $monthlyEnd = $monthlyStart->copy()->endOfMonth();
+                $monthlyOrders = $data->filter(function ($order) use ($monthlyStart, $monthlyEnd) {
+                    return $order->created_at->between($monthlyStart, $monthlyEnd);
                 });
-            });
 
-            $profit = $orders->sum(function ($order) {
-                return $order->orderDetails->sum(function ($detail) {
-                    $variant = Variant::find($detail->variant_id);
-                    $importPrice = $variant ? $variant->import_price : 0;
-                    return ($detail->price - $importPrice) * $detail->quantity;
+                $revenue = $monthlyOrders->sum(function ($order) {
+                    return $order->orderDetails->sum(function ($detail) {
+                        return $detail->price * $detail->quantity;
+                    });
                 });
-            });
 
-            $result['labels'][] = $date;
-            $result['revenue'][] = $revenue;
-            $result['profit'][] = $profit;
+                $profit = $monthlyOrders->sum(function ($order) {
+                    return $order->orderDetails->sum(function ($detail) {
+                        $variant = Variant::find($detail->variant_id);
+                        $importPrice = $variant ? $variant->import_price : 0;
+                        return ($detail->price - $importPrice) * $detail->quantity;
+                    });
+                });
+
+                $result['labels'][] = "Tháng $month";
+                $result['revenue'][] = $revenue;
+                $result['profit'][] = $profit;
+            }
+        } elseif ($filter === 'day') {
+            // Thống kê theo ngày (từng giờ)
+            for ($hour = 0; $hour < 24; $hour++) {
+                $hourStart = Carbon::parse($date)->setHour($hour)->startOfHour();
+                $hourEnd = $hourStart->copy()->endOfHour();
+                $hourlyOrders = $data->filter(function ($order) use ($hourStart, $hourEnd) {
+                    return $order->created_at->between($hourStart, $hourEnd);
+                });
+
+                $revenue = $hourlyOrders->sum(function ($order) {
+                    return $order->orderDetails->sum(function ($detail) {
+                        return $detail->price * $detail->quantity;
+                    });
+                });
+
+                $profit = $hourlyOrders->sum(function ($order) {
+                    return $order->orderDetails->sum(function ($detail) {
+                        $variant = Variant::find($detail->variant_id);
+                        $importPrice = $variant ? $variant->import_price : 0;
+                        return ($detail->price - $importPrice) * $detail->quantity;
+                    });
+                });
+
+                $result['labels'][] = "$hour:00";
+                $result['revenue'][] = $revenue;
+                $result['profit'][] = $profit;
+            }
+        } else {
+            // Thống kê theo khoảng thời gian (theo ngày)
+            $currentDate = $startDate->copy();
+            while ($currentDate->lte($endDate)) {
+                $dailyOrders = $data->filter(function ($order) use ($currentDate) {
+                    return $order->created_at->isSameDay($currentDate);
+                });
+
+                $revenue = $dailyOrders->sum(function ($order) {
+                    return $order->orderDetails->sum(function ($detail) {
+                        return $detail->price * $detail->quantity;
+                    });
+                });
+
+                $profit = $dailyOrders->sum(function ($order) {
+                    return $order->orderDetails->sum(function ($detail) {
+                        $variant = Variant::find($detail->variant_id);
+                        $importPrice = $variant ? $variant->import_price : 0;
+                        return ($detail->price - $importPrice) * $detail->quantity;
+                    });
+                });
+
+                $result['labels'][] = $currentDate->format('d/m/Y');
+                $result['revenue'][] = $revenue;
+                $result['profit'][] = $profit;
+
+                $currentDate->addDay();
+            }
         }
 
         return response()->json($result);
@@ -353,10 +434,31 @@ class OrderController extends Controller
     {
         DB::beginTransaction();
         try {
+            // Lấy thông tin voucher nếu có
+            $voucher = null;
+            $discountValue = 0;
+
+            if ($request->voucher_id) {
+                $voucher = Voucher::find($request->voucher_id); // Lấy voucher giảm giá theo id voucher
+                if ($voucher) {
+                    if ($request->total_price >= $voucher->discount_min_price) {
+                        $discountValue = $voucher->discount_value; // Giá trị giảm giá
+                    } else {
+                        return response()->json([
+                            'status' => false,
+                            'message' => 'Giá trị đơn hàng không đủ điều kiện sử dụng voucher.',
+                        ]);
+                    }
+                }
+            }
+
+            // Tính toán giá trị cuối cùng
+            $finalPrice = $request->total_price - $discountValue;
+
             // Kiểm tra phương thức thanh toán
             if ($request->payment_method == 'vnpay') {
                 $orderCode = $this->generateRandomOrderCode(8);
-                $vnpayUrl = $this->generateVnpayUrl($orderCode, $request->total_price);
+                $vnpayUrl = $this->generateVnpayUrl($orderCode, $finalPrice);
 
                 // Tạo đơn hàng tạm thời với trạng thái chờ thanh toán
                 $order = Order::create([
@@ -366,17 +468,18 @@ class OrderController extends Controller
                     'address' => $request->address,
                     'phone' => $request->phone,
                     'total_price' => $request->total_price,
+                    'discount_value' => $discountValue ?? 0, // Thêm giá trị giảm giá
+                    'final_price' => $finalPrice ?? 0, // Thêm giá trị cuối cùng
                     'status' => 'pending',
                     'payment_method' => 'vnpay',
                     'payment_status' => 'unpaid',
+                    'voucher_id' => $voucher ? $voucher->id : null, // Thêm ID voucher
                 ]);
 
                 // Lưu chi tiết sản phẩm trong đơn hàng
                 foreach ($request->products as $product) {
-                    // Tìm variant với khóa để kiểm tra tồn kho
                     $variant = Variant::lockForUpdate()->find($product['variant_id']);
                     if ($variant && $variant->quantity >= $product['quantity']) {
-                        // Trừ số lượng sản phẩm và lưu chi tiết đơn hàng
                         $variant->update([
                             'quantity' => $variant->quantity - $product['quantity']
                         ]);
@@ -389,7 +492,6 @@ class OrderController extends Controller
                             'total' => $product['price'] * $product['quantity'],
                         ]);
                     } else {
-                        // Trả về lỗi nếu hết hàng
                         DB::rollBack();
                         return response()->json([
                             'status' => false,
@@ -414,9 +516,12 @@ class OrderController extends Controller
                     'address' => $request->address,
                     'phone' => $request->phone,
                     'total_price' => $request->total_price,
+                    'discount_value' => $discountValue, // Thêm giá trị giảm giá
+                    'final_price' => $finalPrice, // Thêm giá trị cuối cùng
                     'status' => $request->status ?? 'pending',
                     'payment_method' => $request->payment_method ?? 'cod',
                     'payment_status' => 'unpaid',
+                    'voucher_id' => $voucher ? $voucher->id : null, // Thêm ID voucher
                 ]);
 
                 // Lưu chi tiết sản phẩm trong đơn hàng

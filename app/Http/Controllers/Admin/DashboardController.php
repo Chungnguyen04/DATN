@@ -17,14 +17,14 @@ class DashboardController extends Controller
         // Tổng doanh thu của tháng hiện tại
         $currentMonth = now()->month;
         $currentYear = now()->year;
-
+        
         $totalRevenueThisMonth = Order::where('status', 'completed')
             ->whereYear('created_at', $currentYear)
             ->whereMonth('created_at', $currentMonth)
-            ->with('orderDetails')
+            ->with('orderDetails') // Load mối quan hệ orderDetails
             ->get()
-            ->sum(function ($order) {
-                return $order->orderDetails->sum(function ($detail) {
+            ->sum(function($order) {
+                return $order->orderDetails->sum(function($detail) {
                     return $detail->price * $detail->quantity;
                 });
             });

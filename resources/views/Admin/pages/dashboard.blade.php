@@ -4,6 +4,109 @@
     Bảng điều khiển
 @endsection
 
+@section('css')
+    <style>
+        <style>
+        /* CSS for horizontal layout */
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f7f7f7;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            display: flex;
+            gap: 20px;
+            /* Khoảng cách giữa hai phần */
+            width: 100%;
+            max-width: 100%;
+            /* Giới hạn chiều rộng cho cả container */
+        }
+
+        .top-products,
+        .top {
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            width: 100%;
+            /* Để cả hai phần chiếm đều nhau */
+        }
+
+        .top-products h3,
+        .top h3 {
+            font-size: 18px;
+            font-weight: bold;
+            margin: 0 0 15px;
+            color: #333;
+            text-align: center;
+            border-bottom: 2px solid #e0e0e0;
+            padding-bottom: 10px;
+        }
+
+        .product-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .product-item {
+            display: flex;
+            align-items: center;
+            border: 1px solid #e0e0e0;
+            border-radius: 5px;
+            padding: 10px;
+            background-color: #fafafa;
+            transition: box-shadow 0.3s ease;
+        }
+
+        .product-item:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .product-image-placeholder {
+            width: 50px;
+            height: 50px;
+            background-color: #ddd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            font-weight: bold;
+            color: #666;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        .product-details {
+            flex-grow: 1;
+        }
+
+        .product-name {
+            margin: 0;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .product-code {
+            margin: 2px 0 0;
+            font-size: 12px;
+            color: #888;
+        }
+
+        .product-price {
+            font-weight: bold;
+            color: #4CAF50;
+            /* Màu xanh cho giá */
+        }
+    </style>
+@endsection
+
 @section('content')
     <div class="page-content">
         <div class="container-fluid">
@@ -85,7 +188,8 @@
                                         <div class="card-body">
                                             <div class="d-flex align-items-center">
                                                 <div class="flex-grow-1 overflow-hidden">
-                                                    <p class="text-uppercase fw-medium text-muted text-truncate mb-0"> Đang giao</p>
+                                                    <p class="text-uppercase fw-medium text-muted text-truncate mb-0"> Đang
+                                                        giao</p>
                                                 </div>
                                             </div>
                                             <div class="d-flex align-items-end justify-content-between mt-4">
@@ -234,7 +338,8 @@
                                                 <h4 class="card-title mb-0">Thống Kê Doanh Thu</h4>
                                                 <div class="mt-3">
                                                     <h4>Doanh thu: <span class="counter-value"
-                                                            data-target="{{ !empty($totalRevenueThisMonth) ? $totalRevenueThisMonth : 0 }}">0</span> VNĐ</h4>
+                                                            data-target="{{ !empty($totalRevenueThisMonth) ? $totalRevenueThisMonth : 0 }}">0</span>
+                                                        VNĐ</h4>
                                                     <p>Số đơn: {{ !empty($totalOrders) ? $totalOrders : 0 }} đơn</p>
                                                 </div>
                                             </div>
@@ -243,26 +348,36 @@
                                                 <div class="d-flex align-items-center">
                                                     <div class="row">
                                                         <div class="col">
-                                                            <select class="form-select" name="filter" id="">
-                                                                <option value="month">Theo tháng</option>
+                                                            <select class="form-select" name="filter" id="filter">
+                                                                <option value="">-- Chọn bộ lọc --</option>
+                                                                <option value="year">Thống kê theo năm</option>
+                                                                <option value="day">Thống kê theo ngày</option>
+                                                                <option value="range">Thống kê theo khoảng thời gian
+                                                                </option>
                                                             </select>
                                                         </div>
-                                                        <div class="col">
-                                                            <select class="form-select" name="month" id="">
-                                                                <option value="">-- Chọn --</option>
-                                                                <option value="1">1</option>
-                                                                <option value="2">2</option>
-                                                                <option value="3">3</option>
-                                                                <option value="4">4</option>
-                                                                <option value="5">5</option>
-                                                                <option value="6">6</option>
-                                                                <option value="7">7</option>
-                                                                <option value="8">8</option>
-                                                                <option value="9">9</option>
-                                                                <option value="10">10</option>
-                                                                <option value="11">11</option>
-                                                                <option value="12">12</option>
+
+                                                        <!-- Lọc theo năm -->
+                                                        <div class="col" id="yearFilter" style="display: none;">
+                                                            <select id="yearSelect" class="form-select" name="year">
+                                                                <option value="">-- Chọn Năm --</option>
                                                             </select>
+                                                        </div>
+
+                                                        <!-- Lọc theo ngày cụ thể -->
+                                                        <div class="col" id="dayFilter" style="display: none;">
+                                                            <input type="date" id="dateFilter" name="date"
+                                                                class="form-control">
+                                                        </div>
+
+                                                        <!-- Lọc theo khoảng thời gian -->
+                                                        <div class="col" id="rangeFilter" style="display: none;">
+                                                            <input type="date" name="start_date" class="form-control"
+                                                                id="start_date">
+                                                        </div>
+                                                        <div class="col" id="rangeFilterEnd" style="display: none;">
+                                                            <input type="date" name="end_date" class="form-control"
+                                                                id="end_date">
                                                         </div>
                                                     </div>
                                                     <div class="row" style="margin-left: 10px">
@@ -280,7 +395,6 @@
                                             data-colors='["--vz-success-rgb, 0.8", "--vz-success-rgb, 0.9"]'></canvas>
                                     </div>
                                 </div>
-
                             </div> <!-- end col -->
                             <div class="container">
                                 <div class="top-products">
@@ -289,16 +403,17 @@
                                         <thead>
                                             <tr>
                                                 <th>Tên Sản Phẩm</th>
-                                                <th>Hình Ảnh</th> 
+                                                <th>Hình Ảnh</th>
                                                 <th>Doanh Thu</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @foreach ( $topRevenueProducts as $item)
+                                            @foreach ($topRevenueProducts as $item)
                                                 <tr>
                                                     <td>{{ $item->product->name }}</td>
                                                     <td>
-                                                        <img src="{{ asset('storage/products' . $item->product->image_path) }}" alt="" style="width: 50px; height: 50px;" />
+                                                        <img src="{{ asset('storage/products' . $item->product->image_path) }}"
+                                                            alt="" style="width: 50px; height: 50px;" />
                                                     </td>
                                                     <td>{{ number_format($item->revenue, 2) }} VND</td>
                                                 </tr>
@@ -308,46 +423,49 @@
                                 </div>
 
                                 <div class="top-products">
-                                    <h3>Top 5 Sản Phẩm Bán Chạy Nhất</h3>                                
-                                        <table class="table">
-                                            <thead>
+                                    <h3>Top 5 Sản Phẩm Bán Chạy Nhất</h3>
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th>Tên Sản Phẩm</th>
+                                                <th>Số Lượng Đã Bán</th>
+                                                <th>Doanh Thu</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach ($topProducts as $products)
                                                 <tr>
-                                                    <th>Tên Sản Phẩm</th>
-                                                    <th>Số Lượng Đã Bán</th>
-                                                    <th>Doanh Thu</th>
+                                                    <td>{{ $products->name }}</td>
+                                                    <td>{{ $products->sold_quantity }}</td>
+                                                    <td>{{ number_format($products->revenue, 2) }} VND</td>
                                                 </tr>
-                                            </thead>
-                                            <tbody>
-                                                @foreach ($topProducts as $products)
-                                                    <tr>
-                                                        <td>{{ $products->name }}</td>
-                                                        <td>{{ $products->sold_quantity }}</td>
-                                                        <td>{{ number_format($products->revenue, 2) }} VND</td>
-                                                    </tr>
-                                                @endforeach
-                                            </tbody>
-                                        </table>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
                                 </div>
 
                                 <div class="top-products">
                                     <h3>Top 5 Sản Phẩm Lợi Nhuận Cao Nhất</h3>
                                     <div class="product-list">
                                         @foreach ($topProfitProducts as $product)
-                                        <div class="product-item">
-                                            <div class="product-image-placeholder">
-                                                @if($product->image_path)
-                                                    <img src="{{ asset('storage/products' . $product->image_path) }}" alt="{{ $product->name }}" style="width: 100%; height: auto;" />
-                                                @else
-                                                    X <!-- Hiển thị 'X' nếu không có hình ảnh -->
-                                                @endif
+                                            <div class="product-item">
+                                                <div class="product-image-placeholder">
+                                                    @if ($product->image_path)
+                                                        <img src="{{ asset('storage/products' . $product->image_path) }}"
+                                                            alt="{{ $product->name }}"
+                                                            style="width: 100%; height: auto;" />
+                                                    @else
+                                                        X <!-- Hiển thị 'X' nếu không có hình ảnh -->
+                                                    @endif
+                                                </div>
+                                                <div class="product-details">
+                                                    <p class="product-name">{{ $product->name }}</p>
+                                                    <p class="product-code">{{ $product->code }}</p>
+                                                </div>
+                                                <div class="product-price">{{ number_format($product->profit, 0) }} VNĐ
+                                                </div>
                                             </div>
-                                            <div class="product-details">
-                                                <p class="product-name">{{ $product->name }}</p>
-                                                <p class="product-code">{{ $product->code }}</p>
-                                            </div>
-                                            <div class="product-price">{{ number_format($product->profit, 0) }} VNĐ</div>
-                                        </div>
-                                    @endforeach
+                                        @endforeach
                                     </div>
                                 </div>
                             </div>
@@ -360,111 +478,29 @@
         </div>
         <!-- container-fluid -->
     </div>
-    <style>
-        <style>
-     /* CSS for horizontal layout */
-
-     body {
-         font-family: Arial, sans-serif;
-         background-color: #f7f7f7;
-         display: flex;
-         justify-content: center;
-         align-items: center;
-         min-height: 100vh;
-         margin: 0;
-     }
-
-     .container {
-         display: flex;
-         gap: 20px;
-         /* Khoảng cách giữa hai phần */
-         width: 100%;
-         max-width: 100%;
-         /* Giới hạn chiều rộng cho cả container */
-     }
-
-     .top-products,
-     .top {
-         background-color: #ffffff;
-         border-radius: 8px;
-         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-         padding: 20px;
-         width: 100%;
-         /* Để cả hai phần chiếm đều nhau */
-     }
-
-     .top-products h3,
-     .top h3 {
-         font-size: 18px;
-         font-weight: bold;
-         margin: 0 0 15px;
-         color: #333;
-         text-align: center;
-         border-bottom: 2px solid #e0e0e0;
-         padding-bottom: 10px;
-     }
-
-     .product-list {
-         display: flex;
-         flex-direction: column;
-         gap: 10px;
-     }
-
-     .product-item {
-         display: flex;
-         align-items: center;
-         border: 1px solid #e0e0e0;
-         border-radius: 5px;
-         padding: 10px;
-         background-color: #fafafa;
-         transition: box-shadow 0.3s ease;
-     }
-
-     .product-item:hover {
-         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-     }
-
-     .product-image-placeholder {
-         width: 50px;
-         height: 50px;
-         background-color: #ddd;
-         display: flex;
-         align-items: center;
-         justify-content: center;
-         margin-right: 15px;
-         font-weight: bold;
-         color: #666;
-         border-radius: 5px;
-         font-size: 14px;
-     }
-
-     .product-details {
-         flex-grow: 1;
-     }
-
-     .product-name {
-         margin: 0;
-         font-weight: bold;
-         color: #333;
-     }
-
-     .product-code {
-         margin: 2px 0 0;
-         font-size: 12px;
-         color: #888;
-     }
-
-     .product-price {
-         font-weight: bold;
-         color: #4CAF50;
-         /* Màu xanh cho giá */
-     }
- </style>
 @endsection
 
 @section('script')
     <script>
         $(document).ready(function() {
+            var currentYear = new Date().getFullYear();
+            var startYear = 2000;
+
+            // Thêm các năm từ 2000 đến năm hiện tại vào select với id="yearFilter"
+            for (var year = startYear; year <= currentYear; year++) {
+                $('#yearSelect').append('<option value="' + year + '">' + year + '</option>');
+            }
+
+            // Hiển thị hoặc ẩn các bộ lọc khác nhau khi thay đổi `#filter`
+            $('#filter').on('change', function() {
+                var filter = $(this).val();
+                $('#yearFilter').toggle(filter === 'year');
+                $('#dayFilter').toggle(filter === 'day');
+                $('#rangeFilter').toggle(filter === 'range');
+                $('#rangeFilterEnd').toggle(filter === 'range');
+            });
+
+
             let barChart; // Declare a variable to hold the chart instance
 
             function createBarChart(data) {
@@ -552,24 +588,32 @@
 
 
             $('#btnFilter').on('click', function() {
-                const month = $('select[name="month"]').val();
+                const filter = $('select[name="filter"]').val();
+                const date = $('#dateFilter').val();
+                const year = $('#yearSelect').val();
+                const startDate = $('#start_date').val();
+                const endDate = $('#end_date').val();
 
+                // Gửi yêu cầu AJAX đến server
                 $.ajax({
                     url: "{{ route('orders.getRevenueAndProfitData') }}",
                     method: 'GET',
                     data: {
-                        month: month
+                        filter: filter,
+                        date: date,
+                        year: year,
+                        start_date: startDate,
+                        end_date: endDate
                     },
                     dataType: 'json',
                     success: function(data) {
-                        createBarChart(data);
+                        createBarChart(data); // Call the function to create the chart
                     },
                     error: function(xhr, status, error) {
                         console.error('Lỗi khi tải dữ liệu biểu đồ:', error);
                     }
                 });
             });
-
 
             // Initial chart loading
             $.ajax({
