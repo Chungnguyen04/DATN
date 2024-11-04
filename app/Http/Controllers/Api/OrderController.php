@@ -79,32 +79,44 @@ class OrderController extends Controller
     public function getRevenueAndProfitData(Request $request)
     {
         // Lấy giá trị bộ lọc từ yêu cầu
-        $filter = $request->input('filter', null);
-        $year = $request->input('year', Carbon::now()->year);
-        $date = $request->input('date', null);
+        $filter = $request->input('filter');
+        $date = $request->input('date');
+        $year = $request->input('year'); // Đổi từ yearFilter sang year_filter
+        $yearMonth = $request->input('yearMonth'); // Đổi từ yearFilter sang year_filter
+        $month = $request->input('month');
+        $startDate = $request->input('start_date');
+        $endDate = $request->input('end_date');
         $startDate = null;
         $endDate = Carbon::now()->endOfDay();
 
+        // Xác định khoảng thời gian dựa vào bộ lọc
         if ($filter === 'year') {
-            // Thống kê theo năm: Lấy dữ liệu từng tháng trong năm
+            // Thống kê theo năm
+            if ($year < 2000 || $year > Carbon::now()->year) {
+                return response()->json(['error' => 'Năm không hợp lệ, phải từ 2000 đến hiện tại.'], 400);
+            }
             $startDate = Carbon::create($year, 1, 1)->startOfDay();
             $endDate = Carbon::create($year, 12, 31)->endOfDay();
         } elseif ($filter === 'day' && $date) {
-            // Thống kê theo ngày: Lấy dữ liệu theo giờ trong ngày
+            // Thống kê theo ngày
             $startDate = Carbon::parse($date)->startOfDay();
             $endDate = Carbon::parse($date)->endOfDay();
+        } elseif ($filter === 'month') {
+            // Thống kê theo tháng
+            if ($month < 1 || $month > 12) {
+                return response()->json(['error' => 'Tháng không hợp lệ, phải từ 1 đến 12.'], 400);
+            }
+            $startDate = Carbon::create($yearMonth, $month, 1)->startOfMonth();
+            $endDate = $startDate->copy()->endOfMonth();
         } elseif ($filter === 'range') {
-            // Thống kê theo khoảng thời gian: Giới hạn tối đa 60 ngày
+            // Thống kê theo khoảng thời gian
             if ($request->input('start_date') && $request->input('end_date')) {
-                // Cả ngày bắt đầu và ngày kết thúc đều có
                 $startDate = Carbon::parse($request->input('start_date'))->startOfDay();
                 $endDate = Carbon::parse($request->input('end_date'))->endOfDay();
-
                 if ($startDate->diffInDays($endDate) > 60) {
                     return response()->json(['error' => 'Khoảng thời gian tối đa là 60 ngày'], 400);
                 }
             } elseif ($request->input('start_date')) {
-                // Chỉ có start_date, lấy đến thời điểm hiện tại
                 $startDate = Carbon::parse($request->input('start_date'))->startOfDay();
                 $endDate = Carbon::now()->endOfDay(); // Đến thời điểm hiện tại
             }
@@ -116,7 +128,7 @@ class OrderController extends Controller
 
         // Lấy dữ liệu doanh thu trong khoảng thời gian đã xác định
         $data = Order::where('status', 'completed')
-            ->whereBetween('created_at', [$startDate, $endDate]) // Áp dụng khoảng thời gian
+            ->whereBetween('created_at', [$startDate, $endDate])
             ->with([
                 'orderDetails' => function ($query) {
                     $query->select('order_id', 'price', 'quantity', 'variant_id');
@@ -131,8 +143,8 @@ class OrderController extends Controller
             'profit' => []
         ];
 
+        // Tính toán doanh thu và lợi nhuận theo bộ lọc
         if ($filter === 'year') {
-            // Thống kê theo năm (từng tháng)
             for ($month = 1; $month <= 12; $month++) {
                 $monthlyStart = Carbon::create($year, $month, 1)->startOfDay();
                 $monthlyEnd = $monthlyStart->copy()->endOfMonth();
@@ -185,8 +197,36 @@ class OrderController extends Controller
                 $result['revenue'][] = $revenue;
                 $result['profit'][] = $profit;
             }
+        } elseif ($filter === 'month') {
+            // Tạo danh sách các ngày trong tháng
+            $currentDate = $startDate->copy();
+            while ($currentDate->lte($endDate)) {
+                $orders = $data->filter(function ($order) use ($currentDate) {
+                    return $order->created_at->isSameDay($currentDate);
+                });
+
+                $revenue = $orders->sum(function ($order) {
+                    return $order->orderDetails->sum(function ($detail) {
+                        return $detail->price * $detail->quantity;
+                    });
+                });
+
+                $profit = $orders->sum(function ($order) {
+                    return $order->orderDetails->sum(function ($detail) {
+                        $variant = Variant::find($detail->variant_id);
+                        $importPrice = $variant ? $variant->import_price : 0;
+                        return ($detail->price - $importPrice) * $detail->quantity;
+                    });
+                });
+
+                $result['labels'][] = $currentDate->format('d-m-Y');
+                $result['revenue'][] = $revenue;
+                $result['profit'][] = $profit;
+
+                $currentDate->addDay();
+            }
         } else {
-            // Thống kê theo khoảng thời gian (theo ngày)
+            // Thống kê theo khoảng thời gian
             $currentDate = $startDate->copy();
             while ($currentDate->lte($endDate)) {
                 $dailyOrders = $data->filter(function ($order) use ($currentDate) {

@@ -350,17 +350,11 @@
                                                         <div class="col">
                                                             <select class="form-select" name="filter" id="filter">
                                                                 <option value="">-- Chọn bộ lọc --</option>
-                                                                <option value="year">Thống kê theo năm</option>
                                                                 <option value="day">Thống kê theo ngày</option>
+                                                                <option value="month">Thống kê theo tháng</option>
+                                                                <option value="year">Thống kê theo năm</option>
                                                                 <option value="range">Thống kê theo khoảng thời gian
                                                                 </option>
-                                                            </select>
-                                                        </div>
-
-                                                        <!-- Lọc theo năm -->
-                                                        <div class="col" id="yearFilter" style="display: none;">
-                                                            <select id="yearSelect" class="form-select" name="year">
-                                                                <option value="">-- Chọn Năm --</option>
                                                             </select>
                                                         </div>
 
@@ -370,11 +364,36 @@
                                                                 class="form-control">
                                                         </div>
 
+                                                        <div class="col" id="monthFilter" style="display: none;">
+                                                            <select id="monthSelect" class="form-select" name="month">
+                                                                @for ($i = 1; $i <= 12; $i++)
+                                                                    <option value="{{ $i }}">
+                                                                        {{ $i }}</option>
+                                                                @endfor
+                                                            </select>
+                                                            <select id="yearSelect" class="form-select mt-2"
+                                                                name="yearMonth">
+                                                                @for ($i = 2000; $i <= \Carbon\Carbon::now()->year; $i++)
+                                                                    <option value="{{ $i }}">
+                                                                        {{ $i }}</option>
+                                                                @endfor
+                                                            </select>
+                                                        </div>
+
+                                                        <!-- Lọc theo năm -->
+                                                        <div class="col" id="yearFilter" style="display: none;">
+                                                            <select id="yearSelect2" class="form-select"
+                                                                name="year_filter">
+                                                                <option value="">-- Chọn Năm --</option>
+                                                            </select>
+                                                        </div>
+
                                                         <!-- Lọc theo khoảng thời gian -->
                                                         <div class="col" id="rangeFilter" style="display: none;">
                                                             <input type="date" name="start_date" class="form-control"
                                                                 id="start_date">
                                                         </div>
+
                                                         <div class="col" id="rangeFilterEnd" style="display: none;">
                                                             <input type="date" name="end_date" class="form-control"
                                                                 id="end_date">
@@ -486,20 +505,20 @@
             var currentYear = new Date().getFullYear();
             var startYear = 2000;
 
-            // Thêm các năm từ 2000 đến năm hiện tại vào select với id="yearFilter"
+            // Thêm các năm từ 2000 đến năm hiện tại vào select với id="yearSelect"
             for (var year = startYear; year <= currentYear; year++) {
-                $('#yearSelect').append('<option value="' + year + '">' + year + '</option>');
+                $('#yearSelect2').append('<option value="' + year + '">' + year + '</option>');
             }
 
             // Hiển thị hoặc ẩn các bộ lọc khác nhau khi thay đổi `#filter`
             $('#filter').on('change', function() {
                 var filter = $(this).val();
-                $('#yearFilter').toggle(filter === 'year');
                 $('#dayFilter').toggle(filter === 'day');
+                $('#monthFilter').toggle(filter === 'month');
+                $('#yearFilter').toggle(filter === 'year');
                 $('#rangeFilter').toggle(filter === 'range');
                 $('#rangeFilterEnd').toggle(filter === 'range');
             });
-
 
             let barChart; // Declare a variable to hold the chart instance
 
@@ -561,23 +580,23 @@
                                         family: "Poppins"
                                     }
                                 }
-                            }
-                        },
-                        animations: {
-                            tension: {
-                                duration: 1000, // Thời gian hiệu ứng (ms)
-                                easing: 'easeOutBounce', // Kiểu easing cho hiệu ứng
-                                from: 1,
-                                to: 0,
-                                loop: true // Nếu muốn hiệu ứng lặp lại
                             },
-                            // Hiệu ứng cho cột
-                            scales: {
-                                y: {
-                                    beginAtZero: true,
-                                    animation: {
-                                        duration: 1000, // Thời gian hiệu ứng
-                                        easing: 'easeOutElastic', // Kiểu easing cho hiệu ứng
+                            animations: {
+                                tension: {
+                                    duration: 1000, // Thời gian hiệu ứng (ms)
+                                    easing: 'easeOutBounce', // Kiểu easing cho hiệu ứng
+                                    from: 1,
+                                    to: 0,
+                                    loop: true // Nếu muốn hiệu ứng lặp lại
+                                },
+                                // Hiệu ứng cho cột
+                                scales: {
+                                    y: {
+                                        beginAtZero: true,
+                                        animation: {
+                                            duration: 1000, // Thời gian hiệu ứng
+                                            easing: 'easeOutElastic', // Kiểu easing cho hiệu ứng
+                                        }
                                     }
                                 }
                             }
@@ -586,11 +605,12 @@
                 });
             }
 
-
             $('#btnFilter').on('click', function() {
                 const filter = $('select[name="filter"]').val();
                 const date = $('#dateFilter').val();
-                const year = $('#yearSelect').val();
+                const year = $('#yearSelect2').val(); // Đổi từ yearSelect sang yearSelect2
+                const yearMonth = $('#yearSelect').val(); // Đổi từ yearSelect sang yearSelect2
+                const month = $('#monthSelect').val();
                 const startDate = $('#start_date').val();
                 const endDate = $('#end_date').val();
 
@@ -602,6 +622,8 @@
                         filter: filter,
                         date: date,
                         year: year,
+                        yearMonth: yearMonth,
+                        month: month,
                         start_date: startDate,
                         end_date: endDate
                     },
@@ -610,7 +632,12 @@
                         createBarChart(data); // Call the function to create the chart
                     },
                     error: function(xhr, status, error) {
-                        console.error('Lỗi khi tải dữ liệu biểu đồ:', error);
+                        Swal.fire({
+                            position: "center",
+                            icon: "error",
+                            title: xhr.responseJSON.error,
+                            showConfirmButton: true,
+                        })
                     }
                 });
             });
