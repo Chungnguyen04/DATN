@@ -20,7 +20,7 @@
                                 <form action="{{ route('users.store') }}" method="POST" enctype="multipart/form-data">
                                     @csrf
                                     <div class="row">
-                                        <label for="" class="form-label"> Name </label>
+                                        <label for="" class="form-label"> Tên Người Dùng </label>
                                         <input type="text" class="form-control" name="name">
                                         @error('name')
                                             <p class="text-danger">{{ $message }}</p>
@@ -34,21 +34,21 @@
                                         @enderror
                                     </div>
                                     <div class="row">
-                                        <label for="" class="form-label">Password</label>
+                                        <label for="" class="form-label">Mật Khẩu</label>
                                         <input type="text" class="form-control" name="password">
                                         @error('password')
                                             <p class="text-danger">{{ $message }}</p>
                                         @enderror
                                     </div>
                                     <div class="row">
-                                        <label for="" class="form-label">Phone</label>
+                                        <label for="" class="form-label">Số Điện Thoại</label>
                                         <input type="text" class="form-control" name="phone">
                                         @error('phone')
                                             <p class="text-danger">{{ $message }}</p>
                                         @enderror
                                     </div>
                                     <div class="row">
-                                        <label for="" class="form-label">Address</label>
+                                        <label for="" class="form-label">Địa Chỉ</label>
                                         <input type="text" class="form-control" name="address">
                                         @error('address')
                                             <p class="text-danger">{{ $message }}</p>
@@ -58,10 +58,10 @@
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="type" class="form-label">Type</label>
+                                                <label for="type" class="form-label">Vai Trò</label>
                                                 <select name="type" id="type" class="form-control">
-                                                    <option value="Admin">Admin</option>
-                                                    <option value="Member">Member</option>
+                                                    <option value="admin">Admin</option>
+                                                    <option value="member">Member</option>
                                                 </select>
                                             </div>
                                         </div>

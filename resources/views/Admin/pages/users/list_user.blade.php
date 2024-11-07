@@ -27,13 +27,13 @@
                                         <thead>
                                             <tr>
                                                 <th scope="col">ID</th>
-                                                <th scope="col">Name</th>
+                                                <th scope="col">Tên Người Dùng</th>
                                                 <th scope="col">Email</th>
-                                                <th scope="col">Password</th>
-                                                <th scope="col">Phone</th>
-                                                <th scope="col">Address</th>
-                                                <th scope="col">Type</th>
-                                                <th scope="col">Action</th>
+                                                <th scope="col">Mật Khẩu</th>
+                                                <th scope="col">Số Điện Thoại</th>
+                                                <th scope="col">Địa Chỉ</th>
+                                                <th scope="col">Vai Trò</th>
+                                                <th scope="col">Hành Động</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -61,23 +61,19 @@
                                                         </td>
                                                     </tr>
                                                 @endforeach
-                                                <!-- Hiển thị các liên kết phân trang -->
-                                                <nav aria-label="Page navigation example">
-                                                    <div class="d-flex justify-content-center mt-4">
-                                                        {{ $users->links() }} <!-- Sử dụng Bootstrap 5 cho phân trang -->
-                                                    </div>
-                                                </nav>
                                             @else
-                                                <tr>
-                                                    <td colspan="8">Không có dữ liệu người dùng nào.</td>
-                                                </tr>
                                             @endif
                                         </tbody>
                                     </table>
                                 </div>
-                            </div>
+                            </div>                           
                         </div>
                     </div>
+                    <nav aria-label="Page navigation example">
+                        <div class="d-flex justify-content-center mt-4">
+                            {{ $users->links() }} <!-- Sử dụng Bootstrap 5 cho phân trang -->
+                        </div>
+                    </nav>
                 </div>
             </div>
         </div>

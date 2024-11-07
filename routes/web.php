@@ -25,6 +25,11 @@ Route::get('/login', [AuthController::class, 'loginForm'])
 
 Route::post('/login', [AuthController::class, 'loginAdmin'])
     ->name('admin.login.submit');
+  
+Route::get('/forgetpass', [AuthController::class, 'forgetpass'])
+    ->name('forgetpass');
+Route::post('/forgetpass', [AuthController::class, 'Postpass']);
+
 
 Route::post('/logout', [AuthController::class, 'logout'])
     ->name('logout');

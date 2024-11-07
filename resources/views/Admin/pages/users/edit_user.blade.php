@@ -21,7 +21,7 @@
                                     enctype="multipart/form-data">
                                     @csrf
                                     <div class="row">
-                                        <label for="" class="form-label"> Name </label>
+                                        <label for="" class="form-label"> Tên Người Dùng </label>
                                         <input type="text" class="form-control" name="name"
                                             value="{{ $user->name }}">
                                         @error('name')
@@ -37,7 +37,7 @@
                                         @enderror
                                     </div>
                                     <div class="row">
-                                        <label for="" class="form-label">Password</label>
+                                        <label for="" class="form-label">Mật Khẩu</label>
                                         <input type="text" class="form-control" name="password"
                                             value="{{ $user->password }}">
                                         @error('password')
@@ -45,7 +45,7 @@
                                         @enderror
                                     </div>
                                     <div class="row">
-                                        <label for="" class="form-label">Phone</label>
+                                        <label for="" class="form-label">Số Điện Thoại</label>
                                         <input type="text" class="form-control" name="phone"
                                             value="{{ $user->phone }}">
                                         @error('phone')
@@ -53,7 +53,7 @@
                                         @enderror
                                     </div>
                                     <div class="row">
-                                        <label for="" class="form-label">Address</label>
+                                        <label for="" class="form-label">Địa Chỉ</label>
                                         <input type="text" class="form-control" name="address"
                                             value="{{ $user->address }}">
                                         @error('address')
@@ -63,16 +63,16 @@
 
 
                                     <div class="mb-3">
-                                        <label for="type" class="form-label">Vai trò người dùng</label>
+                                        <label for="type" class="form-label">Vai trò</label>
                                         <select name="type" id="type" class="form-select">
-                                            <option value="Admin" {{ $user->type == 'Admin' ? 'selected' : '' }}>Admin
+                                            <option value="admin" {{ $user->type == 'admin' ? 'selected' : '' }}>Admin
                                             </option>
-                                            <option value="Member" {{ $user->type == 'Member' ? 'selected' : '' }}>Member
+                                            <option value="member" {{ $user->type == 'member' ? 'selected' : '' }}>Member
                                             </option>
                                         </select>
                                     </div>
                                     <hr>
-                                    <button type="submit" class="btn btn-success">Sửa mới</button>
+                                    <button type="submit" class="btn btn-success">Cập nhật</button>
                                 </form>
                             </div>
                         </div>
