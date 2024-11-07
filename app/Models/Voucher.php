@@ -8,6 +8,13 @@ use Illuminate\Database\Eloquent\Model;
 class Voucher extends Model
 {
     use HasFactory;
+
     protected $table = 'vouchers';
+
     protected $guarded = [];
+
+    public function userVouchers()
+    {
+        return $this->hasMany(UserVoucher::class, 'voucher_id', 'id');
+    }
 }

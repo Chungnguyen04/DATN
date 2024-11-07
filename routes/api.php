@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\CommentController;
 use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\RoleController;
 use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\Api\VoucherController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -150,17 +151,38 @@ Route::prefix('orders')
         // end api
     });
 
-    Route::prefix('comments')
+Route::prefix('vouchers')
+    ->name('vouchers.')
+    ->controller(VoucherController::class)
+    ->group(function () {
+
+        // Api danh sách voucher
+        Route::post('/getVoucherList', 'getVoucherList')
+            ->name('getVoucherList');
+        // end api
+
+        // Api luu voucher cho người dùng
+        Route::post('/storeUserVoucher', 'storeUserVoucher')
+            ->name('storeUserVoucher');
+        // end api
+
+        // Api check quyền sử dụng voucher theo số tiền đơn hàng
+        Route::post('/checkVoucher', 'checkVoucher')
+            ->name('checkVoucher');
+        // end api
+
+    });
+
+Route::prefix('comments')
     ->name('comments.')
     ->controller(CommentController::class)
     ->group(function () {
-         // Lấy danh sách đánh giá cho sản phẩm
+        // Lấy danh sách đánh giá cho sản phẩm
         Route::post('product', 'getComment')
             ->name('getComment')
             ->middleware('auth:sanctum');
-        
-         // Thêm đánh giá cho sản phẩm
+
+        // Thêm đánh giá cho sản phẩm
         Route::post('add', 'addComment')
             ->name('addComment');
     });
-

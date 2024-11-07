@@ -17,14 +17,14 @@ class DashboardController extends Controller
         // Tổng doanh thu của tháng hiện tại
         $currentMonth = now()->month;
         $currentYear = now()->year;
-
+        
         $totalRevenueThisMonth = Order::where('status', 'completed')
             ->whereYear('created_at', $currentYear)
             ->whereMonth('created_at', $currentMonth)
-            ->with('orderDetails')
+            ->with('orderDetails') // Load mối quan hệ orderDetails
             ->get()
-            ->sum(function ($order) {
-                return $order->orderDetails->sum(function ($detail) {
+            ->sum(function($order) {
+                return $order->orderDetails->sum(function($detail) {
                     return $detail->price * $detail->quantity;
                 });
             });
@@ -50,6 +50,7 @@ class DashboardController extends Controller
                 return (object)[
                     'product' => $product,
                     'revenue' => $revenue,
+                    'image' => asset($product->image),
                 ];
             })
             ->sortByDesc('revenue')
@@ -60,10 +61,11 @@ class DashboardController extends Controller
         $topProducts = Product::join('order_details', 'products.id', '=', 'order_details.order_id')
             ->select(
                 'products.name',
+                'products.image',
                 DB::raw('SUM(order_details.quantity) as sold_quantity'),
                 DB::raw('SUM(order_details.price * order_details.quantity) as revenue')
             )
-            ->groupBy('products.name')
+            ->groupBy('products.id','products.name', 'products.image')
             ->orderByDesc('sold_quantity')
             ->take(5)
             ->get();
@@ -73,10 +75,11 @@ class DashboardController extends Controller
             'products.id',
             'products.name',
             'products.sku',
+            'products.image',
             DB::raw('SUM(order_details.price * order_details.quantity) as profit')
         )
             ->join('order_details', 'products.id', '=', 'order_details.order_id')
-            ->groupBy('products.id', 'products.name', 'products.sku')
+            ->groupBy('products.id', 'products.name', 'products.sku','products.image',)
             ->orderByDesc('profit')
             ->take(5)
             ->get();
