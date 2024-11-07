@@ -175,7 +175,7 @@ Route::controller(VoucherController::class)
         Route::get('/edit/{id}', 'edit')
             ->name('edit');
 
-        Route::post('/update/{id}', 'update')
+        Route::put('/update/{id}', 'update')
             ->name('update');
 
         Route::delete('/delete/{id}', 'delete')

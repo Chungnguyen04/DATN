@@ -1,84 +1,98 @@
 @extends('Admin.layouts.master')
 
 @section('title')
-    Cập nhật sản phẩm
+    Cập nhật người dùng
 @endsection
 
 @section('content')
     <div class="page-content">
         <div class="container-fluid">
-            <div class="row">
-                <div class="" style="min-height: 950px;">
-                    <div class="py-3 d-flex align-items-sm-center flex-sm-row flex-column">
-                        <div class="flex-grow-1">
-                            <h4 class="fs-18 fw-semibold m-0">Cập nhật người dùng</h4>
-                        </div>
-                    </div>
-                    <div class="card">
+            <div class="col-xxl-12">
+                <div class="card">
+                    <div class="card-header align-items-center d-flex">
+                        <h4 class="card-title mb-0 flex-grow-1">Cập nhật người dùng</h4>
+                    </div><!-- end card header -->
+
+                    <form action="{{ route('users.update', $user->id) }}" method="POST" enctype="multipart/form-data">
+                        @csrf
+                        @method('PUT')
                         <div class="card-body">
                             <div class="live-preview">
-                                <form action="{{ route('users.update', $user->id) }}" method="POST"
-                                    enctype="multipart/form-data">
-                                    @csrf
-                                    <div class="row">
-                                        <label for="" class="form-label"> Tên Người Dùng </label>
-                                        <input type="text" class="form-control" name="name"
-                                            value="{{ $user->name }}">
-                                        @error('name')
-                                            <p class="text-danger">{{ $message }}</p>
-                                        @enderror
-                                    </div>
-                                    <div class="row">
-                                        <label for="" class="form-label">Email</label>
-                                        <input type="text" class="form-control" name="email"
-                                            value="{{ $user->email }}">
-                                        @error('email')
-                                            <p class="text-danger">{{ $message }}</p>
-                                        @enderror
-                                    </div>
-                                    <div class="row">
-                                        <label for="" class="form-label">Mật Khẩu</label>
-                                        <input type="text" class="form-control" name="password"
-                                            value="{{ $user->password }}">
-                                        @error('password')
-                                            <p class="text-danger">{{ $message }}</p>
-                                        @enderror
-                                    </div>
-                                    <div class="row">
-                                        <label for="" class="form-label">Số Điện Thoại</label>
-                                        <input type="text" class="form-control" name="phone"
-                                            value="{{ $user->phone }}">
-                                        @error('phone')
-                                            <p class="text-danger">{{ $message }}</p>
-                                        @enderror
-                                    </div>
-                                    <div class="row">
-                                        <label for="" class="form-label">Địa Chỉ</label>
-                                        <input type="text" class="form-control" name="address"
-                                            value="{{ $user->address }}">
-                                        @error('address')
-                                            <p class="text-danger">{{ $message }}</p>
-                                        @enderror
-                                    </div>
+                                <!-- Tên Người Dùng -->
+                                <div class="col-md-6 mt-3">
+                                    <label for="userName" class="form-label">Tên Người Dùng</label>
+                                    <input type="text" class="form-control" name="name" id="userName"
+                                        placeholder="Nhập tên người dùng..." value="{{ $user->name }}">
+                                    @error('name')
+                                        <span class="text-danger">{{ $message }}</span>
+                                    @enderror
+                                </div>
 
+                                <!-- Email -->
+                                <div class="col-md-6 mt-3">
+                                    <label for="userEmail" class="form-label">Email</label>
+                                    <input type="email" class="form-control" name="email" id="userEmail"
+                                        placeholder="Nhập email..." value="{{ $user->email }}">
+                                    @error('email')
+                                        <span class="text-danger">{{ $message }}</span>
+                                    @enderror
+                                </div>
 
-                                    <div class="mb-3">
-                                        <label for="type" class="form-label">Vai trò</label>
-                                        <select name="type" id="type" class="form-select">
-                                            <option value="admin" {{ $user->type == 'admin' ? 'selected' : '' }}>Admin
-                                            </option>
-                                            <option value="member" {{ $user->type == 'member' ? 'selected' : '' }}>Member
-                                            </option>
-                                        </select>
+                                <!-- Mật Khẩu -->
+                                <div class="col-md-6 mt-3">
+                                    <label for="userPassword" class="form-label">Mật Khẩu</label>
+                                    <input type="text" class="form-control" name="password" id="userPassword"
+                                        placeholder="Nhập mật khẩu..." value="{{ $user->password }}">
+                                    @error('password')
+                                        <span class="text-danger">{{ $message }}</span>
+                                    @enderror
+                                </div>
+
+                                <!-- Số Điện Thoại -->
+                                <div class="col-md-6 mt-3">
+                                    <label for="userPhone" class="form-label">Số Điện Thoại</label>
+                                    <input type="text" class="form-control" name="phone" id="userPhone"
+                                        placeholder="Nhập số điện thoại..." value="{{ $user->phone }}">
+                                    @error('phone')
+                                        <span class="text-danger">{{ $message }}</span>
+                                    @enderror
+                                </div>
+
+                                <!-- Địa Chỉ -->
+                                <div class="col-md-6 mt-3">
+                                    <label for="userAddress" class="form-label">Địa Chỉ</label>
+                                    <input type="text" class="form-control" name="address" id="userAddress"
+                                        placeholder="Nhập địa chỉ..." value="{{ $user->address }}">
+                                    @error('address')
+                                        <span class="text-danger">{{ $message }}</span>
+                                    @enderror
+                                </div>
+
+                                <!-- Vai Trò -->
+                                <div class="col-md-6 mt-3">
+                                    <label for="userType" class="form-label">Vai Trò</label>
+                                    <select name="type" id="userType" class="form-select">
+                                        <option value="admin" {{ $user->type == 'admin' ? 'selected' : '' }}>Admin
+                                        </option>
+                                        <option value="member" {{ $user->type == 'member' ? 'selected' : '' }}>Member
+                                        </option>
+                                    </select>
+                                </div>
+
+                                <div class="col-12 mt-4">
+                                    <div class="text-start">
+                                        <a href="{{ route('users.index') }}" class="btn btn-outline-danger">Quay lại</a>
+                                        <button type="submit" class="btn btn-primary">Cập nhật</button>
                                     </div>
-                                    <hr>
-                                    <button type="submit" class="btn btn-success">Cập nhật</button>
-                                </form>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    </form>
                 </div>
             </div>
         </div>
     </div>
+
+    <!-- Toggle Password Visibility Script -->
+  
 @endsection
