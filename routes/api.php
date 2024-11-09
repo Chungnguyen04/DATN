@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\CommentController;
 use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\RoleController;
+use App\Http\Controllers\Api\SlideController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\VoucherController;
 use Illuminate\Support\Facades\Route;
@@ -194,5 +195,10 @@ Route::prefix('orders')
 
         Route::post('getAllCommentsForProduct','getAllCommentsForProduct')
         ->name('getAllCommentsForProduct');
+    });
+
+    Route::prefix('slider')->name('slider.')->group(function () {
+        Route::get('/', [SlideController::class, 'index'])->name('index'); // Lấy danh sách sliders
+        Route::get('/{id}', [SlideController::class, 'show'])->name('show'); // Xem slider
     });
 
