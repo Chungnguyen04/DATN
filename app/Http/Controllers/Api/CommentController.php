@@ -11,16 +11,13 @@ use Illuminate\Http\Request;
 
 class CommentController extends Controller
 {
-    public function getComment(Request $request)
+
+    public function getAllCommentsForProduct(Request $request)
     {
         try {
             // Lấy `product_id` từ body của yêu cầu
             $productId = $request->input('product_id');
-            $variantId = $request->input('variant_id');
-    
-            // Lấy thông tin người dùng đã xác thực từ token
-            $user = $request->user();
-    
+
             // Kiểm tra xem sản phẩm có tồn tại không
             $product = Product::find($productId);
             if (!$product) {
@@ -29,15 +26,14 @@ class CommentController extends Controller
                     'message' => 'Sản phẩm không tồn tại.'
                 ], Response::HTTP_NOT_FOUND);
             }
-    
-            // Lấy tất cả các bình luận cho sản phẩm này từ người dùng đã xác thực và bao gồm thông tin biến thể
-            $comments = ModelsComment::with(['variant', 'user']) // Bao gồm thông tin variant và user
+
+            // Lấy tất cả các bình luận cho sản phẩm này, bao gồm thông tin biến thể, weight và user
+            $comments = ModelsComment::with(['variant.weight', 'user']) // Bao gồm thông tin weight trong variant và user
                 ->where('product_id', $productId)
-                ->where('variant_id', $variantId)
                 ->where('status', 'default')
                 ->orderBy('id', 'desc')
                 ->get();
-    
+
             // Chuẩn bị phản hồi
             $response = $comments->map(function ($comment) {
                 return [
@@ -49,12 +45,20 @@ class CommentController extends Controller
                         'id' => $comment->user->id,
                         'name' => $comment->user->name,
                     ],
+                    'variant' => [
+                        'id' => $comment->variant->id,
+                        'name' => $comment->variant->name,
+                        'weight' => $comment->variant->weight ? [
+                            'weight' => $comment->variant->weight->weight,
+                            'unit' => $comment->variant->weight->unit,
+                        ] : null,
+                    ],
                 ];
             });
-    
+
             return response()->json([
                 'status' => true,
-                'message' => 'Danh sách bình luận đã được lấy thành công.',
+                'message' => 'Danh sách bình luận của sản phẩm đã được lấy thành công.',
                 'data' => $response
             ], Response::HTTP_OK);
         } catch (\Exception $e) {
@@ -66,6 +70,76 @@ class CommentController extends Controller
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
+
+
+
+    public function getComment(Request $request)
+    {
+        try {
+            // Lấy `order_id` từ body của yêu cầu
+            $orderId = $request->input('order_id');
+
+            // Lấy thông tin người dùng đã xác thực từ token
+            $user = $request->user();
+
+            // Kiểm tra xem người dùng đã đăng nhập chưa
+            if (!$user) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Người dùng không được xác thực.'
+                ], Response::HTTP_UNAUTHORIZED);
+            }
+
+            // Kiểm tra xem đơn hàng có tồn tại không và có thuộc về người dùng không
+            $order = Order::where('id', $orderId)->where('user_id', $user->id)->first();
+            if (!$order) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Đơn hàng không tồn tại hoặc không thuộc về người dùng này.'
+                ], Response::HTTP_NOT_FOUND);
+            }
+
+            // Lấy tất cả các bình luận cho đơn hàng này từ người dùng đã xác thực
+            $comments = ModelsComment::with(['variant', 'product']) // Bao gồm thông tin variant và product
+                ->where('order_id', $orderId)
+                ->where('user_id', $user->id)
+                ->where('status', 'default')
+                ->orderBy('id', 'desc')
+                ->get();
+
+            // Chuẩn bị phản hồi
+            $response = $comments->map(function ($comment) {
+                return [
+                    'id' => $comment->id,
+                    'content' => $comment->content,
+                    'rating' => $comment->rating,
+                    'created_at' => $comment->created_at,
+                    'product' => [
+                        'id' => $comment->product->id,
+                        'name' => $comment->product->name,
+                    ],
+                    'variant' => [
+                        'id' => $comment->variant->id,
+                        'name' => $comment->variant->name,
+                    ],
+                ];
+            });
+
+            return response()->json([
+                'status' => true,
+                'message' => 'Danh sách bình luận cho đơn hàng đã được lấy thành công.',
+                'data' => $response
+            ], Response::HTTP_OK);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Đã xảy ra lỗi khi truy xuất dữ liệu',
+                'errors' => [$e->getMessage()],
+                'code' => $e->getCode()
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
 
     public function addComment(Request $request)
     {

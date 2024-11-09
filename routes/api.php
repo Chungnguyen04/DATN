@@ -173,7 +173,7 @@ Route::prefix('vouchers')
 
     });
 
-Route::prefix('comments')
+    Route::prefix('comments')
     ->name('comments.')
     ->controller(CommentController::class)
     ->group(function () {
@@ -185,4 +185,8 @@ Route::prefix('comments')
         // Thêm đánh giá cho sản phẩm
         Route::post('add', 'addComment')
             ->name('addComment');
+
+        Route::post('getAllCommentsForProduct','getAllCommentsForProduct')
+        ->name('getAllCommentsForProduct');
     });
+
