@@ -151,26 +151,32 @@ Route::prefix('orders')
         // end api
     });
 
-Route::prefix('vouchers')
+    Route::prefix('vouchers')
     ->name('vouchers.')
     ->controller(VoucherController::class)
     ->group(function () {
 
         // Api danh sách voucher
-        Route::post('/getVoucherList', 'getVoucherList')
+        Route::get('/getVoucherList', 'getVoucherList')
             ->name('getVoucherList');
         // end api
 
-        // Api luu voucher cho người dùng
-        Route::post('/storeUserVoucher', 'storeUserVoucher')
-            ->name('storeUserVoucher');
+        // Api danh sách voucher đã lưu bởi người dùng
+        Route::get('/getUserVouchers', 'getUserVouchers')
+            ->name('getUserVouchers')
+            ->middleware('auth:sanctum');
         // end api
 
-        // Api check quyền sử dụng voucher theo số tiền đơn hàng
+        // Api lưu voucher cho người dùng
+        Route::post('/storeUserVoucher', 'storeUserVoucher')
+            ->name('storeUserVoucher')
+            ->middleware('auth:sanctum');
+        // end api
+
+        // Api kiểm tra sử dụng voucher theo đơn hàng
         Route::post('/checkVoucher', 'checkVoucher')
             ->name('checkVoucher');
         // end api
-
     });
 
     Route::prefix('comments')

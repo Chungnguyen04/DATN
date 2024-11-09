@@ -258,7 +258,6 @@ class OrderController extends Controller
         return response()->json($result);
     }
 
-
     // Chi tiết đơn hàng hiển thị sản phẩm của id order đó
     public function getOrderDetails($orderId)
     {
@@ -382,6 +381,7 @@ class OrderController extends Controller
         }
     }
 
+    // Cập nhật trạng thái đã nhận được hàng
     public function markAsCompleted($orderId)
     {
         DB::beginTransaction();
@@ -481,6 +481,11 @@ class OrderController extends Controller
                             'message' => 'Giá trị đơn hàng không đủ điều kiện sử dụng voucher.',
                         ]);
                     }
+                } else {
+                    return response()->json([
+                        'status' => false,
+                        'message' => 'Voucher không tồn tại.',
+                    ]);
                 }
             }
 
@@ -490,7 +495,7 @@ class OrderController extends Controller
             // Kiểm tra phương thức thanh toán
             if ($request->payment_method == 'vnpay') {
                 $orderCode = $this->generateRandomOrderCode(8);
-                $vnpayUrl = $this->generateVnpayUrl($orderCode, $finalPrice);
+                $vnpayUrl = $this->generateVnpayUrl($orderCode, $request->total_price);
 
                 // Tạo đơn hàng tạm thời với trạng thái chờ thanh toán
                 $order = Order::create([
@@ -500,8 +505,8 @@ class OrderController extends Controller
                     'address' => $request->address,
                     'phone' => $request->phone,
                     'total_price' => $request->total_price,
-                    'discount_value' => $discountValue ?? 0, // Thêm giá trị giảm giá
-                    'final_price' => $finalPrice ?? 0, // Thêm giá trị cuối cùng
+                    'discount_value' => $discountValue, // Thêm giá trị giảm giá
+                    'final_price' => $finalPrice, // Thêm giá trị cuối cùng
                     'status' => 'pending',
                     'payment_method' => 'vnpay',
                     'payment_status' => 'unpaid',
@@ -579,7 +584,6 @@ class OrderController extends Controller
                         ]);
                     }
                 }
-
                 // Lưu lại lịch sử trạng thái đơn hàng ban đầu
                 OrderStatusHistory::create([
                     'order_id' => $order->id,
@@ -593,6 +597,12 @@ class OrderController extends Controller
                     Cart::where('user_id', $request->user_id)
                         ->where('variant_id', $product['variant_id'])
                         ->delete();
+                }
+
+                if ($voucher) {
+                    $voucher->update([
+                        'total_uses' => $voucher->total_uses - 1
+                    ]);
                 }
 
                 DB::commit();
@@ -716,6 +726,12 @@ class OrderController extends Controller
                             ->where('variant_id', $orderDetail->variant_id)
                             ->delete();
                     }
+
+                    $voucher = Voucher::find($order->voucher_id);
+
+                    $voucher->update([
+                        'total_uses' => $voucher->total_uses - 1
+                    ]);
 
                     DB::commit();
 

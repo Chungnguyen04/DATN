@@ -18,14 +18,14 @@ class VoucherController extends Controller
         $vouchers = Voucher::where('end_date', '>', now())
             ->orderBy('id', 'desc')
             ->get();
-    
+
         if ($vouchers->isEmpty()) {
             return response()->json([
                 'status' => false,
                 'message' => 'Không có voucher nào.'
             ], Response::HTTP_NOT_FOUND);
         }
-    
+
         return response()->json([
             'status' => true,
             'message' => 'Lấy danh sách voucher thành công',
@@ -90,11 +90,11 @@ class VoucherController extends Controller
         if (!$voucher) {
             return response()->json([
                 'status' => false,
-'message' => 'Voucher không tồn tại.',
+                'message' => 'Voucher không tồn tại.',
             ], Response::HTTP_NOT_FOUND);
         }
 
-        
+
 
         if ($request->total_price < $voucher->discount_min_price) {
             return response()->json([
@@ -102,10 +102,6 @@ class VoucherController extends Controller
                 'message' => 'Đơn hàng của bạn không đủ điều kiện để sử dụng voucher này!',
             ], Response::HTTP_OK);
         }
-
-        // Giảm số lượng sử dụng của voucher
-        $voucher->total_uses -= 1;
-        $voucher->save();
 
         return response()->json([
             'status' => true,

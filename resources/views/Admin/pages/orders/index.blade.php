@@ -86,7 +86,7 @@
                                                         <td>{{ $key + 1 }}</td>
                                                         <td>{{ $order->code }}</td>
                                                         <td>{{ !empty($order->user_id) ? (!empty($order->user->name) ? $order->user->name : '') : 'Khách vãng lai' }}</td>
-                                                        <td>{{ number_format($order->total_price - $order->discount_value, 0, ',', '.') }} VND</td>
+                                                        <td>{{ number_format($order->total_price, 0, ',', '.') }} VND</td>
                                                         <td>
                                                             @if(!empty($order->status))
                                                                 @if($order->status == 'pending')
