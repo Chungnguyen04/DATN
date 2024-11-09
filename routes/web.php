@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\CommentController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\OrderController;
+use App\Http\Controllers\Admin\SlideController;
 use App\Http\Controllers\Admin\VoucherController;
 use App\Http\Controllers\Admin\WeightController;
 use App\Http\Controllers\Admin\UserController;
@@ -196,4 +197,12 @@ Route::controller(CommentController::class)
     Route::put('/update/{comment}','update')
     ->name('update');
 });
+});
+Route::prefix('admin/sliders')->name('sliders.')->group(function () {
+    Route::get('/', [SlideController::class, 'index'])->name('index');
+    Route::get('/create', [SlideController::class, 'create'])->name('create');
+    Route::post('/', [SlideController::class, 'store'])->name('store');
+    Route::get('/{id}/edit', [SlideController::class, 'edit'])->name('edit');
+    Route::put('/{id}', [SlideController::class, 'update'])->name('update');
+    Route::delete('/{id}', [SlideController::class, 'delete'])->name('delete');
 });

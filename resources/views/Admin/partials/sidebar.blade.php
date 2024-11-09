@@ -43,6 +43,11 @@
                     </a>
                 </li>
                 <li class="nav-item">
+                    <a class="nav-link menu-link" href="{{ route('sliders.index') }}">
+                        <i class="ri-image-line"></i> <span data-key="t-sliders">Quản lý Slider</span>
+                    </a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link menu-link" href="{{ route('users.index') }}">
                         <i class="ri-user-fill"></i> <span data-key="t-dashboards">Quản lí người dùng</span>
                     </a>
