@@ -198,7 +198,7 @@ Route::prefix('orders')
     });
 
     Route::prefix('slider')->name('slider.')->group(function () {
-        Route::get('/', [SlideController::class, 'index'])->name('index'); // Lấy danh sách sliders
-        Route::get('/{id}', [SlideController::class, 'show'])->name('show'); // Xem slider
+        Route::get('/', [SlideController::class, 'getAllSlider'])->name('getAllSlider'); // Lấy danh sách sliders
+        Route::get('/{id}', [SlideController::class, 'getSliderById'])->name('getSliderById'); // Xem chi tiết slider
     });
-
+    
