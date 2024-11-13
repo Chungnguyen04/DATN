@@ -433,8 +433,7 @@
                                                 <tr>
                                                     <td>{{ $item->product->name }}</td>
                                                     <td>
-                                                        <img src="{{ asset('storage/products' . $item->product->image_path) }}"
-                                                            alt="" style="width: 50px; height: 50px;" />
+                                                        <img src="{{ $item->image }}" alt="" style="width: 50px; height: 50px;">
                                                     </td>
                                                     <td>{{ number_format($item->revenue, 2) }} VND</td>
                                                 </tr>
@@ -449,6 +448,7 @@
                                         <thead>
                                             <tr>
                                                 <th>Tên Sản Phẩm</th>
+                                                <th>Hình Ảnh</th>
                                                 <th>Số Lượng Đã Bán</th>
                                                 <th>Doanh Thu</th>
                                             </tr>
@@ -457,6 +457,9 @@
                                             @foreach ($topProducts as $products)
                                                 <tr>
                                                     <td>{{ $products->name }}</td>
+                                                    <td>
+                                                        <img src="{{ $products->image }}" alt="" style="width: 50px; height: 50px;">
+                                                    </td>
                                                     <td>{{ $products->sold_quantity }}</td>
                                                     <td>{{ number_format($products->revenue, 2) }} VND</td>
                                                 </tr>
@@ -467,27 +470,28 @@
 
                                 <div class="top-products">
                                     <h3>Top 5 Sản Phẩm Lợi Nhuận Cao Nhất</h3>
-                                    <div class="product-list">
-                                        @foreach ($topProfitProducts as $product)
-                                            <div class="product-item">
-                                                <div class="product-image-placeholder">
-                                                    @if ($product->image_path)
-                                                        <img src="{{ asset('storage/products' . $product->image_path) }}"
-                                                            alt="{{ $product->name }}"
-                                                            style="width: 100%; height: auto;" />
-                                                    @else
-                                                        X <!-- Hiển thị 'X' nếu không có hình ảnh -->
-                                                    @endif
-                                                </div>
-                                                <div class="product-details">
-                                                    <p class="product-name">{{ $product->name }}</p>
-                                                    <p class="product-code">{{ $product->code }}</p>
-                                                </div>
-                                                <div class="product-price">{{ number_format($product->profit, 0) }} VNĐ
-                                                </div>
-                                            </div>
-                                        @endforeach
-                                    </div>
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th>Tên Sản Phẩm</th>
+                                                <th>Mã Sản Phẩm</th>
+                                                <th>Hình ảnh</th>
+                                                <th>Doanh Thu</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach ($topProfitProducts as $product)
+                                                <tr>
+                                                    <td>{{ $products->name }}</td>
+                                                    <td>{{ $product->sku }}</td>
+                                                    <td>
+                                                        <img src="{{ $product->image }}" alt="" style="width: 50px; height: 50px;">
+                                                    </td>
+                                                    <td>{{ number_format($product->profit, 0) }} VND</td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
                         </div>

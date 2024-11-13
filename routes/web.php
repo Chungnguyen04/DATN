@@ -25,6 +25,11 @@ Route::get('/login', [AuthController::class, 'loginForm'])
 
 Route::post('/login', [AuthController::class, 'loginAdmin'])
     ->name('admin.login.submit');
+  
+Route::get('/forgetpass', [AuthController::class, 'forgetpass'])
+    ->name('forgetpass');
+Route::post('/forgetpass', [AuthController::class, 'Postpass']);
+
 
 Route::post('/logout', [AuthController::class, 'logout'])
     ->name('logout');
@@ -170,7 +175,7 @@ Route::controller(VoucherController::class)
         Route::get('/edit/{id}', 'edit')
             ->name('edit');
 
-        Route::post('/update/{id}', 'update')
+        Route::put('/update/{id}', 'update')
             ->name('update');
 
         Route::delete('/delete/{id}', 'delete')

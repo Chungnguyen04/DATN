@@ -1,9 +1,11 @@
 <?php
 
 namespace App\Http\Controllers\Admin;
+
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
@@ -68,10 +70,11 @@ class UserController extends Controller
 
     public function update($id, Request $req)
     {
+        // Xác thực dữ liệu
         $validated = $req->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required', // Kiểm tra email trùng lặp
-            'password' => 'required|string|min:6',
+            'email' => 'required|email|unique:users,email,' . $id, // Kiểm tra email trùng lặp nhưng bỏ qua email của chính user đang cập nhật
+            'password' => 'nullable|string|min:6', // Cho phép mật khẩu có thể là null
             'phone' => 'required',
             'address' => 'required',
             'type' => 'required',
@@ -84,20 +87,28 @@ class UserController extends Controller
             'phone.required' => 'Số điện thoại bắt buộc',
             'type.required' => 'Vai trò bắt buộc phải nhập',
         ]);
-
+    
+        // Lấy user hiện tại
+        $user = User::findOrFail($id);
+    
+        // Cập nhật dữ liệu cơ bản
         $data = [
             'name' => $req->name,
             'email' => $req->email,
-            'password' => $req->password,
             'phone' => $req->phone,
             'address' => $req->address,
             'type' => $req->type,
         ];
-
-        User::where('id', $id)->update($data);
-
-        return redirect()->route('users.index')
-            ->with('message', 'Sửa thành công');
+    
+        // Kiểm tra nếu người dùng có nhập mật khẩu mới, thì mã hóa và cập nhật mật khẩu
+        if ($req->filled('password')) {
+            $data['password'] = Hash::make($req->password);
+        }
+    
+        // Thực hiện cập nhật dữ liệu
+        $user->update($data);
+    
+        return redirect()->route('users.index')->with('message', 'Sửa thành công');
     }
 
     public function delete($id)

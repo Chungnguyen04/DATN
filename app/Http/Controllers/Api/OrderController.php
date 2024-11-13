@@ -280,18 +280,10 @@ class OrderController extends Controller
                 ], Response::HTTP_NOT_FOUND);
             }
 
-            // Trích xuất chi tiết sản phẩm
-            $products = $order->orderDetails->map(function ($detail) {
-                return $detail->variant->product;
-            });
-
             return response()->json([
                 'status' => true,
                 'message' => 'Danh sách chi tiết đơn hàng',
-                'data' => [
-                    'order' => $order,
-                    'products' => $products
-                ]
+                'data' => $order
             ], Response::HTTP_OK);
         } catch (QueryException $e) {
             return response()->json([
@@ -390,7 +382,6 @@ class OrderController extends Controller
         }
     }
 
-    // Cập nhật trạng thái đã nhận được hàng
     public function markAsCompleted($orderId)
     {
         DB::beginTransaction();
@@ -413,9 +404,10 @@ class OrderController extends Controller
                 ], Response::HTTP_BAD_REQUEST);
             }
 
-            // Cập nhật trạng thái đơn hàng thành "Hoàn thành"
+            // Cập nhật trạng thái đơn hàng thành "Hoàn thành" và "Đã thanh toán"
             $order->update([
-                'status' => 'completed'
+                'status' => 'completed',
+                'payment_status' => 'paid'
             ]);
 
             // Lưu lại lịch sử trạng thái đơn hàng
