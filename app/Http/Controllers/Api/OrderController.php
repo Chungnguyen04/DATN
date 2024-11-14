@@ -599,7 +599,9 @@ class OrderController extends Controller
                         ->delete();
                 }
 
-                if ($voucher) {
+                if (!empty($request->voucher_id)) {
+                    $voucher = Voucher::find($order->voucher_id);
+
                     $voucher->update([
                         'total_uses' => $voucher->total_uses - 1
                     ]);
@@ -727,11 +729,15 @@ class OrderController extends Controller
                             ->delete();
                     }
 
-                    $voucher = Voucher::find($order->voucher_id);
-
-                    $voucher->update([
-                        'total_uses' => $voucher->total_uses - 1
-                    ]);
+                    // Kiểm tra và cập nhật số lần sử dụng của voucher
+                    if ($order->voucher_id) {
+                        $voucher = Voucher::find($order->voucher_id);
+                        if ($voucher) {
+                            $voucher->update([
+                                'total_uses' => $voucher->total_uses - 1
+                            ]);
+                        }
+                    }
 
                     DB::commit();
 

@@ -6,7 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\UpdateOrderRequest;
 use App\Mail\OrderConfirmation;
 use App\Models\Order;
+use App\Models\OrderDetail;
 use App\Models\OrderStatusHistory;
+use App\Models\Variant;
 use App\Notifications\OrderStatusChanged;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -56,6 +58,22 @@ class OrderController extends Controller
                 return redirect()->route('orders.index')->with('status_failed', 'Đơn hàng không tồn tại!');
             }
 
+            if ($request->new_status == 'cancelled') {
+                $orderDetails = OrderDetail::where('order_id', $order->id)->get();
+
+                // Duyệt qua từng sản phẩm trong chi tiết đơn hàng
+                foreach ($orderDetails as $detail) {
+                    // Lấy biến thể sản phẩm từ bảng variants
+                    $variant = Variant::find($detail->variant_id);
+
+                    if ($variant) {
+                        // Cập nhật lại số lượng cho biến thể (cộng lại số lượng đã mua)
+                        $variant->quantity += $detail->quantity;
+                        $variant->save();
+                    }
+                }
+            }
+
             // Lưu trạng thái cũ
             $oldStatus = $order->status;
 
@@ -70,7 +88,6 @@ class OrderController extends Controller
                     'status' => $request->new_status,
                 ]);
             }
-
             // Lưu vào lịch sử thay đổi
             OrderStatusHistory::create([
                 'order_id' => $id,
