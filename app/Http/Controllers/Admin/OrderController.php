@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Events\OrderStatusChanged as EventsOrderStatusChanged;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UpdateOrderRequest;
 use App\Mail\OrderConfirmation;
@@ -11,6 +12,7 @@ use App\Models\OrderStatusHistory;
 use App\Models\Variant;
 use App\Notifications\OrderStatusChanged;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
@@ -96,8 +98,8 @@ class OrderController extends Controller
                 'changed_by' => auth()->user()->id ?? 0, // ID của người thay đổi
                 'note' => $request->note,     // Ghi chú nếu có
             ]);
-            // thông báo về mail khi thay đổi trạng thái đơn hàng
-            Mail::to($order->user->email)->send(new OrderConfirmation($order));
+            
+            EventsOrderStatusChanged::dispatch($order, Auth::user());
 
             DB::commit();
 
