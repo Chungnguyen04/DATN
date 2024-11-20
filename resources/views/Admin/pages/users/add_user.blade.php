@@ -19,7 +19,7 @@
                             <div class="live-preview">
                                 
                                 <div class="col-md-6 mt-3">
-                                    <label for="userName" class="form-label">Tên Người Dùng</label>
+                                    <label for="userName" class="form-label">Tên người dùng</label>
                                     <input type="text" class="form-control" value="{{ old('name') }}" name="name" id="userName" placeholder="Nhập tên người dùng...">
                                     @error('name')
                                         <span class="text-danger">{{ $message }}</span>
@@ -27,7 +27,7 @@
                                 </div>
 
                                 <div class="col-md-6 mt-3">
-                                    <label for="userEmail" class="form-label">Email</label>
+                                    <label for="userEmail" class="form-label">Tài khoản</label>
                                     <input type="email" class="form-control" value="{{ old('email') }}" name="email" id="userEmail" placeholder="Nhập email...">
                                     @error('email')
                                         <span class="text-danger">{{ $message }}</span>
@@ -35,7 +35,7 @@
                                 </div>
 
                                 <div class="col-md-6 mt-3">
-                                    <label for="userPassword" class="form-label">Mật Khẩu</label>
+                                    <label for="userPassword" class="form-label">Mật khẩu</label>
                                     <input type="text" class="form-control" name="password" id="userPassword" placeholder="Nhập mật khẩu...">
                                     @error('password')
                                         <span class="text-danger">{{ $message }}</span>
@@ -43,7 +43,7 @@
                                 </div>
 
                                 <div class="col-md-6 mt-3">
-                                    <label for="userPhone" class="form-label">Số Điện Thoại</label>
+                                    <label for="userPhone" class="form-label">Số điện thoại</label>
                                     <input type="text" class="form-control" value="{{ old('phone') }}" name="phone" id="userPhone" placeholder="Nhập số điện thoại...">
                                     @error('phone')
                                         <span class="text-danger">{{ $message }}</span>
@@ -51,7 +51,7 @@
                                 </div>
 
                                 <div class="col-md-6 mt-3">
-                                    <label for="userAddress" class="form-label">Địa Chỉ</label>
+                                    <label for="userAddress" class="form-label">Địa chỉ</label>
                                     <input type="text" class="form-control" value="{{ old('address') }}" name="address" id="userAddress" placeholder="Nhập địa chỉ...">
                                     @error('address')
                                         <span class="text-danger">{{ $message }}</span>
@@ -59,10 +59,10 @@
                                 </div>
 
                                 <div class="col-md-6 mt-3">
-                                    <label for="userType" class="form-label">Vai Trò</label>
+                                    <label for="userType" class="form-label">Vai trò</label>
                                     <select name="type" id="userType" class="form-select">
-                                        <option value="admin" @selected(old('type') == 'admin')>Admin</option>
-                                        <option value="member" @selected(old('type') == 'member')>Member</option>
+                                        <option value="admin" @selected(old('type') == 'admin')>admin</option>
+                                        <option value="member" @selected(old('type') == 'member')>member</option>
                                     </select>
                                     @error('type')
                                         <span class="text-danger">{{ $message }}</span>

@@ -23,4 +23,8 @@ class Variant extends Model
     {
         return $this->belongsTo(Weight::class);
     }
+    public function orderDetails()
+    {
+        return $this->hasMany(OrderDetail::class);
+    }
 }

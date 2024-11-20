@@ -20,7 +20,7 @@
                             <div class="live-preview">
                                 <!-- Tên Người Dùng -->
                                 <div class="col-md-6 mt-3">
-                                    <label for="userName" class="form-label">Tên Người Dùng</label>
+                                    <label for="userName" class="form-label">Tên người dùng</label>
                                     <input type="text" class="form-control" name="name" id="userName"
                                         placeholder="Nhập tên người dùng..." value="{{ $user->name }}">
                                     @error('name')
@@ -30,7 +30,7 @@
 
                                 <!-- Email -->
                                 <div class="col-md-6 mt-3">
-                                    <label for="userEmail" class="form-label">Email</label>
+                                    <label for="userEmail" class="form-label">Tài khoản</label>
                                     <input type="email" class="form-control" name="email" id="userEmail"
                                         placeholder="Nhập email..." value="{{ $user->email }}">
                                     @error('email')
@@ -40,7 +40,7 @@
 
                                 <!-- Mật Khẩu -->
                                 <div class="col-md-6 mt-3">
-                                    <label for="userPassword" class="form-label">Mật Khẩu</label>
+                                    <label for="userPassword" class="form-label">Mật khẩu</label>
                                     <input type="text" class="form-control" name="password" id="userPassword"
                                         placeholder="Nhập mật khẩu..." value="{{ $user->password }}">
                                     @error('password')
@@ -50,7 +50,7 @@
 
                                 <!-- Số Điện Thoại -->
                                 <div class="col-md-6 mt-3">
-                                    <label for="userPhone" class="form-label">Số Điện Thoại</label>
+                                    <label for="userPhone" class="form-label">Số điện thoại</label>
                                     <input type="text" class="form-control" name="phone" id="userPhone"
                                         placeholder="Nhập số điện thoại..." value="{{ $user->phone }}">
                                     @error('phone')
@@ -60,7 +60,7 @@
 
                                 <!-- Địa Chỉ -->
                                 <div class="col-md-6 mt-3">
-                                    <label for="userAddress" class="form-label">Địa Chỉ</label>
+                                    <label for="userAddress" class="form-label">Địa chỉ</label>
                                     <input type="text" class="form-control" name="address" id="userAddress"
                                         placeholder="Nhập địa chỉ..." value="{{ $user->address }}">
                                     @error('address')
@@ -70,11 +70,11 @@
 
                                 <!-- Vai Trò -->
                                 <div class="col-md-6 mt-3">
-                                    <label for="userType" class="form-label">Vai Trò</label>
+                                    <label for="userType" class="form-label">Vai trò</label>
                                     <select name="type" id="userType" class="form-select">
-                                        <option value="admin" {{ $user->type == 'admin' ? 'selected' : '' }}>Admin
+                                        <option value="admin" {{ $user->type == 'admin' ? 'selected' : '' }}>admin
                                         </option>
-                                        <option value="member" {{ $user->type == 'member' ? 'selected' : '' }}>Member
+                                        <option value="member" {{ $user->type == 'member' ? 'selected' : '' }}>member
                                         </option>
                                     </select>
                                 </div>

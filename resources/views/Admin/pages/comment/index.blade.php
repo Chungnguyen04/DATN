@@ -30,7 +30,7 @@ Danh sách đánh giá
                                 <table class="table align-middle table-nowrap table-striped-columns mb-0">
                                     <thead class="table-light">
                                         <tr>
-                                            <th>Stt</th>
+                                            <th>STT</th>
                                             <th>Tên người dùng</th>
                                             <th>Sản phẩm</th>
                                             <th>Nội dung</th>

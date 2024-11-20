@@ -1,7 +1,7 @@
 @extends('Admin.layouts.master')
 
 @section('title')
-    Bảng điều khiển
+Bảng thống kê
 @endsection
 
 @section('css')
@@ -351,7 +351,7 @@
                                                             <select class="form-select" name="filter" id="filter">
                                                                 <option value="">-- Chọn bộ lọc --</option>
                                                                 <option value="day">Thống kê theo ngày</option>
-                                                                <option value="month" selected>Thống kê theo tháng</option>
+                                                                <option value="month">Thống kê theo tháng</option>
                                                                 <option value="year">Thống kê theo năm</option>
                                                                 <option value="range">Thống kê theo khoảng thời gian
                                                                 </option>
@@ -365,21 +365,19 @@
                                                         </div>
 
                                                         <div class="col" id="monthFilter" style="display: none;">
-                                                            <div class="d-flex align-items-center">
-                                                                <select id="monthSelect" class="form-select"
-                                                                    style="margin-right: 10px" name="month">
-                                                                    @for ($i = 1; $i <= 12; $i++)
-                                                                        <option value="{{ $i }}">
-                                                                            {{ $i }}</option>
-                                                                    @endfor
-                                                                </select>
-                                                                <select id="yearSelect" class="form-select"
-                                                                    name="yearMonth">
-                                                                    @for ($i = 2000; $i <= \Carbon\Carbon::now()->year; $i++)/-strong/-heart:>:o:-((:-h <option value="{{ $i }}">
-                                                                            {{ $i }}</option>
-                                                                    @endfor
-                                                                </select>
-                                                            </div>
+                                                            <select id="monthSelect" class="form-select" name="month">
+                                                                @for ($i = 1; $i <= 12; $i++)
+                                                                    <option value="{{ $i }}">
+                                                                        {{ $i }}</option>
+                                                                @endfor
+                                                            </select>
+                                                            <select id="yearSelect" class="form-select mt-2"
+                                                                name="yearMonth">
+                                                                @for ($i = 2000; $i <= \Carbon\Carbon::now()->year; $i++)
+                                                                    <option value="{{ $i }}">
+                                                                        {{ $i }}</option>
+                                                                @endfor
+                                                            </select>
                                                         </div>
 
                                                         <!-- Lọc theo năm -->
@@ -423,19 +421,19 @@
                                     <table class="table">
                                         <thead>
                                             <tr>
-                                                <th>Tên Sản Phẩm</th>
-                                                <th>Hình Ảnh</th>
+                                                <th>Tên</th>
+                                                <th>Ảnh</th>
                                                 <th>Doanh Thu</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @foreach ($topRevenueProducts as $item)
+                                            @foreach ($topRevenueProducts as $product)
                                                 <tr>
-                                                    <td>{{ $item->product->name }}</td>
+                                                    <td>{{ $product->name }}</td>
                                                     <td>
-                                                        <img src="{{ $item->image }}" alt="" style="width: 50px; height: 50px;">
+                                                        <img src="{{ $product->image }}" alt="" style="width: 50px; height: 50px;">
                                                     </td>
-                                                    <td>{{ number_format($item->revenue, 2) }} VND</td>
+                                                    <td>{{ number_format($product->total_revenue, 0, '.', ',') }} VND</td>
                                                 </tr>
                                             @endforeach
                                         </tbody>
@@ -447,21 +445,19 @@
                                     <table class="table">
                                         <thead>
                                             <tr>
-                                                <th>Tên Sản Phẩm</th>
-                                                <th>Hình Ảnh</th>
-                                                <th>Số Lượng Đã Bán</th>
-                                                <th>Doanh Thu</th>
+                                                <th>Tên</th>
+                                                <th>Ảnh</th>
+                                                <th>Số Lượng</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @foreach ($topProducts as $products)
+                                            @foreach ($topSellingProducts as $product)
                                                 <tr>
-                                                    <td>{{ $products->name }}</td>
+                                                    <td>{{ $product->name }}</td>
                                                     <td>
-                                                        <img src="{{ $products->image }}" alt="" style="width: 50px; height: 50px;">
+                                                        <img src="{{ $product->image }}" alt="" style="width: 50px; height: 50px;">
                                                     </td>
-                                                    <td>{{ $products->sold_quantity }}</td>
-                                                    <td>{{ number_format($products->revenue, 2) }} VND</td>
+                                                    <td>{{ ($product->total_sold ?? 0) }} Sản phẩm</td>
                                                 </tr>
                                             @endforeach
                                         </tbody>
@@ -473,21 +469,19 @@
                                     <table class="table">
                                         <thead>
                                             <tr>
-                                                <th>Tên Sản Phẩm</th>
-                                                <th>Mã Sản Phẩm</th>
-                                                <th>Hình ảnh</th>
-                                                <th>Doanh Thu</th>
+                                                <th>Tên</th>
+                                                <th>Ảnh</th>
+                                                <th>Lợi Nhuận</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             @foreach ($topProfitProducts as $product)
                                                 <tr>
-                                                    <td>{{ $products->name }}</td>
-                                                    <td>{{ $product->sku }}</td>
+                                                    <td>{{ $product->name }}</td>
                                                     <td>
                                                         <img src="{{ $product->image }}" alt="" style="width: 50px; height: 50px;">
                                                     </td>
-                                                    <td>{{ number_format($product->profit, 0) }} VND</td>
+                                                    <td>{{ number_format($product->total_profit, 0, '.', ',') }} VND</td>
                                                 </tr>
                                             @endforeach
                                         </tbody>
@@ -508,40 +502,23 @@
 @section('script')
     <script>
         $(document).ready(function() {
-            var currentMonth = new Date().getMonth() + 1; // Tháng trong JavaScript tính từ 0-11 nên cần +1
             var currentYear = new Date().getFullYear();
+            var startYear = 2000;
 
-            // Thiết lập tháng hiện tại là selected trong #monthSelect
-            $('#monthSelect').val(currentMonth);
-
-            // Thiết lập năm hiện tại là selected trong #yearSelect
-            $('#yearSelect').val(currentYear);
+            // Thêm các năm từ 2000 đến năm hiện tại vào select với id="yearSelect"
+            for (var year = startYear; year <= currentYear; year++) {
+                $('#yearSelect2').append('<option value="' + year + '">' + year + '</option>');
+            }
 
             // Hiển thị hoặc ẩn các bộ lọc khác nhau khi thay đổi `#filter`
             $('#filter').on('change', function() {
-                var filter = $(this).val(); // Lấy giá trị của select filter
-
-                // Ẩn tất cả các bộ lọc
-                $('#dayFilter').hide();
-                $('#monthFilter').hide();
-                $('#yearFilter').hide();
-                $('#rangeFilter').hide();
-                $('#rangeFilterEnd').hide();
-
-                // Hiển thị bộ lọc tương ứng dựa trên giá trị đã chọn
-                if (filter === 'day') {
-                    $('#dayFilter').show(); // Hiển thị bộ lọc theo ngày
-                } else if (filter === 'month') {
-                    $('#monthFilter').show(); // Hiển thị bộ lọc theo tháng
-                } else if (filter === 'year') {
-                    $('#yearFilter').show(); // Hiển thị bộ lọc theo năm
-                } else if (filter === 'range') {
-                    $('#rangeFilter').show(); // Hiển thị bộ lọc theo khoảng thời gian
-                    $('#rangeFilterEnd').show(); // Hiển thị bộ lọc kết thúc
-                }
+                var filter = $(this).val();
+                $('#dayFilter').toggle(filter === 'day');
+                $('#monthFilter').toggle(filter === 'month');
+                $('#yearFilter').toggle(filter === 'year');
+                $('#rangeFilter').toggle(filter === 'range');
+                $('#rangeFilterEnd').toggle(filter === 'range');
             });
-
-            $('#monthFilter').show();
 
             let barChart; // Declare a variable to hold the chart instance
 

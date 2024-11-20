@@ -26,13 +26,13 @@
                                     <table class="table align-middle table-nowrap table-striped-columns mb-0">
                                         <thead class="table-light">
                                             <tr>
-                                                <th scope="col">ID</th>
-                                                <th scope="col">Tên Người Dùng</th>
-                                                <th scope="col">Email</th>
-                                                <th scope="col">Số Điện Thoại</th>
-                                                <th scope="col">Địa Chỉ</th>
-                                                <th scope="col">Vai Trò</th>
-                                                <th scope="col" style="width: 150px;">Hành Động</th>
+                                                <th scope="col">STT</th>
+                                                <th scope="col">Tên người dùng</th>
+                                                <th scope="col">Tài khoản</th>
+                                                <th scope="col">Số điện thoại</th>
+                                                <th scope="col">Địa chỉ</th>
+                                                <th scope="col">Vai trò</th>
+                                                <th scope="col" style="width: 150px;">Hành động</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -86,7 +86,7 @@
                                                 @endforeach
                                             @else
                                                 <tr>
-                                                    <td colspan="7" class="text-center">Không có user nào</td>
+                                                    <td colspan="7" class="text-center">Không có người dùng nào</td>
                                                 </tr>
                                             @endif
                                         </tbody>

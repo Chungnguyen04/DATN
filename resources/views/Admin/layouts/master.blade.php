@@ -9,7 +9,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta content="Premium Multipurpose Admin & Dashboard Template" name="description" />
     <meta content="Themeesbrand" name="author" />
-
+    <link rel="shortcut icon" href="{{ asset('assets/theme/assets/images/favicon1.ico') }}">
     <!-- jsvectormap css -->
     <link href="{{ asset('assets/theme/assets/libs/jsvectormap/css/jsvectormap.min.css') }}" rel="stylesheet"
         type="text/css" />
@@ -36,7 +36,7 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-    
+
     @yield('css')
 </head>
 
@@ -967,24 +967,24 @@
     @yield('script')
 
     <script type="module">
-        @if (session()->has('status_succeed'))
-            Toastify({
-                text: "{{ session()->pull('status_succeed') }}",
-                duration: 2000, // Thời gian hiển thị (miligiây)
-                gravity: "top", // "top" hoặc "bottom"
-                position: 'right', // "left", "center" hoặc "right"
-                backgroundColor: "rgb(22 194 67)",
-            }).showToast();
+        @if(session()->has('status_succeed'))
+        Toastify({
+            text: "{{ session()->pull('status_succeed') }}",
+            duration: 2000, // Thời gian hiển thị (miligiây)
+            gravity: "top", // "top" hoặc "bottom"
+            position: 'right', // "left", "center" hoặc "right"
+            backgroundColor: "rgb(22 194 67)",
+        }).showToast();
         @endif
 
-        @if (session()->has('status_failed'))
-            Toastify({
-                text: "{{ session()->pull('status_failed') }}",
-                duration: 2000, // Thời gian hiển thị (miligiây)
-                gravity: "top", // "top" hoặc "bottom"
-                position: 'right', // "left", "center" hoặc "right"
-                backgroundColor: "red",
-            }).showToast();
+        @if(session()->has('status_failed'))
+        Toastify({
+            text: "{{ session()->pull('status_failed') }}",
+            duration: 2000, // Thời gian hiển thị (miligiây)
+            gravity: "top", // "top" hoặc "bottom"
+            position: 'right', // "left", "center" hoặc "right"
+            backgroundColor: "red",
+        }).showToast();
         @endif
     </script>
 </body>

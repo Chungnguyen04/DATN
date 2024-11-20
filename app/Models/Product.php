@@ -32,4 +32,8 @@ class Product extends Model
     {
         return $this->hasMany(OrderDetail::class, 'order_id'); // Giả sử 'order_id' là khóa ngoại trong bảng order_details
     }
+    public function orderDetailsTotal()
+    {
+        return $this->hasManyThrough(OrderDetail::class, Variant::class, 'product_id', 'variant_id');
+    }
 }
