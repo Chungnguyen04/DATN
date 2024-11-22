@@ -61,8 +61,8 @@
                                 <div class="col-md-6 mt-3">
                                     <label for="userType" class="form-label">Vai trò</label>
                                     <select name="type" id="userType" class="form-select">
-                                        <option value="admin" @selected(old('type') == 'admin')>admin</option>
                                         <option value="member" @selected(old('type') == 'member')>member</option>
+                                        <option value="admin" @selected(old('type') == 'admin')>admin</option>
                                     </select>
                                     @error('type')
                                         <span class="text-danger">{{ $message }}</span>

@@ -30,7 +30,7 @@ class UserController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email', // Kiểm tra email trùng lặp
             'password' => 'required|string|min:6',
-            'phone' => 'required',
+            'phone' => 'required|regex:/^0[0-9]{9}$/',
             'address' => 'required',
             'type' => 'required',
         ], [
@@ -39,7 +39,7 @@ class UserController extends Controller
             'email.email' => 'Email không đúng định dạng',
             'email.unique' => 'Email đã tồn tại', // Thông báo khi email đã tồn tại
             'password.required' => 'Mật khẩu bắt buộc phải nhập',
-            'phone.required' => 'Số điện thoại bắt buộc',
+            'phone.regex' => 'Số điện thoại không đúng định dạng',
             'type.required' => 'Vai trò bắt buộc phải nhập',
         ]);
 
@@ -75,7 +75,7 @@ class UserController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email,' . $id, // Kiểm tra email trùng lặp nhưng bỏ qua email của chính user đang cập nhật
             'password' => 'nullable|string|min:6', // Cho phép mật khẩu có thể là null
-            'phone' => 'required',
+            'phone' => 'required|regex:/^0[0-9]{9}$/',
             'address' => 'required',
             'type' => 'required',
         ], [
@@ -84,7 +84,7 @@ class UserController extends Controller
             'email.email' => 'Email không đúng định dạng',
             'email.unique' => 'Email đã tồn tại', // Thông báo khi email đã tồn tại
             'password.required' => 'Mật khẩu bắt buộc phải nhập',
-            'phone.required' => 'Số điện thoại bắt buộc',
+            'phone.regex' => 'Số điện thoại không đúng định dạng',
             'type.required' => 'Vai trò bắt buộc phải nhập',
         ]);
     
@@ -114,7 +114,16 @@ class UserController extends Controller
     public function delete($id)
     {
         $user = User::findOrFail($id); // Tìm người dùng theo ID, nếu không có thì báo lỗi
+
+        // Kiểm tra loại tài khoản
+        if ($user->type === 'admin') {
+            return redirect()->route('users.index')
+                ->with('message', 'Không thể xóa tài khoản admin');
+        }
+        
+        // Thực hiện xóa nếu là member
         $user->delete(); // Xóa người dùng
+        
         return redirect()->route('users.index')
             ->with('message', 'Tài khoản đã được xóa thành công');
     }
