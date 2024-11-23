@@ -93,7 +93,7 @@ class DashboardController extends Controller
             ->take(5); // Lấy 5 sản phẩm đầu tiên
 
         // Trả tất cả dữ liệu về View trong một lần
-        return view('Admin.pages.dashboard', compact(
+        return view('admin.pages.dashboard', compact(
             'totalOrders',
             'totalOrders1',
             'totalUsers',

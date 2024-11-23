@@ -23,7 +23,7 @@ class ProductController extends Controller
             ->orderBy('id', 'desc')
             ->paginate(5);
 
-        return view('Admin.pages.products.listProduct', compact([
+        return view('admin.pages.products.listProduct', compact([
             'listProduct'
         ]));
     }
@@ -33,7 +33,7 @@ class ProductController extends Controller
         $listCategories = Category::all();
         $weights = Weight::all();
 
-        return view('Admin.pages.products.createProduct', compact('listCategories', 'weights'));
+        return view('admin.pages.products.createProduct', compact('listCategories', 'weights'));
     }
 
     public function store(StoreProductRequest $request)
@@ -131,7 +131,7 @@ class ProductController extends Controller
 
             $weights = Weight::all();
 
-            return view('Admin.pages.products.editProduct', compact([
+            return view('admin.pages.products.editProduct', compact([
                 'listCategories',
                 'product',
                 'categories',

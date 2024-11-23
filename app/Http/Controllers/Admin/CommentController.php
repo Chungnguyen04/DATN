@@ -16,7 +16,7 @@ class CommentController extends Controller
             'user',
             'product'
         ])->latest()->paginate(10);
-        return view('Admin.pages.comment.index',compact('comments'));
+        return view('admin.pages.comment.index',compact('comments'));
     }
 
 

@@ -13,12 +13,12 @@ class VoucherController extends Controller
     public function index()
     {
         $vouchers = Voucher::orderBy('id', 'desc')->paginate(10);
-        return view('Admin.pages.vouchers.index', compact('vouchers'));
+        return view('admin.pages.vouchers.index', compact('vouchers'));
     }
 
     public function create()
     {
-        return view('Admin.pages.vouchers.create');
+        return view('admin.pages.vouchers.create');
     }
 
     public function store(VoucherRequest $request)
@@ -52,7 +52,7 @@ class VoucherController extends Controller
     public function edit($id)
     {
         $voucher = Voucher::find($id);
-        return view('Admin.pages.vouchers.edit', compact('voucher'));
+        return view('admin.pages.vouchers.edit', compact('voucher'));
     }
 
     public function update(VoucherRequest $request, $id)

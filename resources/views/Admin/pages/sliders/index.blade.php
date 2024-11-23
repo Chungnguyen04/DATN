@@ -1,4 +1,4 @@
-@extends('Admin.layouts.master')
+@extends('admin.layouts.master')
 
 @section('title')
     Danh sách Slider
@@ -49,7 +49,7 @@
                                                     <td>{{ $key + 1 }}</td>
                                                     <td>{{ $slider->title }}</td>
                                                     <td>
-                                                        <img src="{{ Storage::url($slider->image) }}" alt="{{ $slider->title }}" style="width: 100px; height: auto;">
+                                                    <img src="{{ url(Storage::url($slider->image)) }}" alt="{{ $slider->title }}" style="width: 100px; height: auto;">
                                                     </td>
                                                     <td>{{ $slider->link }}</td>
                                                     <td>

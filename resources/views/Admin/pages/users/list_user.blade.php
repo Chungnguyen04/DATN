@@ -1,4 +1,4 @@
-@extends('Admin.layouts.master') <!-- Cập nhật theo layout người dùng cuối nếu có -->
+@extends('admin.layouts.master') <!-- Cập nhật theo layout người dùng cuối nếu có -->
 
 @section('title')
     Danh sách người dùng

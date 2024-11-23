@@ -13,14 +13,14 @@ class CategoryController extends Controller
     {
         $categories = Category::orderBy('id', 'desc')->paginate(5);
 
-        return view('Admin.pages.categories.listCategories')->with([
+        return view('admin.pages.categories.listCategories')->with([
             'listCategories' => $categories
         ]);
     }
 
     public function createCategories()
     {
-        return view('Admin.pages.categories.createCategories');
+        return view('admin.pages.categories.createCategories');
     }
 
     public function storeCategories(StoreCategoryRequest $request)
@@ -40,7 +40,7 @@ class CategoryController extends Controller
             ->where('id', '=', $id)
             ->firstOrFail();
 
-        return view('Admin.pages.categories.detailCategories', compact('categoryById'));
+        return view('admin.pages.categories.detailCategories', compact('categoryById'));
     }
 
     public function editCategories($id)
@@ -49,7 +49,7 @@ class CategoryController extends Controller
             ->where('id', $id)
             ->firstOrFail();
 
-        return view('Admin.pages.categories.editCategories', compact('id', 'categoryById'));
+        return view('admin.pages.categories.editCategories', compact('id', 'categoryById'));
     }
 
     public function updateCategories(UpdateCategoryRequest $request, $id)

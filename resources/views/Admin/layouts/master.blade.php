@@ -45,7 +45,7 @@
     <div id="layout-wrapper">
 
         {{-- Header --}}
-        @include('Admin.partials.header')
+        @include('admin.partials.header')
         {{-- End Header --}}
 
         <!-- removeNotificationModal -->
@@ -76,7 +76,7 @@
             </div><!-- /.modal-dialog -->
         </div><!-- /.modal -->
         <!-- ========== App Menu ========== -->
-        @include('Admin.partials.sidebar')
+        @include('admin.partials.sidebar')
         <!-- Left Sidebar End -->
         <!-- Vertical Overlay-->
         <div class="vertical-overlay"></div>
@@ -88,7 +88,7 @@
             @yield('content')
             <!-- End Page-content -->
 
-            {{-- @include('Admin.partials.footer') --}}
+            {{-- @include('admin.partials.footer') --}}
         </div>
         <!-- end main content-->
 
@@ -112,12 +112,12 @@
         </div>
     </div>
 
-    <div class="customizer-setting d-none d-md-block">
+    {{-- <div class="customizer-setting d-none d-md-block">
         <div class="btn-info rounded-pill shadow-lg btn btn-icon btn-lg p-2" data-bs-toggle="offcanvas"
             data-bs-target="#themee-settings-offcanvas" aria-controls="themee-settings-offcanvas">
             <i class='mdi mdi-spin mdi-cog-outline fs-22'></i>
         </div>
-    </div>
+    </div> --}}
 
     <!-- Themee Settings -->
     <div class="offcanvas offcanvas-end border-0" tabindex="-1" id="themee-settings-offcanvas">

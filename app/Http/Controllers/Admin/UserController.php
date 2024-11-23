@@ -15,13 +15,13 @@ class UserController extends Controller
         // Sử dụng paginate để lấy danh sách người dùng với 5 bản ghi mỗi trang
         $users = User::paginate(5);
         // Truyền biến $users sang view
-        return view('Admin.pages.users.list_user', compact('users'));
+        return view('admin.pages.users.list_user', compact('users'));
     }
 
     public function create()
     {
         $users = User::query()->pluck('id')->all();
-        return view('Admin.pages.users.add_user', compact('users'));
+        return view('admin.pages.users.add_user', compact('users'));
     }
 
     public function store(Request $req)
@@ -65,7 +65,7 @@ class UserController extends Controller
             return redirect()->route('users.index')->with('message', 'Người dùng không tồn tại');
         }
 
-        return view('Admin.pages.users.edit_user', compact('user'));
+        return view('admin.pages.users.edit_user', compact('user'));
     }
 
     public function update($id, Request $req)

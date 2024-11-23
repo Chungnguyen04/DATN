@@ -1,4 +1,4 @@
-@extends('Admin.layouts.master')
+@extends('admin.layouts.master')
 
 @section('title')
     Danh sách sản phẩm
@@ -47,8 +47,8 @@
                                                         </div>
                                                     </td>
                                                     <td>{{ $key + 1 }}</td>
-                                                    <td><img src="{{ explode(',', $pro->image)[0] }}" width="100px"
-                                                            alt=""></td>
+                                                    <!-- Sửa đường dẫn để hiện thị ảnh khi để code trong folder backend (backend ở public_html) -->
+                                                    <td><img src="{{ url(explode(',', $pro->image)[0]) }}" width="100px" alt=""></td>       
                                                     <td>{{ $pro->name }}</td>
                                                     <td>
                                                         <button class="btn btn-primary" data-bs-toggle="modal"
@@ -138,7 +138,7 @@
                                                                            data-bs-dismiss="modal"><i
                                                                                 class="ri-close-line me-1 align-middle"></i>
                                                                             Hủy</a>
-                                                                        <a data-product-id="{{ $pro->id }}"
+                                                                        <a data-url="{{ route('products.delete', $pro->id) }}" data-product-id="{{ $pro->id }}"
                                                                            class="btn btn-success btnDel">Xóa</a>
                                                                     </div>
                                                                 </div>
@@ -171,10 +171,10 @@
             btnDels.forEach(btnDel => {
                 btnDel.addEventListener('click', function() {
                     let productId = this.dataset.productId;
-
+                    
                     formData.append('_token', '{{ csrf_token() }}');
 
-                    let urlDelete = `/admin/products/delete/${productId}`;
+                    let urlDelete = $(this).attr("data-url");
 
                     $.ajax({
                         url: urlDelete,
