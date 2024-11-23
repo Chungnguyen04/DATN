@@ -1,7 +1,7 @@
 @extends('admin.layouts.master')
 
 @section('title')
-Bảng thống kê
+    Bảng thống kê
 @endsection
 
 @section('css')
@@ -351,7 +351,7 @@ Bảng thống kê
                                                             <select class="form-select" name="filter" id="filter">
                                                                 <option value="">-- Chọn bộ lọc --</option>
                                                                 <option value="day">Thống kê theo ngày</option>
-                                                                <option value="month">Thống kê theo tháng</option>
+                                                                <option value="month" selected>Thống kê theo tháng</option>
                                                                 <option value="year">Thống kê theo năm</option>
                                                                 <option value="range">Thống kê theo khoảng thời gian
                                                                 </option>
@@ -365,19 +365,22 @@ Bảng thống kê
                                                         </div>
 
                                                         <div class="col" id="monthFilter" style="display: none;">
-                                                            <select id="monthSelect" class="form-select" name="month">
-                                                                @for ($i = 1; $i <= 12; $i++)
-                                                                    <option value="{{ $i }}">
-                                                                        {{ $i }}</option>
-                                                                @endfor
-                                                            </select>
-                                                            <select id="yearSelect" class="form-select mt-2"
-                                                                name="yearMonth">
-                                                                @for ($i = 2000; $i <= \Carbon\Carbon::now()->year; $i++)
-                                                                    <option value="{{ $i }}">
-                                                                        {{ $i }}</option>
-                                                                @endfor
-                                                            </select>
+                                                            <div class="d-flex align-items-center">
+                                                                <select id="monthSelect" class="form-select"
+                                                                    style="margin-right: 10px" name="month">
+                                                                    @for ($i = 1; $i <= 12; $i++)
+                                                                        <option value="{{ $i }}">
+                                                                            {{ $i }}</option>
+                                                                    @endfor
+                                                                </select>
+                                                                <select id="yearSelect" class="form-select"
+                                                                    name="yearMonth">
+                                                                    @for ($i = 2000; $i <= \Carbon\Carbon::now()->year; $i++)
+<option value="{{ $i }}">
+                                                                            {{ $i }}</option>
+                                                                    @endfor
+                                                                </select>
+                                                            </div>
                                                         </div>
 
                                                         <!-- Lọc theo năm -->
@@ -502,23 +505,40 @@ Bảng thống kê
 @section('script')
     <script>
         $(document).ready(function() {
+            var currentMonth = new Date().getMonth() + 1; // Tháng trong JavaScript tính từ 0-11 nên cần +1
             var currentYear = new Date().getFullYear();
-            var startYear = 2000;
 
-            // Thêm các năm từ 2000 đến năm hiện tại vào select với id="yearSelect"
-            for (var year = startYear; year <= currentYear; year++) {
-                $('#yearSelect2').append('<option value="' + year + '">' + year + '</option>');
-            }
+            // Thiết lập tháng hiện tại là selected trong #monthSelect
+            $('#monthSelect').val(currentMonth);
+
+            // Thiết lập năm hiện tại là selected trong #yearSelect
+            $('#yearSelect').val(currentYear);
 
             // Hiển thị hoặc ẩn các bộ lọc khác nhau khi thay đổi `#filter`
             $('#filter').on('change', function() {
-                var filter = $(this).val();
-                $('#dayFilter').toggle(filter === 'day');
-                $('#monthFilter').toggle(filter === 'month');
-                $('#yearFilter').toggle(filter === 'year');
-                $('#rangeFilter').toggle(filter === 'range');
-                $('#rangeFilterEnd').toggle(filter === 'range');
+                var filter = $(this).val(); // Lấy giá trị của select filter
+
+                // Ẩn tất cả các bộ lọc
+                $('#dayFilter').hide();
+                $('#monthFilter').hide();
+                $('#yearFilter').hide();
+                $('#rangeFilter').hide();
+                $('#rangeFilterEnd').hide();
+
+                // Hiển thị bộ lọc tương ứng dựa trên giá trị đã chọn
+                if (filter === 'day') {
+                    $('#dayFilter').show(); // Hiển thị bộ lọc theo ngày
+                } else if (filter === 'month') {
+                    $('#monthFilter').show(); // Hiển thị bộ lọc theo tháng
+                } else if (filter === 'year') {
+                    $('#yearFilter').show(); // Hiển thị bộ lọc theo năm
+                } else if (filter === 'range') {
+                    $('#rangeFilter').show(); // Hiển thị bộ lọc theo khoảng thời gian
+                    $('#rangeFilterEnd').show(); // Hiển thị bộ lọc kết thúc
+                }
             });
+
+            $('#monthFilter').show();
 
             let barChart; // Declare a variable to hold the chart instance
 

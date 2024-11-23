@@ -37,7 +37,6 @@ Danh sách đánh giá
                                             <th>Đánh giá</th>
                                             <th>Trạng thái</th>
                                             <th>Hành động</th>
-
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -55,9 +54,9 @@ Danh sách đánh giá
                                             </td>
                                             <td>
                                                 @if ($comment->status === 'default')
-                                                    <span class="status-dot" style="background-color: green;"></span> Default
+                                                    <span class="status-dot" style="background-color: green;"></span> Hiển thị
                                                 @else
-                                                    <span class="status-dot" style="background-color: red;"></span> Hidden
+                                                    <span class="status-dot" style="background-color: red;"></span> Ẩn
                                                 @endif
                                             </td>
                                             <td><a class="btn btn-info" href="{{ route('comments.edit',$comment->id) }}">Chỉnh sửa</a></td>
