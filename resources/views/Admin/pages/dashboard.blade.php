@@ -1,7 +1,7 @@
 @extends('admin.layouts.master')
 
 @section('title')
-    Bảng thống kê
+    Bảng điều khiển
 @endsection
 
 @section('css')
@@ -140,7 +140,7 @@
                                                             class="counter-value"
                                                             data-target="{{ !empty($totalPendingOrders) ? $totalPendingOrders : 0 }}">{{ $totalPendingOrders }}</span>
                                                         Đơn hàng </h4>
-                                                    <a href="{{ route('orders.index') }}"
+                                                    <a href="{{ route('orders.index') }}?status=pending"
                                                         class="text-decoration-underline">Xem </a>
                                                 </div>
                                                 <div class="avatar-sm flex-shrink-0">
@@ -169,7 +169,7 @@
                                                             class="counter-value"
                                                             data-target="{{ !empty($daxacnhan) ? $daxacnhan : 0 }}">{{ $daxacnhan }}</span>
                                                         Đơn hàng </h4>
-                                                    <a href="{{ route('orders.index') }}"
+                                                    <a href="{{ route('orders.index') }}?status=confirmed"
                                                         class="text-decoration-underline">Xem </a>
                                                 </div>
                                                 <div class="avatar-sm flex-shrink-0">
@@ -198,7 +198,7 @@
                                                             class="counter-value"
                                                             data-target="{{ !empty($danggiao) ? $danggiao : 0 }}">{{ $danggiao }}</span>
                                                         Đơn hàng </h4>
-                                                    <a href="{{ route('orders.index') }}"
+                                                    <a href="{{ route('orders.index') }}?status=shipping"
                                                         class="text-decoration-underline">Xem </a>
                                                 </div>
                                                 <div class="avatar-sm flex-shrink-0">
@@ -227,7 +227,7 @@
                                                             class="counter-value"
                                                             data-target="{{ !empty($giaothanhcong) ? $giaothanhcong : 0 }}">{{ $giaothanhcong }}</span>
                                                         Đơn hàng </h4>
-                                                    <a href="{{ route('orders.index') }}"
+                                                    <a href="{{ route('orders.index') }}?status=delivering"
                                                         class="text-decoration-underline">Xem </a>
                                                 </div>
                                                 <div class="avatar-sm flex-shrink-0">
@@ -256,7 +256,7 @@
                                                             class="counter-value"
                                                             data-target="{{ !empty($totalOrders) ? $totalOrders : 0 }}">{{ $totalOrders }}</span>
                                                         Đơn hàng </h4>
-                                                    <a href="{{ route('orders.index') }}"
+                                                    <a href="{{ route('orders.index') }}?status=completed"
                                                         class="text-decoration-underline">Xem </a>
                                                 </div>
                                                 <div class="avatar-sm flex-shrink-0">
@@ -285,7 +285,7 @@
                                                             class="counter-value"
                                                             data-target="{{ !empty($giaothatbai) ? $giaothatbai : 0 }}">{{ $giaothatbai }}</span>
                                                         Đơn hàng </h4>
-                                                    <a href="{{ route('orders.index') }}"
+                                                    <a href="{{ route('orders.index') }}?status=failed"
                                                         class="text-decoration-underline">Xem </a>
                                                 </div>
                                                 <div class="avatar-sm flex-shrink-0">
@@ -314,7 +314,7 @@
                                                             class="counter-value"
                                                             data-target="{{ !empty($giaohuy) ? $giaohuy : 0 }}">{{ $giaohuy }}</span>
                                                         Đơn hàng </h4>
-                                                    <a href="{{ route('orders.index') }}"
+                                                    <a href="{{ route('orders.index') }}?status=cancelled"
                                                         class="text-decoration-underline">Xem </a>
                                                 </div>
                                                 <div class="avatar-sm flex-shrink-0">
@@ -376,7 +376,7 @@
                                                                 <select id="yearSelect" class="form-select"
                                                                     name="yearMonth">
                                                                     @for ($i = 2000; $i <= \Carbon\Carbon::now()->year; $i++)
-<option value="{{ $i }}">
+                                                                        <option value="{{ $i }}">
                                                                             {{ $i }}</option>
                                                                     @endfor
                                                                 </select>
@@ -434,7 +434,7 @@
                                                 <tr>
                                                     <td>{{ $product->name }}</td>
                                                     <td>
-                                                        <img src="{{ $product->image }}" alt="" style="width: 50px; height: 50px;">
+                                                    <img src="{{ url($product->image) }}" alt="" style="width: 50px; height: 50px;">
                                                     </td>
                                                     <td>{{ number_format($product->total_revenue, 0, '.', ',') }} VND</td>
                                                 </tr>
@@ -458,7 +458,7 @@
                                                 <tr>
                                                     <td>{{ $product->name }}</td>
                                                     <td>
-                                                        <img src="{{ $product->image }}" alt="" style="width: 50px; height: 50px;">
+                                                    <img src="{{ url($product->image) }}" alt="" style="width: 50px; height: 50px;">
                                                     </td>
                                                     <td>{{ ($product->total_sold ?? 0) }} Sản phẩm</td>
                                                 </tr>
@@ -482,7 +482,7 @@
                                                 <tr>
                                                     <td>{{ $product->name }}</td>
                                                     <td>
-                                                        <img src="{{ $product->image }}" alt="" style="width: 50px; height: 50px;">
+                                                    <img src="{{ url($product->image) }}" alt="" style="width: 50px; height: 50px;">
                                                     </td>
                                                     <td>{{ number_format($product->total_profit, 0, '.', ',') }} VND</td>
                                                 </tr>
@@ -507,6 +507,13 @@
         $(document).ready(function() {
             var currentMonth = new Date().getMonth() + 1; // Tháng trong JavaScript tính từ 0-11 nên cần +1
             var currentYear = new Date().getFullYear();
+
+            var startYear = 2000;
+
+            // Thêm các năm từ 2000 đến năm hiện tại vào select với id="yearSelect"
+            for (var year = currentYear; year >= startYear; year--) {
+                $('#yearSelect2').append('<option value="' + year + '">' + year + '</option>');
+            }
 
             // Thiết lập tháng hiện tại là selected trong #monthSelect
             $('#monthSelect').val(currentMonth);

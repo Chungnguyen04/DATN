@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\CartController;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\CommentController;
+use App\Http\Controllers\Api\GhtkController;
 use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\RoleController;
 use App\Http\Controllers\Api\SlideController;
@@ -152,7 +153,7 @@ Route::prefix('orders')
         // end api
     });
 
-    Route::prefix('vouchers')
+Route::prefix('vouchers')
     ->name('vouchers.')
     ->controller(VoucherController::class)
     ->group(function () {
@@ -180,7 +181,7 @@ Route::prefix('orders')
         // end api
     });
 
-    Route::prefix('comments')
+Route::prefix('comments')
     ->name('comments.')
     ->controller(CommentController::class)
     ->group(function () {
@@ -193,12 +194,15 @@ Route::prefix('orders')
         Route::post('add', 'addComment')
             ->name('addComment');
 
-        Route::post('getAllCommentsForProduct','getAllCommentsForProduct')
-        ->name('getAllCommentsForProduct');
+        Route::post('getAllCommentsForProduct', 'getAllCommentsForProduct')
+            ->name('getAllCommentsForProduct');
     });
 
-    Route::prefix('slider')->name('slider.')->group(function () {
-        Route::get('/', [SlideController::class, 'getAllSlider'])->name('getAllSlider'); // Lấy danh sách sliders
-        Route::get('/{id}', [SlideController::class, 'getSliderById'])->name('getSliderById'); // Xem chi tiết slider
-    });
-    
+Route::prefix('slider')->name('slider.')->group(function () {
+    Route::get('/', [SlideController::class, 'getAllSlider'])->name('getAllSlider'); // Lấy danh sách sliders
+    Route::get('/{id}', [SlideController::class, 'getSliderById'])->name('getSliderById'); // Xem chi tiết slider
+});
+
+Route::get('/giao-hang', [GhtkController::class, 'index'])->name('ghtk.index');
+Route::post('/shipping-fee', [GhtkController::class, 'calculateShippingFee']);
+Route::get('/google-autocomplete', [GhtkController::class, 'autocomplete'])->name('ghtk.autocomplete');

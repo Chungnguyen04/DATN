@@ -44,19 +44,19 @@ Danh sách đánh giá
                                         @foreach($comments as $key => $comment)
                                         <tr>
                                             <td>{{ $key + 1 }}</td>
-                                            <td>{{ $comment->user->name }}</td>
-                                            <td>{{ $comment->product->name }}</td>
+                                            <td>{{ optional($comment->user)->name }}</td>
+                                            <td>{{ optional($comment->product)->name }}</td>
                                             <td>{{ $comment->content }}</td>
                                             <td>
                                                 @for ($i = 1; $i <= $comment->rating; $i++)
                                                     <i class="ri-star-fill" style="color: gold;"></i> <!-- Sao đầy -->
-                                                @endfor
+                                                    @endfor
                                             </td>
                                             <td>
                                                 @if ($comment->status === 'default')
-                                                    <span class="status-dot" style="background-color: green;"></span> Hiển thị
+                                                <span class="status-dot" style="background-color: green;"></span> Hiển thị
                                                 @else
-                                                    <span class="status-dot" style="background-color: red;"></span> Ẩn
+                                                <span class="status-dot" style="background-color: red;"></span> Ẩn
                                                 @endif
                                             </td>
                                             <td><a class="btn btn-info" href="{{ route('comments.edit',$comment->id) }}">Chỉnh sửa</a></td>

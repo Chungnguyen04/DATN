@@ -145,4 +145,4 @@ timer: 2500
 });
 
 </script>
-@endsection
+@endsection 
