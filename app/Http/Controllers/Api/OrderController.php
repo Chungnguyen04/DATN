@@ -488,14 +488,13 @@ class OrderController extends Controller
                     ]);
                 }
             }
-
             // Tính toán giá trị cuối cùng
             $finalPrice = $request->total_price - $discountValue;
 
             // Kiểm tra phương thức thanh toán
             if ($request->payment_method == 'vnpay') {
                 $orderCode = $this->generateRandomOrderCode(8);
-                $vnpayUrl = $this->generateVnpayUrl($orderCode, $request->total_price);
+                $vnpayUrl = $this->generateVnpayUrl($orderCode, $finalPrice);
 
                 // Tạo đơn hàng tạm thời với trạng thái chờ thanh toán
                 $order = Order::create([
@@ -507,6 +506,7 @@ class OrderController extends Controller
                     'total_price' => $request->total_price,
                     'discount_value' => $discountValue, // Thêm giá trị giảm giá
                     'final_price' => $finalPrice, // Thêm giá trị cuối cùng
+                    'shipping_fee' => $request->shipping_fee, // Thêm phí ship
                     'status' => 'pending',
                     'payment_method' => 'vnpay',
                     'payment_status' => 'unpaid',
@@ -555,6 +555,7 @@ class OrderController extends Controller
                     'total_price' => $request->total_price,
                     'discount_value' => $discountValue, // Thêm giá trị giảm giá
                     'final_price' => $finalPrice, // Thêm giá trị cuối cùng
+                    'shipping_fee' => $request->shipping_fee, // Thêm phí ship
                     'status' => $request->status ?? 'pending',
                     'payment_method' => $request->payment_method ?? 'cod',
                     'payment_status' => 'unpaid',
@@ -774,7 +775,19 @@ class OrderController extends Controller
                         'new_status' => 'canceled',
                         'changed_by' => auth()->user()->id ?? 0,
                     ]);
+                    $orderDetails = OrderDetail::where('order_id', $order->id)->get();
 
+                    // Duyệt qua từng sản phẩm trong chi tiết đơn hàng
+                    foreach ($orderDetails as $detail) {
+                        // Lấy biến thể sản phẩm từ bảng variants
+                        $variant = Variant::find($detail->variant_id);
+
+                        if ($variant) {
+                            // Cập nhật lại số lượng cho biến thể (cộng lại số lượng đã mua)
+                            $variant->quantity += $detail->quantity;
+                            $variant->save();
+                        }
+                    }
                     DB::commit();
 
                     return redirect()->to('http://localhost:5173/confirm-cancel');

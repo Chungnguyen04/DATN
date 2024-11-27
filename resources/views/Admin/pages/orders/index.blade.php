@@ -271,12 +271,12 @@
                                                                                                         </table>
                                                                                                         <div class="d-flex justify-content-end mt-3">
                                                                                                             <div class="d-flex flex-column text-end">
-                                                                                                                <h5>Miễn phí vận chuyển</h5>
+                                                                                                                <h5>Phí vận chuyển: {{ number_format($order->shipping_fee, 0, '', ',') }}</h5>
                                                                                                                 <h5>Tổng: {{ !empty($total) ? number_format($total, 0, '', ',') : '' }} VND</h5>
                                                                                                                 @if (!empty($order->voucher_id))
                                                                                                                     <h5>Voucher (giảm giá): -{{ !empty($order->discount_value) ? number_format($order->discount_value, 0, '', ',') : '' }} VND</h5>
                                                                                                                 @endif
-                                                                                                                <h4>Thành tiền: {{ !empty($total) ? number_format($total - $order->discount_value, 0, '', ',') : '' }} VND</h4>
+                                                                                                                <h4>Thành tiền: {{ !empty($total) ? number_format($total - $order->discount_value + $order->shipping_fee, 0, '', ',') : '' }} VND</h4>
                                                                                                             </div>
                                                                                                         </div>
                                                                                                     </div>
