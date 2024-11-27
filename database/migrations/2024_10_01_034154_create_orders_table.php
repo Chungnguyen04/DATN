@@ -36,7 +36,7 @@ return new class extends Migration
                 'completed'        // Hoàn thành
             ])->default('pending');
 
-
+            $table->decimal('shipping_fee', 15,0)->default(0);
             // Hình thức thanh toán
             $table->enum('payment_method', ['cod', 'vnpay'])
                 ->default('cod');

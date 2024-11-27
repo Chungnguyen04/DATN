@@ -22,7 +22,7 @@ class GhtkController extends Controller
             'pick_district' => 'Quận Ba Đình', // Quận của kho hàng
             'province' => $request->province, // Tỉnh gửi từ người dùng
             'district' => $request->district, // Quận gửi từ người dùng
-            'address' => $request->address, // Phường/Xã gửi từ người dùng
+            'ward' => $request->ward, // Phường/Xã gửi từ người dùng
             'weight' => 1000, // Trọng lượng gói hàng (gram)
             'value' => 500000, // Giá trị gói hàng
         ];

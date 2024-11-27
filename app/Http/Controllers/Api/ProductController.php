@@ -34,7 +34,6 @@ class ProductController extends Controller
                 'message' => 'Sản phẩm được lấy thành công',
                 'data' => $products
             ], Response::HTTP_OK);
-
         } catch (\Exception $e) {
             // Lỗi hệ thống
             return response()->json([
@@ -75,7 +74,6 @@ class ProductController extends Controller
                     'relatedProducts' => $relatedProducts
                 ]
             ], Response::HTTP_OK);
-
         } catch (ModelNotFoundException $e) {
             // Trường hợp không tìm thấy sản phẩm
             return response()->json([
@@ -88,7 +86,6 @@ class ProductController extends Controller
                     'line' => $e->getLine()
                 ]
             ], Response::HTTP_NOT_FOUND);
-
         } catch (\Exception $e) {
             // Lỗi hệ thống
             return response()->json([
@@ -128,7 +125,6 @@ class ProductController extends Controller
                     'category' => $category
                 ]
             ], Response::HTTP_OK);
-
         } catch (\Exception $e) {
             // Xử lý lỗi hệ thống
             return response()->json([
@@ -161,7 +157,6 @@ class ProductController extends Controller
                 'message' => 'Sản phẩm được lấy thành công',
                 'data' => $products
             ], Response::HTTP_OK);
-
         } catch (\Exception $e) {
             // Lỗi hệ thống
             return response()->json([
@@ -177,8 +172,8 @@ class ProductController extends Controller
     public function filterProducts(Request $request)
     {
         try {
-            // Nhận tham số 'name' từ request
-            $name = $request->input('name');
+            // Nhận tham số 'name' từ query string
+            $name = $request->query('name');
 
             // Khởi tạo truy vấn với Eloquent
             $query = Product::with('category', 'variants');
@@ -187,6 +182,9 @@ class ProductController extends Controller
             if ($name) {
                 $query->where('name', 'LIKE', "%{$name}%");
             }
+
+            // Sắp xếp theo sản phẩm mới nhất
+            $query->orderBy('created_at', 'desc');
 
             // Lấy danh sách sản phẩm đã lọc
             $products = $query->get();
@@ -205,7 +203,6 @@ class ProductController extends Controller
                 'message' => 'Sản phẩm được lấy thành công',
                 'data' => $products
             ], Response::HTTP_OK);
-
         } catch (\Exception $e) {
             // Lỗi hệ thống
             return response()->json([
