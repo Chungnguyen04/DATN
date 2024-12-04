@@ -31,22 +31,13 @@
                                 <!-- Email -->
                                 <div class="col-md-6 mt-3">
                                     <label for="userEmail" class="form-label">Tài khoản</label>
-                                    <input type="email" class="form-control" name="email" id="userEmail"
+                                    <input type="email" class="form-control" name="email" id="userEmail" readonly
                                         placeholder="Nhập email..." value="{{ $user->email }}">
                                     @error('email')
                                         <span class="text-danger">{{ $message }}</span>
                                     @enderror
                                 </div>
 
-                                <!-- Mật Khẩu -->
-                                <div class="col-md-6 mt-3">
-                                    <label for="userPassword" class="form-label">Mật khẩu</label>
-                                    <input type="text" class="form-control" name="password" id="userPassword"
-                                        placeholder="Nhập mật khẩu..." value="{{ $user->password }}">
-                                    @error('password')
-                                        <span class="text-danger">{{ $message }}</span>
-                                    @enderror
-                                </div>
 
                                 <!-- Số Điện Thoại -->
                                 <div class="col-md-6 mt-3">
