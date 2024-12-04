@@ -73,7 +73,7 @@
 
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="{{ route('vouchers.index') }}">
-                        <i class="ri-coupon-3-fill"></i> <span data-key="t-dashboards">Voucher</span>
+                        <i class="ri-coupon-3-fill"></i> <span data-key="t-dashboards">Phiếu giảm giá</span>
                     </a>
                 </li>
                 

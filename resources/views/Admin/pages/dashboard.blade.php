@@ -350,10 +350,10 @@
                                                         <div class="col">
                                                             <select class="form-select" name="filter" id="filter">
                                                                 <option value="">-- Chọn bộ lọc --</option>
-                                                                <option value="day">Thống kê theo ngày</option>
-                                                                <option value="month" selected>Thống kê theo tháng</option>
-                                                                <option value="year">Thống kê theo năm</option>
-                                                                <option value="range">Thống kê theo khoảng thời gian
+                                                                <option value="day">Thống kê ngày</option>
+                                                                <option value="month" selected>Thống kê tháng</option>
+                                                                <option value="year">Thống kê năm</option>
+                                                                <option value="range">Thống kê khoảng thời gian
                                                                 </option>
                                                             </select>
                                                         </div>

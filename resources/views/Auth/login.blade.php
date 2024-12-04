@@ -5,12 +5,12 @@
 <head>
 
     <meta charset="utf-8" />
-    <title>Quản trị admin</title>
+    <title> Quản Trị ADMIN</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta content="Premium Multipurpose Admin & Dashboard Template" name="description" />
     <meta content="Themesbrand" name="author" />
     <!-- App favicon -->
-    <link rel="shortcut icon" href="{{ asset('assets/theme/assets/images/favicon.ico') }}">
+    <link rel="shortcut icon" href="{{ asset('assets/theme/assets/images/favicon1.ico') }}">
 
     <!-- Layout config Js -->
     <script src="{{ asset('assets/theme/assets/js/layout.js') }}"></script>
@@ -49,7 +49,7 @@
                     <div class="col-lg-12">
                         <div class="text-center mt-sm-5 mb-4 text-white-50">
                             <div>
-                                <a href="index.html" class="d-inline-block auth-logo">
+                                <a class="d-inline-block auth-logo">
                                     <img src="{{asset('images/logo_admin.png')}}" alt=""
                                         height="70">
                                 </a>
@@ -114,7 +114,7 @@
         <!-- end auth page content -->
 
         <!-- footer -->
-        @include('Admin.partials.footer')
+        @include('admin.partials.footer')
         <!-- end Footer -->
     </div>
     <!-- end auth-page-wrapper -->

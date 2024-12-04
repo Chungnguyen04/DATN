@@ -1,7 +1,7 @@
 @extends('admin.layouts.master')
 
 @section('title')
-    Danh sách voucher
+    Danh sách phiếu giảm giá
 @endsection
 
 @section('content')
@@ -11,14 +11,14 @@
                 <div class="col-xl-12">
                     <div class="card">
                         <div class="card-header align-items-center d-flex">
-                            <h4 class="card-title mb-0 flex-grow-1">Danh sách voucher</h4>
+                            <h4 class="card-title mb-0 flex-grow-1">Danh sách phiếu giảm giá</h4>
                         </div><!-- end card header -->
 
                         <div class="card-body">
                             <div class="live-preview">
                                 <div class="table-responsive table-card">
                                     <a href="{{ route('vouchers.create') }}" class="btn btn-primary m-3">Thêm mới
-                                        voucher</a>
+                                        phiếu giảm giá</a>
                                     <table class="table align-middle table-nowrap table-striped-columns mb-0">
                                         <thead class="table-light">
                                             <tr>
@@ -30,7 +30,7 @@
                                                     </div>
                                                 </th>
                                                 <th scope="col">STT</th>
-                                                <th scope="col">Tên voucher</th>
+                                                <th scope="col">Tên mã giảm giá</th>
                                                 <th scope="col">Giá trị giảm</th>
                                                 <th scope="col">Giá trị tối thiểu</th>
                                                 <th scope="col">Điều kiện áp dụng</th>
@@ -152,7 +152,7 @@
 
                     $(this).find(".time-left").text(displayText);
                 } else {
-                    $(this).find(".time-left").text("Voucher đã hết hạn");
+                    $(this).find(".time-left").text("Phiếu giảm giá đã hết hạn");
                 }
             });
         }
