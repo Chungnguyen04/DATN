@@ -333,7 +333,11 @@
                                                                                                     </td>
                                                                                                     <td style="word-break:break-word;text-align:left;font-family:Helvetica,arial,sans-serif;font-size:13px;color:#000000;vertical-align:top"
                                                                                                         width="49%">
-                                                                                                        -{{ number_format($order->voucher->discount_value, 0, '', ',') . ' VND' }}
+                                                                                                        @if (!empty($order->voucher->discount_value))
+                                                                                                            -{{ number_format(($order->voucher->discount_value ?? 0), 0, '.', '.') . 'VND' }}
+                                                                                                            @else
+                                                                                                            Không có voucher
+                                                                                                        @endif
                                                                                                     </td>
                                                                                                 </tr>
 
