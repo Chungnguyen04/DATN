@@ -3,8 +3,11 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\District;
+use App\Models\Province;
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\Ward;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 
@@ -12,34 +15,31 @@ class UserController extends Controller
 {
     public function index()
     {
-        // Sử dụng paginate để lấy danh sách người dùng với 5 bản ghi mỗi trang
-        $users = User::paginate(5);
-        // Truyền biến $users sang view
+        $users = User::with('province', 'district', 'ward')->paginate(5);
         return view('admin.pages.users.list_user', compact('users'));
     }
 
     public function create()
     {
         $users = User::query()->pluck('id')->all();
-        return view('admin.pages.users.add_user', compact('users'));
+        $data['provinces']  = Province::all();
+        $data['districts']  = District::all();
+        $data['wards']      = Ward::all();
+        return view('admin.pages.users.add_user', compact('users', 'data'));
     }
 
     public function store(Request $req)
     {
-        $validated = $req->validate([
+        $req->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email', // Kiểm tra email trùng lặp
             'password' => 'required|string|min:6',
-            'phone' => 'required|regex:/^0[0-9]{9}$/',
-            'address' => 'required',
             'type' => 'required',
         ], [
             'name.required' => 'Tên bắt buộc phải nhập',
             'email.required' => 'Email bắt buộc phải nhập',
             'email.email' => 'Email không đúng định dạng',
             'email.unique' => 'Email đã tồn tại', // Thông báo khi email đã tồn tại
-            'password.required' => 'Mật khẩu bắt buộc phải nhập',
-            'phone.regex' => 'Số điện thoại không đúng định dạng',
             'type.required' => 'Vai trò bắt buộc phải nhập',
         ]);
 
@@ -50,6 +50,9 @@ class UserController extends Controller
             'phone' => $req->phone,
             'address' => $req->address,
             'type' => $req->type,
+            'province_id' => $req->province_id,
+            'district_id' => $req->district_id,
+            'ward_id' => $req->ward_id,
         ];
         User::create($data);
 
@@ -65,26 +68,19 @@ class UserController extends Controller
             return redirect()->route('users.index')->with('message', 'Người dùng không tồn tại');
         }
 
-        return view('admin.pages.users.edit_user', compact('user'));
+        $data['provinces']  = Province::all();
+        $data['districts']  = District::all();
+        $data['wards']      = Ward::all();
+
+        return view('admin.pages.users.edit_user', compact('user', 'data'));
     }
 
     public function update($id, Request $req)
     {
         // Xác thực dữ liệu
         $validated = $req->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email,' . $id, // Kiểm tra email trùng lặp nhưng bỏ qua email của chính user đang cập nhật
-            'password' => 'nullable|string|min:6', // Cho phép mật khẩu có thể là null
-            'phone' => 'required|regex:/^0[0-9]{9}$/',
-            'address' => 'required',
             'type' => 'required',
         ], [
-            'name.required' => 'Tên bắt buộc phải nhập',
-            'email.required' => 'Email bắt buộc phải nhập',
-            'email.email' => 'Email không đúng định dạng',
-            'email.unique' => 'Email đã tồn tại', // Thông báo khi email đã tồn tại
-            'password.required' => 'Mật khẩu bắt buộc phải nhập',
-            'phone.regex' => 'Số điện thoại không đúng định dạng',
             'type.required' => 'Vai trò bắt buộc phải nhập',
         ]);
     
@@ -93,11 +89,15 @@ class UserController extends Controller
     
         // Cập nhật dữ liệu cơ bản
         $data = [
-            'name' => $req->name,
-            'email' => $req->email,
-            'phone' => $req->phone,
-            'address' => $req->address,
+            'name' => $user->name,
+            'email' => $user->email,
+            'password' => $user->password,
+            'phone' => $user->phone,
+            'address' => $user->address,
             'type' => $req->type,
+            'province_id' => $user->province_id,
+            'district_id' => $user->district_id,
+            'ward_id' => $user->ward_id,
         ];
     
         // Kiểm tra nếu người dùng có nhập mật khẩu mới, thì mã hóa và cập nhật mật khẩu
@@ -108,7 +108,7 @@ class UserController extends Controller
         // Thực hiện cập nhật dữ liệu
         $user->update($data);
     
-        return redirect()->route('users.index')->with('message', 'Sửa thành công');
+        return redirect()->route('users.index')->with('message', 'Cập nhật thành công');
     }
 
     public function delete($id)

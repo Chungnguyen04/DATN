@@ -1,7 +1,7 @@
 @extends('admin.layouts.master')
 
 @section('title')
-    Bảng điều khiển
+    Bảng thống kê
 @endsection
 
 @section('css')
@@ -210,7 +210,53 @@
                                         </div><!-- end card body -->
                                     </div><!-- end card -->
                                 </div><!-- end col -->
+                            </div>
 
+                            <div class="row">
+                                <div class="col-xl-12">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <form id="form-filter-order" method="post">
+                                                @csrf
+                                                <div class="d-flex align-items-center">
+                                                    <div class="row">
+                                                        <div class="col-5">
+                                                            <input type="text" value="Thống kê theo tháng" readonly class="form-control">
+                                                        </div>
+            
+                                                        <div class="col">
+                                                            <div class="d-flex align-items-center">
+                                                                <select id="monthSelectOrder" class="form-select w-75"
+                                                                    style="margin-right: 10px;width: 133px !important;" name="month">
+                                                                    @for ($i = 1; $i <= 12; $i++)
+                                                                        <option {{ $i == \Carbon\Carbon::now()->month ? 'selected' : '' }} value="{{ $i }}">Tháng
+                                                                            {{ $i }}</option>
+                                                                    @endfor
+                                                                </select>
+                                                                <select id="yearSelectOrder" style="width: 133px !important;" class="form-select w-75"
+                                                                    name="yearMonth">
+                                                                    @for ($i = \Carbon\Carbon::now()->year; $i >= 2000; $i--)
+                                                                        <option {{ $i == \Carbon\Carbon::now()->year ? 'selected' : '' }} value="{{ $i }}">
+                                                                            {{ $i }}</option>
+                                                                    @endfor
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row" style="margin-left: 10px">
+                                                        <div class="col text-end">
+                                                            <button data-url="{{ route('dashboards.filterMonthAndYear') }}" type="button" class="btn btn-primary"
+                                                                id="btnFilterOrderStatus">Lọc</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
                                 <div class="col-xl-3 col-md-6">
                                     <!-- card -->
                                     <div class="card card-animate">
@@ -224,7 +270,7 @@
                                             <div class="d-flex align-items-end justify-content-between mt-4">
                                                 <div>
                                                     <h4 class="fs-22 fw-semibold ff-secondary mb-4"><span
-                                                            class="counter-value"
+                                                            class="counter-value" data-value="giaothanhcong"
                                                             data-target="{{ !empty($giaothanhcong) ? $giaothanhcong : 0 }}">{{ $giaothanhcong }}</span>
                                                         Đơn hàng </h4>
                                                     <a href="{{ route('orders.index') }}?status=delivering"
@@ -253,8 +299,8 @@
                                             <div class="d-flex align-items-end justify-content-between mt-4">
                                                 <div>
                                                     <h4 class="fs-22 fw-semibold ff-secondary mb-4"><span
-                                                            class="counter-value"
-                                                            data-target="{{ !empty($totalOrders) ? $totalOrders : 0 }}">{{ $totalOrders }}</span>
+                                                            class="counter-value" data-value="hoanthanh"
+                                                            data-target="{{ !empty($totalCompletedOrders) ? $totalCompletedOrders : 0 }}">{{ $totalCompletedOrders }}</span>
                                                         Đơn hàng </h4>
                                                     <a href="{{ route('orders.index') }}?status=completed"
                                                         class="text-decoration-underline">Xem </a>
@@ -282,7 +328,7 @@
                                             <div class="d-flex align-items-end justify-content-between mt-4">
                                                 <div>
                                                     <h4 class="fs-22 fw-semibold ff-secondary mb-4"><span
-                                                            class="counter-value"
+                                                            class="counter-value" data-value="giaothatbai"
                                                             data-target="{{ !empty($giaothatbai) ? $giaothatbai : 0 }}">{{ $giaothatbai }}</span>
                                                         Đơn hàng </h4>
                                                     <a href="{{ route('orders.index') }}?status=failed"
@@ -311,7 +357,7 @@
                                             <div class="d-flex align-items-end justify-content-between mt-4">
                                                 <div>
                                                     <h4 class="fs-22 fw-semibold ff-secondary mb-4"><span
-                                                            class="counter-value"
+                                                            class="counter-value" data-value="giaohuy"
                                                             data-target="{{ !empty($giaohuy) ? $giaohuy : 0 }}">{{ $giaohuy }}</span>
                                                         Đơn hàng </h4>
                                                     <a href="{{ route('orders.index') }}?status=cancelled"
@@ -336,12 +382,12 @@
                                         <div class="d-flex justify-content-between">
                                             <div>
                                                 <h4 class="card-title mb-0">Thống Kê Doanh Thu</h4>
-                                                <div class="mt-3">
+                                                <!-- <div class="mt-3">
                                                     <h4>Doanh thu: <span class="counter-value"
                                                             data-target="{{ !empty($totalRevenueThisMonth) ? $totalRevenueThisMonth : 0 }}">0</span>
                                                         VNĐ</h4>
                                                     <p>Số đơn: {{ !empty($totalOrders) ? $totalOrders : 0 }} đơn</p>
-                                                </div>
+                                                </div> -->
                                             </div>
                                             <form action="{{ route('orders.index') }}" method="post">
                                                 @csrf
@@ -367,16 +413,16 @@
                                                         <div class="col" id="monthFilter" style="display: none;">
                                                             <div class="d-flex align-items-center">
                                                                 <select id="monthSelect" class="form-select"
-                                                                    style="margin-right: 10px" name="month">
+                                                                    style="margin-right: 10px;width: 133px !important;" name="month">
                                                                     @for ($i = 1; $i <= 12; $i++)
-                                                                        <option value="{{ $i }}">
+                                                                        <option {{ $i == \Carbon\Carbon::now()->month ? 'selected' : '' }} value="{{ $i }}">Tháng
                                                                             {{ $i }}</option>
                                                                     @endfor
                                                                 </select>
                                                                 <select id="yearSelect" class="form-select"
                                                                     name="yearMonth">
-                                                                    @for ($i = 2000; $i <= \Carbon\Carbon::now()->year; $i++)
-                                                                        <option value="{{ $i }}">
+                                                                    @for ($i = \Carbon\Carbon::now()->year; $i >= 2000; $i--)
+                                                                        <option {{ $i == \Carbon\Carbon::now()->year ? 'selected' : '' }} value="{{ $i }}">
                                                                             {{ $i }}</option>
                                                                     @endfor
                                                                 </select>
@@ -505,6 +551,35 @@
 @section('script')
     <script>
         $(document).ready(function() {
+            $('#btnFilterOrderStatus').on('click', function (e) {
+                e.preventDefault();
+
+                const url = $(this).data('url');
+                const month = $('#monthSelectOrder').val();
+                const year = $('#yearSelectOrder').val();
+
+                $.ajax({
+                    url: url,
+                    type: 'POST',
+                    data: {
+                        _token: $('meta[name="csrf-token"]').attr('content'),
+                        month: month,
+                        year: year
+                    },
+                    success: function (response) {
+                        $('.counter-value[data-value]').each(function () {
+                            const target = $(this).data('value');
+                            if (response[target] !== undefined) {
+                                $(this).text(response[target]);
+                            }
+                        });
+                    },
+                    error: function (xhr) {
+                        alert('Có lỗi xảy ra! Vui lòng thử lại.');
+                    }
+                });
+            });
+            
             var currentMonth = new Date().getMonth() + 1; // Tháng trong JavaScript tính từ 0-11 nên cần +1
             var currentYear = new Date().getFullYear();
 

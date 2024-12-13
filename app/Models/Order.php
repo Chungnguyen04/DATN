@@ -18,6 +18,21 @@ class Order extends Model
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
+    public function province()
+    {
+        return $this->belongsTo(Province::class, 'province_id', 'id');
+    }
+
+    public function district()
+    {
+        return $this->belongsTo(District::class, 'district_id', 'id');
+    }
+
+    public function ward()    
+    {
+        return $this->belongsTo(Ward::class, 'ward_id', 'id');
+    }
+
     public function orderDetails()
     {
         return $this->hasMany(OrderDetail::class, 'order_id', 'id');
@@ -26,5 +41,9 @@ class Order extends Model
     public function orderStatusHistories()
     {
         return $this->hasMany(OrderStatusHistory::class, 'order_id', 'id');
+    }
+    public function voucher()
+    {
+        return $this->belongsTo(Voucher::class, 'voucher_id', 'id');
     }
 }

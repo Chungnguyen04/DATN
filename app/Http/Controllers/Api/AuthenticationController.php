@@ -48,7 +48,6 @@ class AuthenticationController extends Controller
             'name' => $req->name,
             'email' => $req->email,
             'password' => Hash::make($req->password),
-            'role' => $isFirstUser ? 0 : 1,
         ];
 
         $newUser = User::create($data);
@@ -59,7 +58,6 @@ class AuthenticationController extends Controller
                 'id' => $newUser->id,
                 'name' => $newUser->name,
                 'email' => $newUser->email,
-                'role' => $newUser->role,
             ],
             'status_code' => 201
         ], 201);
@@ -119,7 +117,6 @@ class AuthenticationController extends Controller
                 'id' => $user->id,
                 'name' => $user->name,
                 'email' => $user->email,
-                'role' => $user->role,
             ],
             'status_code' => 200,
             'authorisation' => [

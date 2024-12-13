@@ -22,13 +22,6 @@
                                     <table class="table align-middle table-nowrap table-striped-columns mb-0">
                                         <thead class="table-light">
                                             <tr>
-                                                <th scope="col" style="width: 46px;">
-                                                    <div class="form-check">
-                                                        <input class="form-check-input" type="checkbox" value=""
-                                                            id="cardtableCheck">
-                                                        <label class="form-check-label" for="cardtableCheck"></label>
-                                                    </div>
-                                                </th>
                                                 <th scope="col">STT</th>
                                                 <th scope="col">Tên mã giảm giá</th>
                                                 <th scope="col">Giá trị giảm</th>
@@ -49,14 +42,6 @@
                                                     @endphp
                                                     <tr data-id-tr="{{ $voucher->id }}"
                                                         data-end-date="{{ $voucher->end_date }}">
-                                                        <td>
-                                                            <div class="form-check">
-                                                                <input class="form-check-input" type="checkbox"
-                                                                    value="" id="cardtableCheck03">
-                                                                <label class="form-check-label"
-                                                                    for="cardtableCheck03"></label>
-                                                            </div>
-                                                        </td>
                                                         <td>{{ $key + 1 }}</td>
                                                         <td>{{ $voucher->name }}</td>
                                                         <td>{{ number_format($voucher->discount_value, 0, ',', '.') }} VND

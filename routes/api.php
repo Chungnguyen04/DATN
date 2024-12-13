@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\CartController;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\CommentController;
+use App\Http\Controllers\Api\DashboardController;
 use App\Http\Controllers\Api\GhtkController;
 use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\RoleController;
@@ -33,9 +34,24 @@ Route::post('/logout', [AuthenticationController::class, 'apiLogout'])->middlewa
 
 
 // Phân quyền user 
-
 Route::put('/user', [UserController::class, 'updateUser'])->middleware('auth:sanctum');
 Route::get('/user', [UserController::class, 'getUserInfo'])->middleware('auth:sanctum');
+
+Route::get('/provinces', [GhtkController::class, 'getProvinces'])->name('api.provinces');
+Route::post('/districts', [GhtkController::class, 'getDistricts'])->name('api.districts');
+Route::post('/wards', [GhtkController::class, 'getWards'])->name('api.wards');
+
+Route::prefix('dashboards')
+    ->name('dashboards.')
+    ->controller(DashboardController::class)
+    ->group(function () {
+
+        // api filter lọc theo tháng 
+        Route::post('/filterMonthAndYear', 'filterMonthAndYear')
+            ->name('filterMonthAndYear');
+        // end api
+
+    });
 
 
 Route::prefix('product')
@@ -133,7 +149,7 @@ Route::prefix('orders')
         // end api
 
         // api thay dổi trạng thái đơn hàng
-        Route::get('/order-markAsCompleted/{orderId}', 'markAsCompleted')
+        Route::post('/order-markAsCompleted/{orderId}', 'markAsCompleted')
             ->name('markAsCompleted');
         // end api
 

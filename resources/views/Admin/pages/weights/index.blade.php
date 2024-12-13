@@ -21,13 +21,6 @@
                                     <table class="table align-middle table-nowrap table-striped-columns mb-0">
                                         <thead class="table-light">
                                         <tr>
-                                            <th scope="col" style="width: 46px;">
-                                                <div class="form-check">
-                                                    <input class="form-check-input" type="checkbox" value=""
-                                                           id="cardtableCheck">
-                                                    <label class="form-check-label" for="cardtableCheck"></label>
-                                                </div>
-                                            </th>
                                             <th scope="col">STT</th>
                                             <th scope="col">Trọng lượng</th>
                                             <th scope="col">Đơn vị tính</th>
@@ -38,13 +31,6 @@
                                         @if(!empty($data['weights']))
                                             @foreach ($data['weights'] as $key => $weight)
                                                 <tr data-id-tr="{{ $weight->id }}">
-                                                    <td>
-                                                        <div class="form-check">
-                                                            <input class="form-check-input" type="checkbox" value=""
-                                                                   id="cardtableCheck03">
-                                                            <label class="form-check-label" for="cardtableCheck03"></label>
-                                                        </div>
-                                                    </td>
                                                     <td>{{ $key + 1 }}</td>
                                                     <td>
                                                         {{ number_format($weight->weight, 2) }}

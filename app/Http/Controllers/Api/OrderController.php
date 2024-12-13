@@ -26,6 +26,9 @@ class OrderController extends Controller
         try {
             $orders = Order::with([
                 'user',
+                'province',
+                'district',
+                'ward',
                 'orderDetails',
                 'orderDetails.variant',
                 'orderDetails.variant.product',
@@ -264,6 +267,9 @@ class OrderController extends Controller
         try {
             $order = Order::with([
                 'user',
+                'province',
+                'district',
+                'ward',
                 'orderDetails',
                 'orderDetails.variant',
                 'orderDetails.variant.product',
@@ -349,6 +355,14 @@ class OrderController extends Controller
                 'status' => 'cancelled'
             ]);
 
+            OrderStatusHistory::create([
+                'order_id' => $orderId,
+                'old_status' => $order->status,
+                'new_status' => 'cancelled',
+                'changed_by' => request()->user_id ?? 0,
+                'note' => 'Hủy đơn hàng',
+            ]);
+
             DB::commit();
 
             return response()->json([
@@ -415,7 +429,8 @@ class OrderController extends Controller
                 'order_id' => $order->id,
                 'old_status' => 'delivering',
                 'new_status' => 'completed',
-                'changed_by' => auth()->user()->id ?? 0, // Cập nhật nếu có người dùng đang đăng nhập
+                'changed_by' => request()->user_id ?? 0, 
+                'note' => 'Nhận hàng thành công.',
             ]);
 
             DB::commit();
@@ -494,10 +509,13 @@ class OrderController extends Controller
             // Kiểm tra phương thức thanh toán
             if ($request->payment_method == 'vnpay') {
                 $orderCode = $this->generateRandomOrderCode(8);
-                $vnpayUrl = $this->generateVnpayUrl($orderCode, $finalPrice);
+                $vnpayUrl = $this->generateVnpayUrl($orderCode, $request->total_price);
 
                 // Tạo đơn hàng tạm thời với trạng thái chờ thanh toán
                 $order = Order::create([
+                    'province_id' => $request->province_id,
+                    'district_id' => $request->district_id,
+                    'ward_id' => $request->ward_id,
                     'user_id' => $request->user_id ?? null,
                     'code' => $orderCode,
                     'name' => $request->name,
@@ -547,6 +565,9 @@ class OrderController extends Controller
             } else {
                 // Xử lý thanh toán khi nhận hàng (COD)
                 $order = Order::create([
+                    'province_id' => $request->province_id,
+                    'district_id' => $request->district_id,
+                    'ward_id' => $request->ward_id,
                     'user_id' => $request->user_id ?? null,
                     'code' => $this->generateRandomOrderCode(8),
                     'name' => $request->name,
@@ -590,7 +611,8 @@ class OrderController extends Controller
                     'order_id' => $order->id,
                     'old_status' => $order->status,
                     'new_status' => $order->status,
-                    'changed_by' => auth()->user()->id ?? 0,
+                    'changed_by' => $request->user_id ?? 0,
+                    'note' => 'Đặt hàng'
                 ]);
 
                 // Xóa sản phẩm trong giỏ hàng sau khi đặt hàng thành công
@@ -720,7 +742,8 @@ class OrderController extends Controller
                         'order_id' => $order->id,
                         'old_status' => 'pending',
                         'new_status' => 'pending',
-                        'changed_by' => auth()->user()->id ?? 0,
+                        'changed_by' => $order->user_id ?? 0,
+                        'note' => 'Đặt hàng'
                     ]);
 
                     // Xóa sản phẩm trong giỏ hàng của người dùng
@@ -758,7 +781,6 @@ class OrderController extends Controller
                 ], Response::HTTP_INTERNAL_SERVER_ERROR);
             }
         } else {
-            // Thanh toán đã bị hủy hoặc thất bại
             DB::beginTransaction();
             try {
                 $order = Order::where('code', $vnp_TxnRef)->first();
@@ -772,8 +794,9 @@ class OrderController extends Controller
                     OrderStatusHistory::create([
                         'order_id' => $order->id,
                         'old_status' => 'pending',
-                        'new_status' => 'canceled',
-                        'changed_by' => auth()->user()->id ?? 0,
+                        'new_status' => 'cancelled',
+                        'changed_by' =>  $order->user_id ?? 0,
+                        'note' => 'Người dùng hủy đơn không thanh toán'
                     ]);
                     $orderDetails = OrderDetail::where('order_id', $order->id)->get();
 

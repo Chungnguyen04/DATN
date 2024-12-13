@@ -15,7 +15,7 @@ class CommentController extends Controller
         $comments = Comment::with([
             'user',
             'product'
-        ])->latest()->paginate(10);
+        ])->latest()->paginate(5);
         return view('admin.pages.comment.index',compact('comments'));
     }
 
@@ -64,7 +64,7 @@ class CommentController extends Controller
         //     'status' => $request->status
         // ];
         $comment->update($request->all());
-        return redirect()->route('comments.index')->with('success','Sửa thành công');
+        return response()->json(['success' => true, 'message' => 'Cập nhật đánh giá thành công']);
         
     }
 

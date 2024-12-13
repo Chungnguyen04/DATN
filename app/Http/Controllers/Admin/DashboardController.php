@@ -9,6 +9,8 @@ use App\Models\OrderDetail;
 use App\Models\Product;
 use App\Models\User;
 use App\Models\Variant;
+use Carbon\Carbon;
+use Illuminate\Http\Request;
 
 class DashboardController extends Controller
 {
@@ -20,7 +22,6 @@ class DashboardController extends Controller
 
         $totalRevenueThisMonth = Order::where('status', 'completed')
             ->whereYear('created_at', $currentYear)
-            ->whereMonth('created_at', $currentMonth)
             ->with('orderDetails') // Load mối quan hệ orderDetails
             ->get()
             ->sum(function ($order) {
@@ -33,12 +34,27 @@ class DashboardController extends Controller
         $totalOrders1 = Order::count();
         $totalUsers = User::count();
         $totalPendingOrders = Order::where('status', 'pending')->count();
-        $totalCompletedOrders = Order::where('status', 'completed')->count();
         $daxacnhan = Order::where('status', 'confirmed')->count();
         $danggiao = Order::where('status', 'shipping')->count();
-        $giaohuy = Order::where('status', 'cancelled')->count();
-        $giaothatbai = Order::where('status', 'failed')->count();
-        $giaothanhcong = Order::where('status', 'delivering')->count();
+
+        $totalCompletedOrders = Order::where('status', 'completed')
+            ->whereMonth('created_at', $currentMonth)
+            ->whereYear('created_at', $currentYear)
+            ->count();
+
+        $giaohuy = Order::where('status', 'cancelled')
+            ->whereMonth('created_at', $currentMonth)
+            ->whereYear('created_at', $currentYear)
+            ->count();
+        $giaothatbai = Order::where('status', 'failed')
+            ->whereMonth('created_at', $currentMonth)
+            ->whereYear('created_at', $currentYear)
+            ->count();
+        $giaothanhcong = Order::where('status', 'delivering')
+            ->whereMonth('created_at', $currentMonth)
+            ->whereYear('created_at', $currentYear)
+            ->count();
+
 
         // Lấy top 5 sản phẩm có doanh thu cao nhất
         $topRevenueProducts = Product::with([
@@ -61,8 +77,10 @@ class DashboardController extends Controller
             }
         ])
             ->withSum(['orderDetailsTotal as total_sold'], 'quantity') // Tính tổng số lượng bán
-            ->whereHas('orderDetailsTotal.order', function ($query) {
-                $query->where('status', 'completed');
+            ->whereHas('orderDetailsTotal.order', function ($query) use ($currentMonth, $currentYear) {
+                $query->where('status', 'completed')
+                    ->whereMonth('created_at', $currentMonth)
+                    ->whereYear('created_at', $currentYear);
             })
             ->orderByDesc('total_sold') // Sắp xếp theo tổng số lượng bán
             ->take(5) // Lấy 5 sản phẩm đầu tiên
@@ -70,12 +88,16 @@ class DashboardController extends Controller
 
         // Lấy top 5 sản phẩm lợi nhuận cao nhất
         $topProfitProducts = Product::with(['orderDetailsTotal.order', 'variants'])
+            ->whereHas('orderDetailsTotal.order', function ($query) use ($currentMonth, $currentYear) {
+                $query->where('status', 'completed')
+                    ->whereMonth('created_at', $currentMonth)
+                    ->whereYear('created_at', $currentYear);
+            })
             ->get()
-            ->filter(function ($product) {
+            ->map(function ($product) {
                 $totalProfit = 0;
 
                 foreach ($product->orderDetailsTotal as $detail) {
-                    // Kiểm tra nếu `order` tồn tại
                     if ($detail->order && $detail->order->status === 'completed') {
                         $variant = $product->variants->firstWhere('id', $detail->variant_id);
 
@@ -86,8 +108,11 @@ class DashboardController extends Controller
                     }
                 }
 
-                $product->total_profit = $totalProfit; // Gán tổng lợi nhuận
-                return $totalProfit > 0; // Chỉ giữ lại sản phẩm có lợi nhuận > 0
+                $product->total_profit = $totalProfit; // Gán tổng lợi nhuận vào sản phẩm
+                return $product;
+            })
+            ->filter(function ($product) {
+                return $product->total_profit > 0; // Chỉ giữ sản phẩm có lợi nhuận > 0
             })
             ->sortByDesc('total_profit') // Sắp xếp theo lợi nhuận giảm dần
             ->take(5); // Lấy 5 sản phẩm đầu tiên

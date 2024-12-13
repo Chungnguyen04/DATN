@@ -26,7 +26,7 @@
                                     <button type="button" id="btnUpdateCategories" name="insertCategory"
                                         class="btn btn-primary">Cập nhật danh
                                         mục</button>
-                                    <a href="/admin/categories/" class="btn btn-outline-warning">Quay lại</a>
+                                    <a href="{{ route('categories.listCategories') }}" class="btn btn-outline-warning">Quay lại</a>
                                 </div>
                             </div>
                         </div>

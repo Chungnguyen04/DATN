@@ -23,7 +23,7 @@
                                     <label for="categoryInput" class="form-label">Mã giảm giá <span
                                             class="text-danger">*</span></label>
                                     <input type="text" value="{{ old('code') }}" class="form-control code"
-                                        name="code" id="code" placeholder="Nhập mã voucher...">
+                                        name="code" id="code" placeholder="Nhập mã giảm giá...">
                                     @error('code')
                                         <span class="text-danger mt-3">{{ $message }}</span>
                                     @enderror
@@ -33,7 +33,7 @@
                                     <label for="categoryInput" class="form-label">Tên mã giảm giá <span
                                             class="text-danger">*</span></label>
                                     <input type="text" value="{{ old('name') }}" class="form-control name"
-                                        name="name" id="name" placeholder="Nhập tên voucher...">
+                                        name="name" id="name" placeholder="Nhập tên mã giảm giá...">
                                     @error('name')
                                         <span class="text-danger mt-3">{{ $message }}</span>
                                     @enderror

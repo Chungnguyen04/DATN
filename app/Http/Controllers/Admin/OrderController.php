@@ -23,6 +23,9 @@ class OrderController extends Controller
     {
         $orders = Order::with([
             'user',
+            'province',
+            'district',
+            'ward',
             'orderDetails',
             'orderStatusHistories',
             'orderStatusHistories.user',
@@ -46,6 +49,15 @@ class OrderController extends Controller
         $orders = $orders->orderBy('id', 'desc')
             ->paginate(5);
 
+        if ($request->query('page') > 0) {
+            $currentPage = $request->query('page', 1);
+        }
+
+        session([
+            'page' => $currentPage ?? null,
+        ]);
+        $orders->appends(request()->query());
+
         return view('admin.pages.orders.index', compact('orders'));
     }
 
@@ -55,41 +67,35 @@ class OrderController extends Controller
             DB::beginTransaction();
 
             // Tìm đơn hàng
-            $order = Order::find($id);
+            $order = Order::with([
+                'user',
+                'province',
+                'district',
+                'ward',
+                'voucher',
+                'orderDetails',
+                'orderStatusHistories',
+                'orderStatusHistories.user',
+                'orderDetails.variant',
+                'orderDetails.variant.weight',
+                'orderDetails.variant.product',
+            ])->find($id);
 
             // Kiểm tra đơn hàng có tồn tại không
             if (!$order) {
-                Log::error('Order not found', ['order_id' => $id]);
                 return redirect()->route('orders.index')->with('status_failed', 'Đơn hàng không tồn tại!');
             }
 
-            Log::info('Updating order status', [
-                'order_id' => $order->id,
-                'current_status' => $order->status,
-                'new_status' => $request->new_status,
-            ]);
             // Xử lý hủy đơn hàng: trả lại số lượng sản phẩm
             if ($request->new_status == 'cancelled') {
-                Log::info('Order is being cancelled', ['order_id' => $order->id]);
                 $orderDetails = OrderDetail::where('order_id', $order->id)->get();
 
                 foreach ($orderDetails as $detail) {
                     $variant = Variant::find($detail->variant_id);
 
                     if ($variant) {
-                        Log::info('Updating variant quantity', [
-                            'variant_id' => $variant->id,
-                            'current_quantity' => $variant->quantity,
-                            'return_quantity' => $detail->quantity,
-                        ]);
-
                         $variant->quantity += $detail->quantity;
                         $variant->save();
-                    } else {
-                        Log::warning('Variant not found for order detail', [
-                            'detail_id' => $detail->id,
-                            'variant_id' => $detail->variant_id,
-                        ]);
                     }
                 }
             }
@@ -101,10 +107,12 @@ class OrderController extends Controller
                 $order->update([
                     'payment_status' => 'paid',
                     'status' => $request->new_status,
+                    'updated_at' => now(),
                 ]);
             } else {
                 $order->update([
                     'status' => $request->new_status,
+                    'updated_at' => now(),
                 ]);
             }
 
@@ -121,24 +129,18 @@ class OrderController extends Controller
             $user = $order->user; // Quan hệ phải được định nghĩa trong model Order
 
             if (!$user || !$user->email) {
-                Log::error('User hoặc email của user không hợp lệ', [
-                    'order_id' => $order->id,
-                    'user_id' => $user->id ?? null,
-                ]);
                 return redirect()->route('orders.index')->with('status_failed', 'Người dùng không hợp lệ!');
             }
 
-            Log::info('Dispatching OrderStatusChanged event', [
-                'order_id' => $order->id,
-                'user_email' => $user->email,
-            ]);
-
-            // Dispatch event với email của khách hàng
             EventsOrderStatusChanged::dispatch($order, $user);
 
             DB::commit();
 
-            return redirect()->route('orders.index')->with('status_succeed', 'Đơn hàng đã được cập nhật thành công!');
+            $currentPage = session('page', 1);
+
+            $url = route('orders.index', ['page' => $currentPage]);
+
+            return redirect($url)->with('status_succeed', 'Đơn hàng đã được cập nhật thành công!');
         } catch (\Exception $e) {
             DB::rollBack();
 

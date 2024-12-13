@@ -31,6 +31,7 @@
                                                 <th scope="col">Tài khoản</th>
                                                 <th scope="col">Số điện thoại</th>
                                                 <th scope="col">Địa chỉ</th>
+                                                <th scope="col">Thông tin bổ sung</th>
                                                 <th scope="col">Vai trò</th>
                                                 <th scope="col" style="width: 150px;">Hành động</th>
                                             </tr>
@@ -43,7 +44,16 @@
                                                         <td>{{ $item->name }}</td>
                                                         <td>{{ $item->email }}</td>
                                                         <td>{{ $item->phone }}</td>
-                                                        <td>{{ $item->address }}</td>
+                                                        <td style="max-width: 200px;">
+                                                            <span style="text-overflow: ellipsis;white-space: nowrap;overflow: hidden;display: inline-block;width: 200px;"><b>{{ $item->address }}</b></span>
+                                                        </td>
+                                                        <td>
+                                                            <ul>
+                                                                <li>Tỉnh / Thành phố: {{ $item->province->name ?? 'Chưa cập nhật' }}</li>
+                                                                <li>Quận / Huyện: {{ $item->district->name ?? 'Chưa cập nhật' }}</li>
+                                                                <li>Phường / Xã: {{ $item->ward->name ?? 'Chưa cập nhật' }}</li>
+                                                            </ul>
+                                                        </td>
                                                         <td>{{ $item->type }}</td>
                                                         <td>
                                                             <a style="margin: 0 5px;" href="{{ route('users.edit', $item->id) }}" class="link-primary">

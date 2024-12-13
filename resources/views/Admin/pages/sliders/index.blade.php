@@ -21,13 +21,6 @@
                                     <table class="table align-middle table-nowrap table-striped-columns mb-0">
                                         <thead class="table-light">
                                         <tr>
-                                            <th scope="col" style="width: 46px;">
-                                                <div class="form-check">
-                                                    <input class="form-check-input" type="checkbox" value=""
-                                                           id="cardtableCheck">
-                                                    <label class="form-check-label" for="cardtableCheck"></label>
-                                                </div>
-                                            </th>
                                             <th scope="col">STT</th>
                                             <th scope="col">Tiêu đề</th>
                                             <th scope="col">Hình ảnh</th>
@@ -39,13 +32,6 @@
                                         @if(!empty($data['sliders']))
                                             @foreach ($data['sliders'] as $key => $slider)
                                                 <tr data-id-tr="{{ $slider->id }}">
-                                                    <td>
-                                                        <div class="form-check">
-                                                            <input class="form-check-input" type="checkbox" value=""
-                                                                   id="cardtableCheck{{ $slider->id }}">
-                                                            <label class="form-check-label" for="cardtableCheck{{ $slider->id }}"></label>
-                                                        </div>
-                                                    </td>
                                                     <td>{{ $key + 1 }}</td>
                                                     <td>{{ $slider->title }}</td>
                                                     <td>

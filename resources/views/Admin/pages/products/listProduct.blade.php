@@ -21,13 +21,6 @@
                                     <table class="table align-middle table-nowrap table-striped-columns mb-0">
                                         <thead class="table-light">
                                             <tr>
-                                                <th scope="col" style="width: 46px;">
-                                                    <div class="form-check">
-                                                        <input class="form-check-input" type="checkbox" value=""
-                                                            id="cardtableCheck">
-                                                        <label class="form-check-label" for="cardtableCheck"></label>
-                                                    </div>
-                                                </th>
                                                 <th scope="col">STT</th>
                                                 <th scope="col">Ảnh</th>
                                                 <th scope="col">Tên</th>
@@ -39,13 +32,6 @@
                                         <tbody>
                                             @foreach ($listProduct as $key => $pro)
                                                 <tr data-id-tr="{{ $pro->id }}">
-                                                    <td>
-                                                        <div class="form-check">
-                                                            <input class="form-check-input" type="checkbox" value=""
-                                                                id="cardtableCheck03">
-                                                            <label class="form-check-label" for="cardtableCheck03"></label>
-                                                        </div>
-                                                    </td>
                                                     <td>{{ $key + 1 }}</td>
                                                     <!-- Sửa đường dẫn để hiện thị ảnh khi để code trong folder backend (backend ở public_html) -->
                                                     <td><img src="{{ url(explode(',', $pro->image)[0]) }}" width="100px" alt=""></td>       

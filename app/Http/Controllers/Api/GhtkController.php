@@ -3,6 +3,9 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Province;
+use App\Models\District;
+use App\Models\Ward;
 use Illuminate\Http\Request;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Http;
@@ -10,19 +13,26 @@ use Illuminate\Support\Facades\Log;
 
 class GhtkController extends Controller
 {
-    public function index()
-    {
-        return view('giaohang');
-    }
-
     public function calculateShippingFee(Request $request)
     {
+            // Lấy thông tin tỉnh, huyện, xã từ cơ sở dữ liệu
+            $province = Province::find($request->province_id);
+            $district = District::find($request->district_id);
+            $ward = Ward::find($request->ward_id);
+
+        if (!$province || !$district || !$ward) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Thông tin tỉnh, huyện, xã không hợp lệ',
+            ], 400);
+        }
+
         $data = [
             'pick_province' => 'Hà Nội', // Tỉnh của kho hàng
             'pick_district' => 'Quận Ba Đình', // Quận của kho hàng
-            'province' => $request->province, // Tỉnh gửi từ người dùng
-            'district' => $request->district, // Quận gửi từ người dùng
-            'ward' => $request->ward, // Phường/Xã gửi từ người dùng
+            'province' => $province->name, // Tên tỉnh lấy từ cơ sở dữ liệu
+            'district' => $district->name, // Tên huyện lấy từ cơ sở dữ liệu
+            'ward' => $ward->name, // Tên xã lấy từ cơ sở dữ liệu
             'weight' => 1000, // Trọng lượng gói hàng (gram)
             'value' => 500000, // Giá trị gói hàng
         ];
@@ -62,7 +72,7 @@ class GhtkController extends Controller
                 ]);
             }
         } catch (\Exception $e) {
-            return response()->json([
+return response()->json([
                 'success' => false,
                 'message' => 'Lỗi khi gọi API tính phí ship: ' . $e->getMessage(),
             ]);
@@ -85,5 +95,30 @@ class GhtkController extends Controller
         } else {
             return response()->json(['error' => 'Lỗi khi gọi Google API'], 500);
         }
+    }
+
+
+    public function getProvinces(Request $request)
+    {
+        $provinces = Province::all();
+        return response()->json([
+            'provinces' => $provinces
+        ]);
+    }
+
+    public function getDistricts(Request $request)
+    {
+        $districts = District::where('province_id', $request->province_id)->get();
+        return response()->json([
+            'districts' => $districts
+        ]);
+    }
+
+    public function getWards(Request $request)
+    {
+        $wards = Ward::where('district_id', $request->district_id)->get();
+        return response()->json([
+            'wards' => $wards
+        ]);
     }
 }

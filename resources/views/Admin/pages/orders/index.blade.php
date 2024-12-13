@@ -212,6 +212,24 @@
                                                                                                                 <label for="passwordfloatingInput1">Điện Thoại</label>
                                                                                                             </div>
                                                                                                         </div>
+                                                                                                        <div class="col-lg-4">
+                                                                                                            <div class="form-floating">
+                                                                                                                <input type="text" value="{{ $order->province->name ?? 'Chưa có thông tin' }}" disabled class="form-control" id="cityfloatingInput" placeholder="Enter your city">
+                                                                                                                <label for="cityfloatingInput">Tỉnh / Thành phố</label>
+                                                                                                            </div>
+                                                                                                        </div>
+                                                                                                        <div class="col-lg-4">
+                                                                                                            <div class="form-floating">
+                                                                                                                <input type="text" value="{{ $order->district->name ?? 'Chưa có thông tin' }}" disabled class="form-control" id="cityfloatingInput" placeholder="Enter your city">
+                                                                                                                <label for="cityfloatingInput">Quận / Huyện</label>
+                                                                                                            </div>
+                                                                                                        </div>
+                                                                                                        <div class="col-lg-4">
+                                                                                                            <div class="form-floating">
+                                                                                                                <input type="text" value="{{ $order->ward->name ?? 'Chưa có thông tin' }}" disabled class="form-control" id="cityfloatingInput" placeholder="Enter your city">
+                                                                                                                <label for="cityfloatingInput">Phường / Xã</label>
+                                                                                                            </div>
+                                                                                                        </div>
                                                                                                         <div class="col-lg-12">
                                                                                                             <div class="form-floating">
                                                                                                                 <input type="text" value="{{ $order->address }}" disabled class="form-control" id="cityfloatingInput" placeholder="Enter your city">

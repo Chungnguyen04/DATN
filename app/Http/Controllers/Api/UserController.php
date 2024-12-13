@@ -59,6 +59,9 @@ class UserController extends Controller
                 'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
                 'phone' => 'required|string|regex:/^0\d{9}$/',
                 'address' => 'required|string|max:255',
+                'province_id' => 'nullable',
+                'district_id' => 'nullable',
+                'ward_id' => 'nullable',
             ]);
     
             if ($validator->fails()) {
