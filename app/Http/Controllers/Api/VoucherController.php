@@ -94,7 +94,12 @@ class VoucherController extends Controller
             ], Response::HTTP_NOT_FOUND);
         }
 
-
+        if ($voucher->total_uses < 0) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Voucher đã hết lượt sử dụng.',
+            ], Response::HTTP_NOT_FOUND);
+        }
 
         if ($request->total_price < $voucher->discount_min_price) {
             return response()->json([

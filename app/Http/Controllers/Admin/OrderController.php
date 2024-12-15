@@ -107,11 +107,13 @@ class OrderController extends Controller
                 $order->update([
                     'payment_status' => 'paid',
                     'status' => $request->new_status,
+                    'created_at' => now(),
                     'updated_at' => now(),
                 ]);
             } else {
                 $order->update([
                     'status' => $request->new_status,
+                    'created_at' => now(),
                     'updated_at' => now(),
                 ]);
             }

@@ -357,7 +357,7 @@ class OrderController extends Controller
 
             OrderStatusHistory::create([
                 'order_id' => $orderId,
-                'old_status' => $order->status,
+                'old_status' => 'pending',
                 'new_status' => 'cancelled',
                 'changed_by' => request()->user_id ?? 0,
                 'note' => 'Hủy đơn hàng',
@@ -421,7 +421,9 @@ class OrderController extends Controller
             // Cập nhật trạng thái đơn hàng thành "Hoàn thành" và "Đã thanh toán"
             $order->update([
                 'status' => 'completed',
-                'payment_status' => 'paid'
+                'payment_status' => 'paid',
+                'created_at' => now(),
+                'updated_at' => now(),
             ]);
 
             // Lưu lại lịch sử trạng thái đơn hàng
@@ -501,6 +503,13 @@ class OrderController extends Controller
                         'status' => false,
                         'message' => 'Voucher không tồn tại.',
                     ]);
+                }
+
+                if ($voucher->total_uses <= 0) {
+                    return response()->json([
+                        'status' => false,
+                        'message' => 'Voucher đã hết lượt sử dụng.',
+                    ], Response::HTTP_NOT_FOUND);
                 }
             }
             // Tính toán giá trị cuối cùng
