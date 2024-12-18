@@ -27,7 +27,7 @@ Cập nhật đánh giá
                                 <tbody>
                                     <tr>
                                         <td>{{ $commentById->user->name }}</td>
-                                        <td>{{ $commentById->product->name }}</td>
+                                        <td>{{ optional($comment->product)->name ?? 'Không xác định' }}</td>
                                         <td>{{ $commentById->content }}</td>
                                     </tr>
                                 </tbody>

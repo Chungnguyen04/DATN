@@ -11,7 +11,7 @@ class CategoryController extends Controller
 {
     public function listCategories()
     {
-        $categories = Category::orderBy('id', 'desc')->paginate(5);
+        $categories = Category::withCount('products')->orderBy('id', 'desc')->paginate(5);
 
         return view('admin.pages.categories.listCategories')->with([
             'listCategories' => $categories

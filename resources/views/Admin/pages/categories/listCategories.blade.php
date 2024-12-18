@@ -38,10 +38,13 @@ Danh sách danh mục
                                                     href="{{ route('categories.editCategories', ['id' => $cate->id]) }}"
                                                     class="link-primary"><i class="ri-settings-4-line"
                                                         style="font-size:18px;"></i></a>
-                                                <a style="margin: 0 5px; cursor: pointer;" class="link-danger"><i
-                                                        class="ri-delete-bin-5-line" style="font-size:18px;"
-                                                        data-bs-toggle="modal"
-                                                        data-bs-target="#topmodal{{ $cate->id }}"></i></a>
+                                                        
+                                                @if($cate->products_count == 0)
+                                                    <a style="margin: 0 5px; cursor: pointer;" class="link-danger"><i
+                                                            class="ri-delete-bin-5-line" style="font-size:18px;"
+                                                            data-bs-toggle="modal"
+                                                            data-bs-target="#topmodal{{ $cate->id }}"></i></a>
+                                                @endif
                                             </td>
                                         </tr>
                                         <div id="topmodal{{ $cate->id }}" class="modal fade" tabindex="-1"

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\WeightRequest;
+use App\Models\Variant;
 use App\Models\Weight;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -15,6 +16,10 @@ class WeightController extends Controller
     public function index()
     {
         $data['weights'] = Weight::orderBy('id', 'DESC')->paginate(5);
+
+        foreach ($data['weights'] as $key => $weight) {
+            $weight->isDeletable = Variant::where('weight_id', $weight->id)->count() === 0;
+        }
 
         return view('admin.pages.weights.index', compact('data'));
     }

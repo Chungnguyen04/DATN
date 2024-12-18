@@ -41,10 +41,12 @@
                                                            href="{{ route('weights.edit', $weight->id) }}"
                                                            class="link-primary"><i class="ri-settings-4-line"
                                                                                    style="font-size:18px;"></i></a>
+                                                        @if($weight->isDeletable)
                                                         <a style="margin: 0 5px; cursor: pointer;" class="link-danger"><i
                                                                 class="ri-delete-bin-5-line" style="font-size:18px;"
                                                                 data-bs-toggle="modal"
                                                                 data-bs-target="#topmodal{{ $weight->id }}"></i></a>
+                                                        @endif
                                                     </td>
                                                 </tr>
                                                 <div id="topmodal{{ $weight->id }}" class="modal fade" tabindex="-1"

@@ -59,40 +59,8 @@
                                                             <a style="margin: 0 5px;" href="{{ route('users.edit', $item->id) }}" class="link-primary">
                                                                 <i class="ri-settings-4-line" style="font-size:18px;"></i>
                                                             </a>
-                                                            <a style="margin: 0 5px; cursor: pointer;" class="link-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{ $item->id }}">
-                                                                <i class="ri-delete-bin-5-line" style="font-size:18px;"></i>
-                                                            </a>
                                                         </td>
                                                     </tr>
-
-                                                    <!-- Modal Xóa User -->
-                                                    <div id="deleteModal{{ $item->id }}" class="modal fade" tabindex="-1" aria-hidden="true">
-                                                        <div class="modal-dialog">
-                                                            <div class="modal-content">
-                                                                <div class="modal-body text-center p-5">
-                                                                    <lord-icon src="https://cdn.lordicon.com/tdrtiskw.json"
-                                                                               trigger="loop"
-                                                                               colors="primary:#f7b84b,secondary:#405189"
-                                                                               style="width:130px;height:130px"></lord-icon>
-                                                                    <div class="mt-4">
-                                                                        <h4 class="mb-3">Bạn muốn xóa tài khoản này?</h4>
-                                                                        <h5 class="mb-3">'{{ $item->name }}'</h5>
-                                                                        <p class="text-muted mb-4"> Tài khoản này sẽ bị xóa vĩnh viễn khỏi hệ thống.</p>
-                                                                        <div class="hstack gap-2 justify-content-center">
-                                                                            <button type="button" class="btn btn-link link-success fw-medium" data-bs-dismiss="modal">
-                                                                                Hủy
-                                                                            </button>
-                                                                            <form action="{{ route('users.delete', $item->id) }}" method="POST" style="display:inline;">
-                                                                                @csrf
-                                                                                @method('DELETE')
-                                                                                <button type="submit" class="btn btn-danger">Xóa</button>
-                                                                            </form>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
                                                 @endforeach
                                             @else
                                                 <tr>
